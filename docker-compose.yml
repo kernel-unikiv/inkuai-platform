@@ -1,0 +1,47 @@
+version: '3.9'
+
+# ═══════════════════════════════════════════════════════
+#  INKU·AI — Docker Compose
+#  Para usar: docker-compose up
+#  Acesso:    http://localhost:5000
+# ═══════════════════════════════════════════════════════
+
+services:
+  app:
+    build: ./backend
+    container_name: inkuai-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - JWT_SECRET=inkuai-docker-dev-secret-2026
+      - JWT_REFRESH_SECRET=inkuai-docker-refresh-secret-2026
+      # SQLite é usado automaticamente sem DATABASE_URL
+      # Para PostgreSQL: descomente abaixo
+      # - DATABASE_URL=postgresql://inkuai:inkuai123@postgres:5432/inkuai_db
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
+      - inkuai_db:/app  # persiste o SQLite
+    # Se quiser PostgreSQL real, descomente:
+    # depends_on:
+    #   - postgres
+
+  # ── PostgreSQL (opcional — só se não quiser SQLite) ───
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: inkuai-postgres
+  #   environment:
+  #     POSTGRES_DB: inkuai_db
+  #     POSTGRES_USER: inkuai
+  #     POSTGRES_PASSWORD: inkuai123
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+
+volumes:
+  inkuai_db:
+  # pgdata:

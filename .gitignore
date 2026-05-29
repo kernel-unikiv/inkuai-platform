@@ -1,0 +1,44 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Env
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Base de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Build
+dist/
+coverage/
+
+# Pass do supabase
+supabase
+
+echo "# inkuai-platform" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/kernel-unikiv/inkuai-platform.git
+git push -u origin main

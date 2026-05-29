@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/pages/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div><div style="font-size:0.6rem;color:#6b7280">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/pages/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/pages/projects.html" class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/pages/startups.html" class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/pages/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/pages/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/pages/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/pages/datasets.html" class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/pages/profile.html" class="sidebar-link active"><i class="bi bi-person-fill"></i>Perfil</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem" id="sb-avatar">U</div>
+        <div style="flex:1"><div class="text-white" style="font-size:0.82rem" data-user-name>Utilizador</div><div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0 text-muted"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
+      <span class="text-white fw-semibold" style="font-size:0.95rem">Perfil</span>
+    </div>
+    <div class="p-4">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="inkuai-card text-center">
+            <div style="width:80px;height:80px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;margin:0 auto 16px" id="avatar-circle">U</div>
+            <h5 class="text-white fw-bold mb-1" id="profile-name">—</h5>
+            <span class="badge bg-primary bg-opacity-20 text-primary mb-2" id="profile-role">—</span>
+            <p class="text-muted small mb-3" id="profile-institution">—</p>
+            <div class="d-flex justify-content-center gap-3 mb-3">
+              <a href="#" id="profile-github" class="text-muted text-decoration-none small" style="display:none"><i class="bi bi-github me-1"></i>GitHub</a>
+              <a href="#" id="profile-orcid" class="text-muted text-decoration-none small" style="display:none"><i class="bi bi-person-badge me-1"></i>ORCID</a>
+            </div>
+            <p class="text-secondary small" id="profile-bio">—</p>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="inkuai-card">
+            <h6 class="text-white fw-semibold mb-4"><i class="bi bi-pencil-square text-primary me-2"></i>Editar Perfil</h6>
+            <form id="profile-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label-dark">Nome completo</label>
+                  <input type="text" id="f-name" class="form-control-dark" placeholder="Nome completo">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-dark">Instituição</label>
+                  <input type="text" id="f-institution" class="form-control-dark" placeholder="IP/UNIKIVI">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-dark">Username GitHub</label>
+                  <input type="text" id="f-github" class="form-control-dark" placeholder="nome-usuario">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label-dark">ORCID ID</label>
+                  <input type="text" id="f-orcid" class="form-control-dark" placeholder="0000-0000-0000-0000">
+                </div>
+                <div class="col-12">
+                  <label class="form-label-dark">Biografia</label>
+                  <textarea id="f-bio" class="form-control-dark" rows="3" placeholder="Investigo em..."></textarea>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn-inkuai"><i class="bi bi-save me-2"></i>Guardar Alterações</button>
+                <button type="button" onclick="loadProfile()" class="btn-outline-inkuai">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/api/apiClient.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/components/sidebar.js"></script>
+<script>
+let userId;
+
+async function loadProfile() {
+  if (!window.InkuAuth?.getToken()) { window.location.href='/pages/login.html'; return; }
+  try {
+    const res = await window.InkuAPI.get('/auth/me');
+    const u = res.user; userId = u.id;
+    document.getElementById('profile-name').textContent       = u.name;
+    document.getElementById('profile-role').textContent       = u.role;
+    document.getElementById('profile-institution').textContent= u.institution||'IP/UNIKIVI';
+    document.getElementById('profile-bio').textContent        = u.bio||'Sem biografia.';
+    document.getElementById('avatar-circle').textContent      = u.name[0].toUpperCase();
+    document.getElementById('sb-avatar').textContent          = u.name[0].toUpperCase();
+    if (u.github_username) {
+      const el = document.getElementById('profile-github');
+      el.style.display=''; el.href=`https://github.com/${u.github_username}`;
+    }
+    if (u.orcid_id) {
+      const el = document.getElementById('profile-orcid');
+      el.style.display=''; el.href=`https://orcid.org/${u.orcid_id}`;
+    }
+    document.getElementById('f-name').value        = u.name||'';
+    document.getElementById('f-institution').value = u.institution||'';
+    document.getElementById('f-github').value      = u.github_username||'';
+    document.getElementById('f-orcid').value       = u.orcid_id||'';
+    document.getElementById('f-bio').value         = u.bio||'';
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('[type=submit]');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
+  try {
+    await window.InkuAPI.put(`/users/${userId}`, {
+      name:            document.getElementById('f-name').value,
+      institution:     document.getElementById('f-institution').value,
+      github_username: document.getElementById('f-github').value,
+      orcid_id:        document.getElementById('f-orcid').value,
+      bio:             document.getElementById('f-bio').value,
+    });
+    window.showToast?.('Perfil actualizado!','success');
+    loadProfile();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-save me-2"></i>Guardar Alterações'; }
+});
+
+document.addEventListener('DOMContentLoaded', loadProfile);
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+FROM python:3.11-slim
+
+RUN pip install --no-cache-dir \
+    numpy==1.26.0 \
+    pandas==2.1.0 \
+    scikit-learn==1.3.0 \
+    matplotlib==3.8.0 \
+    scipy==1.11.0
+
+RUN useradd -m -u 1001 sandboxuser
+USER sandboxuser
+WORKDIR /workspace
+CMD ["python3", "-u", "/workspace/user_code.py"]

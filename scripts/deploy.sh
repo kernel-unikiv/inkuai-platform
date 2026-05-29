@@ -1,0 +1,18 @@
+#!/bin/bash
+# INKU·AI — Script de Deploy (Render.com)
+echo "🚀 Deploy INKU·AI para Render.com"
+echo ""
+echo "Pré-requisitos:"
+echo "  1. Conta em render.com criada"
+echo "  2. Web Service configurado com:"
+echo "     - Build Command: cd backend && npm install"
+echo "     - Start Command: cd backend && npm start"
+echo "     - Environment Variables: todas do .env.example"
+echo ""
+echo "Para deploy automático via GitHub:"
+echo "  1. Ligue o repositório no Render Dashboard"
+echo "  2. Adicione RENDER_DEPLOY_HOOK nos secrets do GitHub"
+echo "  3. O CI/CD (.github/workflows/ci.yml) fará o deploy automático"
+echo ""
+echo "Alternativa rápida (Render CLI):"
+echo "  render deploy"

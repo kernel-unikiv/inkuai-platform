@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: INKU·AI Platform API
+  description: API da Plataforma de Incubação de IA do IP/UNIKIVI — Candidatura FUNDECIT Edital Nº 1/2026
+  version: 1.0.0
+  contact:
+    name: Mestre Nkanga Pedro
+    email: nkanga.pedro@ip.unikivi.ao
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Desenvolvimento Local
+  - url: https://inkuai-backend.onrender.com/api/v1
+    description: Produção (Render.com)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, mentor, researcher, student] }
+        institution: { type: string }
+        is_verified: { type: boolean }
+    Startup:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        status: { type: string, enum: [draft, active, paused, graduated, rejected] }
+        sector: { type: string }
+    Project:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        type: { type: string, enum: [software, ai_model, data_pipeline, research] }
+        status: { type: string, enum: [draft, submitted, under_review, approved, in_progress, completed, rejected] }
+paths:
+  /auth/register:
+    post:
+      tags: [Autenticação]
+      summary: Registar novo utilizador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, minLength: 2 }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                role: { type: string, enum: [student, researcher] }
+      responses:
+        '201': { description: Utilizador criado com sucesso }
+        '409': { description: Email já registado }
+  /auth/login:
+    post:
+      tags: [Autenticação]
+      summary: Login e obtenção de token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200': { description: Login bem-sucedido, retorna token JWT }
+        '401': { description: Credenciais inválidas }
+  /auth/me:
+    get:
+      tags: [Autenticação]
+      summary: Obter perfil do utilizador autenticado
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200': { description: Dados do utilizador }
+  /startups:
+    get:
+      tags: [Startups]
+      summary: Listar todas as startups
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 10 }
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200': { description: Lista paginada de startups }
+    post:
+      tags: [Startups]
+      summary: Criar nova startup
+      security: [{ BearerAuth: [] }]
+      responses:
+        '201': { description: Startup criada }
+  /projects:
+    get:
+      tags: [Projectos]
+      summary: Listar projectos
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200': { description: Lista paginada de projectos }
+    post:
+      tags: [Projectos]
+      summary: Criar novo projecto
+      security: [{ BearerAuth: [] }]
+      responses:
+        '201': { description: Projecto criado }
+  /sandbox/execute:
+    post:
+      tags: [Sandbox]
+      summary: Executar código Python no sandbox
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, project_id]
+              properties:
+                code: { type: string }
+                project_id: { type: string, format: uuid }
+                type: { type: string, enum: [python, ai_training, test] }
+      responses:
+        '200': { description: Resultado da execução }
+        '400': { description: Código bloqueado por segurança }
