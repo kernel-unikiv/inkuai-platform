@@ -5,7 +5,7 @@ services:
     region: frankfurt
     plan: free
     buildCommand: cd backend && npm install
-    startCommand: cd backend && npm run seed && npm start
+    startCommand: cd backend && npm run migrate && npm run seed && npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -18,5 +18,11 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: https://inkuai-platform.onrender.com
-      # DATABASE_URL → adicionar manualmente (Supabase)
-      # MONGODB_URI  → adicionar manualmente (Atlas) - OPCIONAL
+      # ⚠️  IMPORTANTE — Para usar PostgreSQL em produção:
+      # 1. Crie uma BD gratuita em https://supabase.com
+      # 2. Copie a CONNECTION STRING da BD (ex: postgresql://user:pass@host/db)
+      # 3. Adicione abaixo como DATABASE_URL
+      # - key: DATABASE_URL
+      #   value: postgresql://user:password@db.xxx.supabase.co:5432/postgres
+      #
+      # Se não configurar, usa SQLite em /tmp/inkuai.sqlite (dados não persistem após restart)
