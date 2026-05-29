@@ -1,5 +1,5 @@
 const sequelize = require('../config/database');
-require('../models');
+require('../models/sql');          // ← caminho correto
 
 (async () => {
   await sequelize.authenticate();
