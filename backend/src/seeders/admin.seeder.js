@@ -48,12 +48,9 @@ if (require.main === module) {
       console.log('╚════════════════════════════════════════════════════╝\n');
       process.exit(0);
     } catch (err) {
-      console.error('❌ Seed falhou:', err.message);
-      if (err.message.includes('DATABASE_URL')) {
-        console.error('   Configure DATABASE_URL no ficheiro .env');
-        console.error('   Veja GUIA_DEPLOY.md para obter PostgreSQL gratuito');
-      }
-      process.exit(1);
-    }
+  console.error(err);
+  console.error(err.stack);
+  process.exit(1);
+}
   })();
 }
