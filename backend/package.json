@@ -2,7 +2,7 @@
   "name": "inkuai-backend",
   "version": "1.0.0",
   "description": "INKU·AI Platform Backend — IP/UNIKIVI FUNDECIT 2026",
-  "main": "src/server.js",
+  "main": "server.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -33,6 +33,6 @@
   "scripts": {
     "migrate": "node src/scripts/init-db.js",
     "seed": "node src/seeders/admin.seeder.js",
-    "start": "node src/server.js"
+    "start": "node server.js"
   }
 }
