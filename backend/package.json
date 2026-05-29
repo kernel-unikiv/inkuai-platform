@@ -34,13 +34,11 @@
   "engines": {
     "node": ">=18.0.0"
   },
-
-  
-  "scripts": {
-    "migrate": "node src/scripts/init-db.js",
-    "seed": "node src/seeders/admin.seeder.js",
-    "start": "node src/server.js"
-  }
+"scripts": {
+  "migrate": "node src/scripts/init-db.js",
+  "seed": "node src/seeders/admin.seeder.js",
+  "start": "node src/server.js"
+}
 
 }
 
