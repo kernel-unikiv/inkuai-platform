@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projecto — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div><div style="font-size:0.6rem;color:#6b7280">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html" class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html" class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html" class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/profile.html" class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem">U</div>
+        <div style="flex:1"><div class="text-white" style="font-size:0.82rem" data-user-name>Utilizador</div><div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0 text-muted"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
+      <a href="/projects.html" class="btn btn-link text-muted p-0 me-2"><i class="bi bi-arrow-left"></i></a>
+      <span class="text-white fw-semibold" style="font-size:0.95rem" id="page-title">Detalhes do Projecto</span>
+      <div class="ms-auto d-flex gap-2" id="action-btns"></div>
+    </div>
+
+    <div class="p-4" id="project-content">
+      <div class="text-center py-5 text-muted"><div class="spinner-border"></div></div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+async function loadProject() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (!id) { window.location.href='/pages/projects.html'; return; }
+
+  try {
+    const res = await window.InkuAPI.get(`/projects/${id}`);
+    const p = res.project;
+    const me = window.InkuAuth.getUser();
+    const isOwner = me?.id === p.created_by || ['admin','mentor'].includes(me?.role);
+
+    document.getElementById('page-title').textContent = p.title;
+
+    // Action buttons
+    const ab = document.getElementById('action-btns');
+    if (isOwner) {
+      if (p.status === 'draft') ab.innerHTML += `<button onclick="submitProject('${p.id}')" class="btn-inkuai btn-sm"><i class="bi bi-send me-1"></i>Submeter</button>`;
+      if (['admin','mentor'].includes(me?.role) && p.status === 'submitted')
+        ab.innerHTML += `<button onclick="approveProject('${p.id}')" class="btn btn-sm btn-success"><i class="bi bi-check-lg me-1"></i>Aprovar</button>`;
+    }
+    ab.innerHTML += `<a href="/sandbox.html?project=${p.id}" class="btn btn-sm btn-outline-success"><i class="bi bi-terminal me-1"></i>Sandbox</a>`;
+
+    const typeColors = {software:'primary',ai_model:'success',data_pipeline:'warning',research:'info'};
+    const tc = typeColors[p.type]||'secondary';
+
+    document.getElementById('project-content').innerHTML = `
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <!-- Header -->
+          <div class="inkuai-card mb-4">
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div style="width:52px;height:52px;background:rgba(59,130,246,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="bi bi-folder2-open text-primary fs-4"></i>
+              </div>
+              <div style="flex:1">
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                  <h4 class="text-white fw-bold mb-0">${p.title}</h4>
+                  <span class="status status-${p.status}">${p.status}</span>
+                  <span class="badge bg-${tc} bg-opacity-20 text-${tc}">${p.type}</span>
+                </div>
+                <div class="text-muted small">
+                  Criado por <strong class="text-white">${p.creator?.name||'—'}</strong> · 
+                  ${new Date(p.created_at).toLocaleDateString('pt-PT')} · 
+                  v${p.version||'1.0.0'}
+                </div>
+              </div>
+            </div>
+            <p class="text-secondary mb-4">${p.description||'Sem descrição.'}</p>
+            ${p.github_repo_url ? `
+              <a href="${p.github_repo_url}" target="_blank" class="d-inline-flex align-items-center gap-2 text-decoration-none"
+                 style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:8px 14px;border-radius:8px;color:#e5e7eb;font-size:0.875rem">
+                <i class="bi bi-github"></i> ${p.github_repo_url.replace('https://github.com/','')}
+                <i class="bi bi-box-arrow-up-right text-muted" style="font-size:0.75rem"></i>
+              </a>` : ''}
+          </div>
+
+          <!-- Tech Stack -->
+          ${p.tech_stack?.length ? `
+          <div class="inkuai-card mb-4">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-layers text-primary me-2"></i>Stack Tecnológico</h6>
+            <div class="d-flex flex-wrap gap-2">
+              ${p.tech_stack.map(t=>`<span class="badge bg-secondary bg-opacity-30 text-secondary px-3 py-2">${t}</span>`).join('')}
+            </div>
+          </div>` : ''}
+
+          <!-- Avaliações -->
+          <div class="inkuai-card">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-star text-warning me-2"></i>Avaliações (${p.evaluations?.length||0})</h6>
+            ${p.evaluations?.length ? p.evaluations.map(e=>`
+              <div class="p-3 rounded-3 mb-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-white small fw-semibold">${e.evaluator?.name||'Avaliador'}</span>
+                  <span class="text-warning fw-bold">${e.score||0}/100</span>
+                </div>
+                <p class="text-muted small mb-0">${e.feedback||'Sem feedback.'}</p>
+              </div>`).join('') : '<p class="text-muted small">Ainda sem avaliações.</p>'}
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <!-- Info -->
+          <div class="inkuai-card mb-4">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-info-circle text-info me-2"></i>Informações</h6>
+            <div class="d-flex flex-column gap-2" style="font-size:0.875rem">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Estado</span>
+                <span class="status status-${p.status}">${p.status}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Tipo</span>
+                <span class="text-white">${p.type}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Versão</span>
+                <span class="text-white">v${p.version||'1.0.0'}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Público</span>
+                <span class="${p.is_public?'text-success':'text-muted'}">${p.is_public?'Sim':'Não'}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Criado em</span>
+                <span class="text-white">${new Date(p.created_at).toLocaleDateString('pt-PT')}</span>
+              </div>
+              ${p.startup ? `<div class="d-flex justify-content-between">
+                <span class="text-muted">Startup</span>
+                <a href="/startup-detail.html?id=${p.startup.id}" class="text-primary text-decoration-none">${p.startup.name}</a>
+              </div>` : ''}
+            </div>
+          </div>
+
+          <!-- Tags -->
+          ${p.tags?.length ? `
+          <div class="inkuai-card mb-4">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-tags text-success me-2"></i>Tags</h6>
+            <div class="d-flex flex-wrap gap-2">
+              ${p.tags.map(t=>`<span class="badge bg-success bg-opacity-15 text-success">#${t}</span>`).join('')}
+            </div>
+          </div>` : ''}
+
+          <!-- Acções rápidas -->
+          <div class="inkuai-card">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-lightning text-warning me-2"></i>Acções</h6>
+            <div class="d-grid gap-2">
+              <a href="/sandbox.html?project=${p.id}" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-terminal me-2"></i>Abrir Sandbox
+              </a>
+              ${p.github_repo_url ? `<a href="${p.github_repo_url}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-github me-2"></i>Ver GitHub
+              </a>` : ''}
+              ${isOwner && p.status==='draft' ? `<button onclick="submitProject('${p.id}')" class="btn btn-sm btn-primary">
+                <i class="bi bi-send me-2"></i>Submeter para Avaliação
+              </button>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  } catch(err) {
+    document.getElementById('project-content').innerHTML = `<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
+  }
+}
+
+async function submitProject(id) {
+  if (!confirm('Submeter este projecto para avaliação?')) return;
+  try {
+    await window.InkuAPI.post(`/projects/${id}/submit`);
+    window.showToast?.('Projecto submetido para avaliação!','success');
+    setTimeout(()=>loadProject(),800);
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function approveProject(id) {
+  if (!confirm('Aprovar este projecto?')) return;
+  try {
+    await window.InkuAPI.post(`/projects/${id}/approve`);
+    window.showToast?.('Projecto aprovado!','success');
+    setTimeout(()=>loadProject(),800);
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+document.addEventListener('DOMContentLoaded', loadProject);
+</script>
+</body>
+</html>

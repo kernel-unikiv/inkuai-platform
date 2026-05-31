@@ -42,7 +42,7 @@ function initSidebar() {
 window.doLogout = async function() {
   try { await window.InkuAPI?.post('/auth/logout'); } catch {}
   window.InkuAuth?.clearAuth();
-  window.location.href = '/pages/login.html';
+  window.location.href = '/login.html';
 };
 
 document.addEventListener('DOMContentLoaded', initSidebar);

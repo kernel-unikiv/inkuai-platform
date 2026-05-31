@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projectos — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div><div style="font-size:0.6rem;color:#6b7280">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Principal</span>
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html" class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html" class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <span class="sidebar-section-label">Académico</span>
+      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html" class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <span class="sidebar-section-label">Conta</span>
+      <a href="/profile.html" class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#fff">U</div>
+        <div style="flex:1"><div class="text-white" style="font-size:0.82rem" data-user-name>Utilizador</div><div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0 text-muted"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
+      <span class="text-white fw-semibold" style="font-size:0.95rem">Projectos</span>
+      <div class="ms-auto">
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newProjectModal">
+          <i class="bi bi-plus-lg me-2"></i>Novo Projecto
+        </button>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <!-- Filtros -->
+      <div class="d-flex gap-2 mb-4 flex-wrap">
+        <input type="text" id="search-input" class="form-control-dark" placeholder="Pesquisar projectos..." style="max-width:280px">
+        <select id="status-filter" class="form-control-dark" style="width:auto">
+          <option value="">Todos os estados</option>
+          <option value="draft">Rascunho</option>
+          <option value="submitted">Submetido</option>
+          <option value="approved">Aprovado</option>
+          <option value="in_progress">Em Progresso</option>
+          <option value="completed">Concluído</option>
+        </select>
+        <select id="type-filter" class="form-control-dark" style="width:auto">
+          <option value="">Todos os tipos</option>
+          <option value="software">Software</option>
+          <option value="ai_model">Modelo IA</option>
+          <option value="data_pipeline">Pipeline de Dados</option>
+          <option value="research">Investigação</option>
+        </select>
+      </div>
+
+      <!-- Lista de Projectos -->
+      <div id="projects-grid" class="row g-3">
+        <div class="col-12 text-center py-5 text-muted">
+          <div class="spinner-border spinner-border-sm me-2"></div>A carregar projectos...
+        </div>
+      </div>
+
+      <!-- Paginação -->
+      <div id="pagination" class="d-flex justify-content-center gap-2 mt-4"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo Projecto -->
+<div class="modal fade" id="newProjectModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background:#0d1117;border:1px solid rgba(255,255,255,0.1)">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title text-white"><i class="bi bi-folder-plus text-primary me-2"></i>Novo Projecto</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="create-project-form">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label-dark">Título do Projecto *</label>
+              <input type="text" id="proj-title" class="form-control-dark" placeholder="Ex: Sistema de Detecção de Doenças com CNN" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-dark">Tipo *</label>
+              <select id="proj-type" class="form-control-dark">
+                <option value="software">Software</option>
+                <option value="ai_model">Modelo IA/ML</option>
+                <option value="data_pipeline">Pipeline de Dados</option>
+                <option value="research">Investigação Científica</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-dark">Repositório GitHub (opcional)</label>
+              <input type="url" id="proj-github" class="form-control-dark" placeholder="https://github.com/usuario/repo">
+            </div>
+            <div class="col-12">
+              <label class="form-label-dark">Descrição *</label>
+              <textarea id="proj-desc" class="form-control-dark" rows="4" placeholder="Descreva o projecto, objetivos e tecnologias utilizadas..." required></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label-dark">Stack Tecnológico (separado por vírgulas)</label>
+              <input type="text" id="proj-stack" class="form-control-dark" placeholder="Python, TensorFlow, React, Docker...">
+            </div>
+            <div class="col-12">
+              <label class="form-label-dark d-flex align-items-center gap-2">
+                <input type="checkbox" id="proj-public" class="form-check-input"> Tornar projecto público
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn-inkuai" id="save-project-btn"><i class="bi bi-save me-2"></i>Criar Projecto</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+let currentPage = 1;
+
+async function loadProjects(page = 1) {
+  const search = document.getElementById('search-input').value;
+  const status = document.getElementById('status-filter').value;
+  const type   = document.getElementById('type-filter').value;
+  const grid   = document.getElementById('projects-grid');
+  grid.innerHTML = '<div class="col-12 text-center py-5 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>A carregar...</div>';
+
+  try {
+    let ep = `/projects?page=${page}&limit=9`;
+    if (search) ep += `&search=${encodeURIComponent(search)}`;
+    if (status) ep += `&status=${status}`;
+    if (type)   ep += `&type=${type}`;
+
+    const res = await window.InkuAPI.get(ep);
+    const projects = res.data || [];
+
+    if (projects.length === 0) {
+      grid.innerHTML = '<div class="col-12 text-center py-5 text-muted"><i class="bi bi-folder2 fs-1 d-block mb-3"></i>Nenhum projecto encontrado.<br><small>Crie o seu primeiro projecto!</small></div>';
+      return;
+    }
+
+    const typeIcon = { software:'bi-code-slash', ai_model:'bi-braces', data_pipeline:'bi-database', research:'bi-journal-text' };
+    const typeColor = { software:'primary', ai_model:'success', data_pipeline:'warning', research:'info' };
+
+    grid.innerHTML = projects.map(p => `
+      <div class="col-md-6 col-xl-4">
+        <div class="inkuai-card h-100 d-flex flex-column">
+          <div class="d-flex align-items-start justify-content-between mb-3">
+            <div class="d-flex align-items-center gap-2">
+              <div style="width:36px;height:36px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center">
+                <i class="bi ${typeIcon[p.type]||'bi-folder'} text-${typeColor[p.type]||'secondary'}"></i>
+              </div>
+              <span class="badge bg-${typeColor[p.type]||'secondary'} bg-opacity-20 text-${typeColor[p.type]||'secondary'}" style="font-size:0.7rem">${p.type}</span>
+            </div>
+            <span class="status status-${p.status}">${p.status}</span>
+          </div>
+          <h6 class="text-white fw-semibold mb-2">${p.title}</h6>
+          <p class="text-muted small mb-3" style="flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.description||'Sem descrição.'}</p>
+          ${p.github_repo_url ? `<a href="${p.github_repo_url}" target="_blank" class="text-muted small mb-2 text-decoration-none"><i class="bi bi-github me-1"></i>GitHub</a>` : ''}
+          <div class="d-flex align-items-center justify-content-between mt-auto pt-2" style="border-top:1px solid var(--inkuai-border)">
+            <small class="text-muted">${new Date(p.created_at).toLocaleDateString('pt-PT')}</small>
+            <div class="d-flex gap-1">
+              <a href="/sandbox.html?project=${p.id}" class="btn btn-sm btn-outline-success" title="Sandbox"><i class="bi bi-terminal"></i></a>
+              <a href="/project-detail.html?id=${p.id}" class="btn btn-sm btn-outline-primary">Ver</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Paginação
+    if (res.pagination && res.pagination.pages > 1) {
+      const pg = document.getElementById('pagination');
+      pg.innerHTML = Array.from({length: res.pagination.pages}, (_,i) => `
+        <button class="btn btn-sm ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadProjects(${i+1})">${i+1}</button>
+      `).join('');
+    }
+  } catch (err) {
+    grid.innerHTML = `<div class="col-12 text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
+  }
+}
+
+// Criar projecto
+document.getElementById('save-project-btn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('save-project-btn');
+  const stack = document.getElementById('proj-stack').value.split(',').map(s=>s.trim()).filter(Boolean);
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A criar...';
+  try {
+    await window.InkuAPI.post('/projects', {
+      title: document.getElementById('proj-title').value,
+      description: document.getElementById('proj-desc').value,
+      type: document.getElementById('proj-type').value,
+      github_repo_url: document.getElementById('proj-github').value || null,
+      tech_stack: stack,
+      is_public: document.getElementById('proj-public').checked
+    });
+    bootstrap.Modal.getInstance(document.getElementById('newProjectModal')).hide();
+    window.showToast?.('Projecto criado com sucesso!', 'success');
+    loadProjects();
+  } catch (err) {
+    window.showToast?.(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-save me-2"></i>Criar Projecto';
+  }
+});
+
+['search-input','status-filter','type-filter'].forEach(id => {
+  document.getElementById(id)?.addEventListener('change', () => loadProjects(1));
+});
+document.getElementById('search-input')?.addEventListener('keyup', (e) => { if (e.key==='Enter') loadProjects(1); });
+
+document.addEventListener('DOMContentLoaded', () => loadProjects());
+</script>
+</body>
+</html>

@@ -15,7 +15,7 @@ if (loginForm) {
       });
       window.InkuAuth.setAuth(data.token, data.user);
       window.showToast?.('Login realizado com sucesso!', 'success');
-      setTimeout(() => { window.location.href = '/pages/dashboard.html'; }, 800);
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
     } catch (err) {
       window.showToast?.(err.message || 'Erro no login.', 'error');
       btn.disabled = false;
@@ -44,7 +44,7 @@ if (registerForm) {
         institution: document.getElementById('institution')?.value || 'IP/UNIKIVI'
       });
       window.showToast?.('Conta criada com sucesso! Verifique o seu email.', 'success');
-      setTimeout(() => { window.location.href = '/pages/login.html'; }, 1500);
+      setTimeout(() => { window.location.href = '/login.html'; }, 1500);
     } catch (err) {
       const msg = err.errors ? err.errors.map(e => e.message).join(', ') : err.message;
       window.showToast?.(msg, 'error');
@@ -56,5 +56,5 @@ if (registerForm) {
 
 // ─── Redirect se já autenticado ──────────────────
 if ((loginForm || registerForm) && window.InkuAuth?.getToken()) {
-  window.location.href = '/pages/dashboard.html';
+  window.location.href = '/dashboard.html';
 }

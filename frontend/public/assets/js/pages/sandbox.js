@@ -3,7 +3,7 @@
 let currentProjectId = null;
 
 async function initSandbox() {
-  if (!window.InkuAuth?.getToken()) { window.location.href = '/pages/login.html'; return; }
+  if (!window.InkuAuth?.getToken()) { window.location.href = '/login.html'; return; }
   
   // Carregar projectos do utilizador para selecção
   try {

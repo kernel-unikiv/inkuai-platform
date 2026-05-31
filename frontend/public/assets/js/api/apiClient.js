@@ -28,7 +28,7 @@ async function request(method, endpoint, body = null, isFormData = false) {
 
     if (res.status === 401) {
       clearAuth();
-      window.location.href = '/pages/login.html';
+      window.location.href = '/login.html';
       return;
     }
     if (!res.ok) throw { status: res.status, message: data.message || 'Erro na requisição', errors: data.errors };

@@ -21,6 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const protectedPaths = ['dashboard','projects','startups','sandbox','profile','admin','mentorship'];
   const isProtected = protectedPaths.some(p => window.location.pathname.includes(p));
   if (isProtected && !window.InkuAuth?.getToken()) {
-    window.location.href = '/pages/login.html';
+    window.location.href = '/login.html';
   }
 });

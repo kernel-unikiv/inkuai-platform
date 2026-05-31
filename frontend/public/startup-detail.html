@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startup — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div><div style="font-size:0.6rem;color:#6b7280">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html" class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html" class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/profile.html" class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem">U</div>
+        <div style="flex:1"><div class="text-white" style="font-size:0.82rem" data-user-name>Utilizador</div><div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0 text-muted"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
+      <a href="/startups.html" class="btn btn-link text-muted p-0 me-2"><i class="bi bi-arrow-left"></i></a>
+      <span class="text-white fw-semibold" style="font-size:0.95rem" id="page-title">Detalhes da Startup</span>
+    </div>
+    <div class="p-4" id="startup-content">
+      <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+async function loadStartup() {
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) { window.location.href='/pages/startups.html'; return; }
+  try {
+    const res = await window.InkuAPI.get(`/startups/${id}`);
+    const s = res.startup;
+    document.getElementById('page-title').textContent = s.name;
+    const roleColors = {lead:'warning',developer:'primary',researcher:'info',designer:'success',analyst:'secondary'};
+    document.getElementById('startup-content').innerHTML = `
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="inkuai-card mb-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div style="width:60px;height:60px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff">${s.name[0]}</div>
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <h4 class="text-white fw-bold mb-0">${s.name}</h4>
+                  <span class="status status-${s.status}">${s.status}</span>
+                </div>
+                <div class="text-muted small">${s.sector} · Criado em ${new Date(s.created_at).toLocaleDateString('pt-PT')}</div>
+              </div>
+            </div>
+            <p class="text-secondary">${s.description||'Sem descrição.'}</p>
+            <div class="d-flex gap-3 mt-3">
+              ${s.github_url?`<a href="${s.github_url}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-github me-1"></i>GitHub</a>`:''}
+              ${s.website_url?`<a href="${s.website_url}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-globe me-1"></i>Website</a>`:''}
+            </div>
+          </div>
+
+          <!-- Equipa -->
+          <div class="inkuai-card">
+            <h6 class="text-white fw-semibold mb-4"><i class="bi bi-people-fill text-primary me-2"></i>Equipa (${s.members?.length||0} membros)</h6>
+            <div class="row g-3">
+              ${(s.members||[]).map(m=>`
+                <div class="col-sm-6">
+                  <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)">
+                    <div style="width:38px;height:38px;background:rgba(59,130,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#3b82f6;font-size:0.9rem">${m.user?.name?.[0]||'?'}</div>
+                    <div>
+                      <div class="text-white small fw-semibold">${m.user?.name||'Membro'}</div>
+                      <span class="badge bg-${roleColors[m.role_in_team]||'secondary'} bg-opacity-20 text-${roleColors[m.role_in_team]||'secondary'}" style="font-size:0.68rem">${m.role_in_team}</span>
+                    </div>
+                  </div>
+                </div>`).join('')||'<div class="col-12"><p class="text-muted small">Sem membros.</p></div>'}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="inkuai-card mb-4">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-info-circle text-info me-2"></i>Detalhes</h6>
+            <div class="d-flex flex-column gap-2" style="font-size:0.875rem">
+              <div class="d-flex justify-content-between"><span class="text-muted">Estado</span><span class="status status-${s.status}">${s.status}</span></div>
+              <div class="d-flex justify-content-between"><span class="text-muted">Sector</span><span class="text-white">${s.sector}</span></div>
+              <div class="d-flex justify-content-between"><span class="text-muted">Fundador</span><span class="text-white">${s.owner?.name||'—'}</span></div>
+              <div class="d-flex justify-content-between"><span class="text-muted">Membros</span><span class="text-white">${s.members?.length||0}</span></div>
+            </div>
+          </div>
+          ${s.tags?.length?`
+          <div class="inkuai-card">
+            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-tags text-success me-2"></i>Tags</h6>
+            <div class="d-flex flex-wrap gap-2">${s.tags.map(t=>`<span class="badge bg-success bg-opacity-15 text-success">#${t}</span>`).join('')}</div>
+          </div>`:''}
+        </div>
+      </div>`;
+  } catch(err) {
+    document.getElementById('startup-content').innerHTML = `<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', loadStartup);
+</script>
+</body>
+</html>
