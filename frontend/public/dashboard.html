@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt" data-bs-theme="dark">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,155 +11,179 @@
 <body>
 <div class="dashboard-layout">
 
-  <!-- ══ SIDEBAR ══════════════════════════════════ -->
+  <!-- ══ SIDEBAR AZUL ESCURO ══ -->
   <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div>
-        <div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div>
-        <div style="font-size:0.6rem;color:#6b7280;line-height:1">IP/UNIKIVI</div>
+        <div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div>
+        <div class="brand-sub">IP/UNIKIVI</div>
       </div>
     </a>
 
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html" class="sidebar-link active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html" class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html" class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/dashboard.html"   class="sidebar-link active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"   class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
 
       <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html" class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/mentorship.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html"    class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
 
       <span class="sidebar-section-label">Conta</span>
-      <a href="/profile.html" class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
-      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
+      <a href="/profile.html"     class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none">
+        <i class="bi bi-shield-fill"></i>Administração
+      </a>
     </nav>
 
     <div class="sidebar-footer">
-      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
-        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#fff" id="user-avatar-init">U</div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
         <div style="flex:1;overflow:hidden">
-          <div class="text-white" style="font-size:0.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" data-user-name>Utilizador</div>
-          <div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div>
+          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
         </div>
-        <button onclick="doLogout()" class="btn btn-link p-0 text-muted" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)" title="Sair">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
       </div>
     </div>
   </aside>
 
-  <!-- ══ MAIN CONTENT ══════════════════════════════ -->
+  <!-- ══ MAIN CONTENT ══ -->
   <main class="main-content">
-    <!-- Top Bar -->
+    <!-- Topbar branco -->
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
-      <span class="text-white fw-semibold" style="font-size:0.95rem">Dashboard</span>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+      <span class="topbar-title">Dashboard</span>
+      <span class="topbar-badge ms-2 d-none d-md-inline">FUNDECIT 2026</span>
       <div class="ms-auto d-flex align-items-center gap-3">
-        <button class="btn btn-link text-muted p-0 position-relative">
+        <button class="btn btn-link p-0 position-relative" style="color:var(--text-muted)">
           <i class="bi bi-bell fs-5"></i>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem" id="stat-notifs">0</span>
         </button>
-        <div class="text-muted small" data-user-email></div>
+        <span class="text-muted small d-none d-md-block" data-user-email></span>
       </div>
     </div>
 
-    <!-- Content -->
-    <div class="p-4">
-      <!-- Welcome -->
+    <!-- Conteúdo -->
+    <div class="page-content">
+
+      <!-- Boas-vindas -->
       <div class="mb-4">
-        <h5 class="text-white fw-bold mb-1">Bem-vindo, <span data-user-name>Investigador</span> 👋</h5>
-        <p class="text-muted small mb-0">Plataforma de Incubação de IA — IP/UNIKIVI | FUNDECIT 2026</p>
+        <h5 style="font-weight:700;color:var(--text-primary)">
+          Bem-vindo de volta, <span data-user-name style="color:var(--blue-600)">Investigador</span> 👋
+        </h5>
+        <p class="mb-0" style="color:var(--text-muted);font-size:0.9rem">
+          Plataforma de Incubação de IA · IP/UNIKIVI · Candidatura FUNDECIT Edital Nº 1/2026
+        </p>
       </div>
 
-      <!-- Metric Cards -->
+      <!-- Métricas -->
       <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon" style="background:rgba(59,130,246,0.15)"><i class="bi bi-folder2-open" style="color:#3b82f6"></i></div>
+            <div class="metric-icon blue"><i class="bi bi-folder2-open"></i></div>
             <div>
-              <div class="metric-value text-white" id="stat-projects">—</div>
+              <div class="metric-value" id="stat-projects">—</div>
               <div class="metric-label">Projectos</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon" style="background:rgba(16,185,129,0.15)"><i class="bi bi-rocket-takeoff" style="color:#10b981"></i></div>
+            <div class="metric-icon green"><i class="bi bi-rocket-takeoff"></i></div>
             <div>
-              <div class="metric-value text-white" id="stat-startups">—</div>
+              <div class="metric-value" id="stat-startups">—</div>
               <div class="metric-label">Startups</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon" style="background:rgba(245,158,11,0.15)"><i class="bi bi-terminal-fill" style="color:#f59e0b"></i></div>
+            <div class="metric-icon orange"><i class="bi bi-terminal-fill"></i></div>
             <div>
-              <div class="metric-value text-white">Activo</div>
-              <div class="metric-label">Sandbox</div>
+              <div class="metric-value" style="font-size:1.2rem;color:var(--success)">Activo</div>
+              <div class="metric-label">Sandbox IA</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon" style="background:rgba(139,92,246,0.15)"><i class="bi bi-github" style="color:#8b5cf6"></i></div>
+            <div class="metric-icon purple"><i class="bi bi-github"></i></div>
             <div>
-              <div class="metric-value text-white">GitHub</div>
+              <div class="metric-value" style="font-size:1.2rem">GitHub</div>
               <div class="metric-label">Integração</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Main Grid -->
+      <!-- Grid principal -->
       <div class="row g-4">
         <!-- Projectos Recentes -->
         <div class="col-lg-8">
           <div class="inkuai-card">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 class="text-white fw-semibold mb-0"><i class="bi bi-folder2-open text-primary me-2"></i>Projectos Recentes</h6>
-              <a href="/projects.html" class="btn btn-sm btn-outline-secondary">Ver todos</a>
+              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
+                <i class="bi bi-folder2-open me-2" style="color:var(--blue-600)"></i>Projectos Recentes
+              </h6>
+              <a href="/projects.html" class="btn btn-sm btn-outline-primary" style="font-size:0.8rem">Ver todos</a>
             </div>
             <div class="table-responsive">
-              <table class="table table-dark table-hover mb-0" style="font-size:0.875rem">
+              <table class="inkuai-table">
                 <thead>
-                  <tr>
-                    <th>Nome</th><th>Tipo</th><th>Estado</th><th>Data</th><th></th>
-                  </tr>
+                  <tr><th>Nome</th><th>Tipo</th><th>Estado</th><th>Data</th><th></th></tr>
                 </thead>
                 <tbody id="recent-projects">
-                  <tr><td colspan="5" class="text-center py-4 text-muted">A carregar projectos...</td></tr>
+                  <tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted)">
+                    <div class="spinner-border spinner-border-sm me-2"></div>A carregar...
+                  </td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- Sidebar Right -->
+        <!-- Coluna direita -->
         <div class="col-lg-4">
-          <!-- Minhas Startups -->
+          <!-- Startups -->
           <div class="inkuai-card mb-4">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 class="text-white fw-semibold mb-0"><i class="bi bi-rocket-takeoff text-success me-2"></i>Minhas Startups</h6>
-              <a href="/startups.html" class="text-muted small text-decoration-none">Ver todas</a>
+              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
+                <i class="bi bi-rocket-takeoff me-2" style="color:var(--success)"></i>Minhas Startups
+              </h6>
+              <a href="/startups.html" style="font-size:0.8rem;color:var(--blue-600);text-decoration:none">Ver todas</a>
             </div>
             <div id="my-startups">
-              <p class="text-muted small">A carregar startups...</p>
+              <p style="color:var(--text-muted);font-size:0.875rem">A carregar...</p>
             </div>
             <a href="/startups.html" class="btn-outline-inkuai w-100 justify-content-center mt-2" style="font-size:0.8rem">
               <i class="bi bi-plus-lg me-1"></i>Nova Startup
             </a>
           </div>
 
-          <!-- Quick Actions -->
+          <!-- Acções rápidas -->
           <div class="inkuai-card">
-            <h6 class="text-white fw-semibold mb-3"><i class="bi bi-lightning-fill text-warning me-2"></i>Acções Rápidas</h6>
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px">
+              <i class="bi bi-lightning-fill me-2" style="color:var(--warning)"></i>Acções Rápidas
+            </h6>
             <div class="d-grid gap-2">
-              <a href="/projects.html" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg me-2"></i>Novo Projecto</a>
-              <a href="/sandbox.html" class="btn btn-sm btn-outline-success"><i class="bi bi-play-fill me-2"></i>Abrir Sandbox</a>
-              <a href="/datasets.html" class="btn btn-sm btn-outline-secondary"><i class="bi bi-upload me-2"></i>Carregar Dataset</a>
+              <a href="/projects.html" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-2"></i>Novo Projecto
+              </a>
+              <a href="/sandbox.html" class="btn btn-success btn-sm">
+                <i class="bi bi-play-fill me-2"></i>Abrir Sandbox IA
+              </a>
+              <a href="/datasets.html" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-upload me-2"></i>Carregar Dataset
+              </a>
             </div>
           </div>
         </div>
@@ -174,13 +198,9 @@
 <script src="/assets/js/components/sidebar.js"></script>
 <script src="/assets/js/pages/dashboard.js"></script>
 <script>
-  // Mostrar link admin se for admin
   const user = window.InkuAuth?.getUser();
   if (user?.role === 'admin') document.getElementById('admin-link').style.display = '';
-  if (user) {
-    const init = document.getElementById('user-avatar-init');
-    if (init) init.textContent = (user.name || 'U')[0].toUpperCase();
-  }
+  if (user?.name) document.getElementById('user-avatar').textContent = user.name[0].toUpperCase();
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt" data-bs-theme="dark">
+<html lang="pt">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Startups — INKU·AI</title>
@@ -12,34 +12,35 @@
   <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="fw-bold text-white" style="font-size:1rem">INKU<span style="color:#3b82f6">·AI</span></div><div style="font-size:0.6rem;color:#6b7280">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html" class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html" class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/sandbox.html" class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-models.html" class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"   class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
       <span class="sidebar-section-label">Académico</span>
       <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html" class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/profile.html" class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,0.03)">
-        <div style="width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#fff">U</div>
-        <div style="flex:1"><div class="text-white" style="font-size:0.82rem" data-user-name>Utilizador</div><div style="font-size:0.7rem;color:#6b7280" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn btn-link p-0 text-muted"><i class="bi bi-box-arrow-right"></i></button>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link text-muted d-lg-none p-0 me-2"><i class="bi bi-list fs-4"></i></button>
-      <span class="text-white fw-semibold" style="font-size:0.95rem">Startups</span>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title">Startups</span>
       <div class="ms-auto">
         <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newStartupModal">
           <i class="bi bi-plus-lg me-2"></i>Nova Startup
@@ -47,51 +48,65 @@
       </div>
     </div>
 
-    <div class="p-4">
-      <div class="d-flex gap-2 mb-4">
-        <input type="text" id="search-startup" class="form-control-dark" placeholder="Pesquisar startups..." style="max-width:300px">
-        <select id="status-startup" class="form-control-dark" style="width:auto">
-          <option value="">Todos os estados</option>
-          <option value="draft">Rascunho</option>
-          <option value="active">Activa</option>
-          <option value="graduated">Graduada</option>
-        </select>
+    <div class="page-content">
+      <div class="inkuai-card mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-7">
+            <label class="form-label-dark">Pesquisar</label>
+            <div class="position-relative">
+              <i class="bi bi-search position-absolute" style="left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
+              <input type="text" id="search-startup" class="form-control-dark" style="padding-left:36px" placeholder="Nome da startup...">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label-dark">Estado</label>
+            <select id="status-startup" class="form-control-dark">
+              <option value="">Todas</option>
+              <option value="draft">Rascunho</option>
+              <option value="active">Activa</option>
+              <option value="graduated">Graduada</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <button onclick="loadStartups()" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
       </div>
 
       <div id="startups-grid" class="row g-3">
-        <div class="col-12 text-center py-5 text-muted"><div class="spinner-border spinner-border-sm me-2"></div>A carregar startups...</div>
+        <div class="col-12 text-center py-5" style="color:var(--text-muted)">
+          <div class="spinner-border text-primary"></div>
+        </div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- Modal Nova Startup -->
+<!-- Modal -->
 <div class="modal fade" id="newStartupModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:#0d1117;border:1px solid rgba(255,255,255,0.1)">
-      <div class="modal-header border-secondary">
-        <h5 class="modal-title text-white"><i class="bi bi-rocket-takeoff text-success me-2"></i>Nova Startup</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--blue-600)"></i>Nova Startup</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row g-3">
-          <div class="col-12"><label class="form-label-dark">Nome da Startup *</label>
-            <input type="text" id="st-name" class="form-control-dark" placeholder="Ex: AgroIA Angola" required></div>
-          <div class="col-md-6"><label class="form-label-dark">Sector *</label>
+          <div class="col-12"><label class="form-label-dark">Nome *</label><input type="text" id="st-name" class="form-control-dark" placeholder="Ex: AgroIA Angola"></div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Sector *</label>
             <select id="st-sector" class="form-control-dark">
               <option>IA/Software</option><option>AgriTech</option><option>HealthTech</option>
               <option>EduTech</option><option>FinTech</option><option>Dados & Analytics</option><option>Outro</option>
-            </select></div>
-          <div class="col-md-6"><label class="form-label-dark">GitHub (opcional)</label>
-            <input type="url" id="st-github" class="form-control-dark" placeholder="https://github.com/org"></div>
-          <div class="col-12"><label class="form-label-dark">Descrição *</label>
-            <textarea id="st-desc" class="form-control-dark" rows="4" placeholder="Descreva a missão e visão da startup..." required></textarea></div>
-          <div class="col-12"><label class="form-label-dark">Tags (separadas por vírgulas)</label>
-            <input type="text" id="st-tags" class="form-control-dark" placeholder="ia, machine-learning, angola, agro"></div>
+            </select>
+          </div>
+          <div class="col-md-6"><label class="form-label-dark">GitHub (opcional)</label><input type="url" id="st-github" class="form-control-dark" placeholder="https://github.com/org"></div>
+          <div class="col-12"><label class="form-label-dark">Descrição *</label><textarea id="st-desc" class="form-control-dark" rows="4" placeholder="Missão, visão e problema que resolve..."></textarea></div>
+          <div class="col-12"><label class="form-label-dark">Tags (separadas por vírgulas)</label><input type="text" id="st-tags" class="form-control-dark" placeholder="ia, machine-learning, angola, agro"></div>
         </div>
       </div>
-      <div class="modal-footer border-secondary">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
         <button class="btn-inkuai" id="save-startup-btn"><i class="bi bi-save me-2"></i>Criar Startup</button>
       </div>
     </div>
@@ -103,43 +118,44 @@
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
+const PALETTE = ['var(--blue-600)','#16a34a','#7c3aed','#d97706','#dc2626','#0284c7'];
+
 async function loadStartups() {
   const search = document.getElementById('search-startup').value;
   const status = document.getElementById('status-startup').value;
-  const grid   = document.getElementById('startups-grid');
+  const grid = document.getElementById('startups-grid');
+  grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>';
   try {
     let ep = '/startups?limit=12';
     if (search) ep += `&search=${encodeURIComponent(search)}`;
     if (status) ep += `&status=${status}`;
     const res = await window.InkuAPI.get(ep);
     const startups = res.data || [];
-    if (startups.length === 0) {
-      grid.innerHTML = '<div class="col-12 text-center py-5 text-muted"><i class="bi bi-rocket fs-1 d-block mb-3"></i>Nenhuma startup encontrada.</div>';
+    if (!startups.length) {
+      grid.innerHTML = '<div class="col-12 text-center py-5"><i class="bi bi-rocket fs-1 d-block mb-3" style="color:var(--text-muted)"></i><p style="color:var(--text-muted)">Nenhuma startup encontrada.</p></div>';
       return;
     }
-    const colors = ['#3b82f6','#10b981','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     grid.innerHTML = startups.map((s,i) => `
       <div class="col-md-6 col-xl-4">
-        <div class="inkuai-card h-100">
+        <div class="project-card">
           <div class="d-flex align-items-center gap-3 mb-3">
-            <div style="width:44px;height:44px;background:${colors[i%colors.length]}20;border:1px solid ${colors[i%colors.length]}40;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:${colors[i%colors.length]}">${s.name[0]}</div>
+            <div style="width:48px;height:48px;background:${PALETTE[i%PALETTE.length]}18;border:1px solid ${PALETTE[i%PALETTE.length]}30;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:${PALETTE[i%PALETTE.length]};flex-shrink:0">${s.name[0]}</div>
             <div>
-              <div class="text-white fw-semibold">${s.name}</div>
+              <div style="font-weight:700;color:var(--text-primary)">${s.name}</div>
               <span class="status status-${s.status}">${s.status}</span>
             </div>
           </div>
-          <p class="text-muted small mb-3" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${s.description||''}</p>
+          <p style="font-size:0.82rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${s.description||''}</p>
           <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge bg-secondary bg-opacity-30 text-secondary" style="font-size:0.72rem">${s.sector||'IA/Software'}</span>
-            ${s.github_url?`<a href="${s.github_url}" target="_blank" class="text-muted small"><i class="bi bi-github me-1"></i>GitHub</a>`:''}
+            <span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">${s.sector||'IA/Software'}</span>
+            ${s.github_url?`<a href="${s.github_url}" target="_blank" style="color:var(--text-muted);font-size:0.78rem;text-decoration:none"><i class="bi bi-github me-1"></i>GitHub</a>`:''}
           </div>
-          <div class="d-flex gap-2 mt-auto pt-2" style="border-top:1px solid var(--inkuai-border)">
-            <a href="/startup-detail.html?id=${s.id}" class="btn btn-sm btn-outline-primary flex-fill">Ver Detalhes</a>
+          <div class="d-flex gap-2 pt-2" style="border-top:1px solid var(--border-light)">
+            <a href="/startup-detail.html?id=${s.id}" class="btn btn-sm btn-primary flex-fill">Ver Detalhes</a>
             <button class="btn btn-sm btn-outline-secondary" title="Adicionar membro"><i class="bi bi-person-plus"></i></button>
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   } catch(err) {
     grid.innerHTML = `<div class="col-12 text-center py-5 text-danger">${err.message}</div>`;
   }
@@ -147,25 +163,27 @@ async function loadStartups() {
 
 document.getElementById('save-startup-btn')?.addEventListener('click', async () => {
   const btn = document.getElementById('save-startup-btn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A criar...';
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A criar...';
   try {
     const tags = document.getElementById('st-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-    await window.InkuAPI.post('/startups', {
+    await window.InkuAPI.post('/startups',{
       name: document.getElementById('st-name').value,
       description: document.getElementById('st-desc').value,
       sector: document.getElementById('st-sector').value,
-      github_url: document.getElementById('st-github').value || null,
-      tags
+      github_url: document.getElementById('st-github').value||null, tags
     });
     bootstrap.Modal.getInstance(document.getElementById('newStartupModal')).hide();
-    window.showToast?.('Startup criada!', 'success');
+    window.showToast?.('Startup criada!','success');
     loadStartups();
-  } catch(err) { window.showToast?.(err.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-save me-2"></i>Criar Startup'; }
+  } catch(err){ window.showToast?.(err.message,'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="bi bi-save me-2"></i>Criar Startup'; }
 });
 
-['search-startup','status-startup'].forEach(id => document.getElementById(id)?.addEventListener('change', loadStartups));
-document.addEventListener('DOMContentLoaded', loadStartups);
+['search-startup','status-startup'].forEach(id=>document.getElementById(id)?.addEventListener('change',loadStartups));
+const usr=window.InkuAuth?.getUser();
+if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
+if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',loadStartups);
 </script>
 </body>
 </html>
