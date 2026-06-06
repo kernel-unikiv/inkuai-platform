@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registo de Acções — Admin INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Administração</span>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
+      <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-messages.html"  class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/admin/admin-approvers.html" class="sidebar-link"><i class="bi bi-shield-check"></i>Aprovadores</a>
+      <a href="/admin/admin-stats.html"     class="sidebar-link"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
+      <a href="/admin/admin-log.html"       class="sidebar-link active"><i class="bi bi-journal-text"></i>Registo</a>
+      <span class="sidebar-section-label">Plataforma</span>
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title"><i class="bi bi-journal-text me-2" style="color:var(--blue-600)"></i>Registo de Acções Administrativas</span>
+      <div class="ms-auto">
+        <button onclick="loadLog()" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="inkuai-card">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h6 style="font-weight:700;color:var(--text-primary);margin:0">
+            Histórico Completo de Acções
+          </h6>
+          <span class="badge" style="background:var(--blue-50);color:var(--blue-700)" id="total-badge">0 acções</span>
+        </div>
+
+        <div id="log-list">
+          <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+        </div>
+        <div id="pagination" class="d-flex justify-content-center gap-2 mt-4"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+const actionMeta = {
+  create_user:      { icon:'bi-person-plus-fill',   color:'#16a34a', label:'Utilizador criado' },
+  update_user:      { icon:'bi-pencil-fill',         color:'#2563eb', label:'Utilizador actualizado' },
+  delete_user:      { icon:'bi-person-dash-fill',    color:'#dc2626', label:'Utilizador eliminado' },
+  activate_user:    { icon:'bi-play-circle-fill',    color:'#16a34a', label:'Conta activada' },
+  suspend_user:     { icon:'bi-pause-circle-fill',   color:'#d97706', label:'Conta suspensa' },
+  change_role:      { icon:'bi-arrow-left-right',    color:'#7c3aed', label:'Role alterado' },
+  update_project:   { icon:'bi-folder-fill',         color:'#2563eb', label:'Projecto actualizado' },
+  delete_project:   { icon:'bi-folder-x',            color:'#dc2626', label:'Projecto eliminado' },
+  approve_project:  { icon:'bi-check-circle-fill',   color:'#16a34a', label:'Projecto aprovado' },
+  reject_project:   { icon:'bi-x-circle-fill',       color:'#dc2626', label:'Projecto rejeitado' },
+  advance_stage:    { icon:'bi-arrow-right-circle-fill', color:'#0284c7', label:'Etapa avançada' },
+  update_startup:   { icon:'bi-rocket-fill',         color:'#2563eb', label:'Startup actualizada' },
+  delete_startup:   { icon:'bi-rocket',              color:'#dc2626', label:'Startup eliminada' },
+  advance_startup:  { icon:'bi-arrow-right-circle-fill', color:'#d97706', label:'Startup avançou etapa' },
+  add_approver:     { icon:'bi-shield-fill-plus',    color:'#16a34a', label:'Aprovador adicionado' },
+  remove_approver:  { icon:'bi-shield-fill-minus',   color:'#dc2626', label:'Aprovador removido' },
+  send_message:     { icon:'bi-chat-dots-fill',      color:'#7c3aed', label:'Mensagem enviada' },
+};
+
+function getActionMeta(action) {
+  return actionMeta[action] || { icon:'bi-activity', color:'#6b7280', label: action };
+}
+
+async function loadLog(page=1) {
+  const list = document.getElementById('log-list');
+  list.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/admin/log?page=${page}&limit=25`);
+    const actions = res.data || [];
+    document.getElementById('total-badge').textContent = `${res.pagination?.total||0} acções`;
+
+    if (!actions.length) {
+      list.innerHTML = '<div class="text-center py-5 text-muted"><i class="bi bi-journal fs-1 d-block mb-3"></i>Sem acções registadas.</div>';
+      return;
+    }
+
+    list.innerHTML = actions.map(a => {
+      const meta = getActionMeta(a.action);
+      let details = {};
+      try { details = JSON.parse(a.details||'{}'); } catch {}
+      const detailStr = Object.entries(details)
+        .filter(([k])=>!['password','password_hash'].includes(k))
+        .map(([k,v])=>`<span style="background:var(--bg-page);padding:1px 6px;border-radius:4px;font-size:0.72rem">${k}: ${JSON.stringify(v).substring(0,40)}</span>`)
+        .join(' ');
+
+      return `<div class="d-flex align-items-start gap-3 py-3" style="border-bottom:1px solid var(--border-light)">
+        <div style="width:36px;height:36px;border-radius:50%;background:${meta.color}15;border:1px solid ${meta.color}30;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+          <i class="bi ${meta.icon}" style="color:${meta.color};font-size:1rem"></i>
+        </div>
+        <div style="flex:1">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span style="font-weight:700;color:var(--text-primary);font-size:0.875rem">${meta.label}</span>
+            ${a.target_type?`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.68rem">${a.target_type}</span>`:''}
+            <span class="ms-auto text-muted" style="font-size:0.75rem;white-space:nowrap">${new Date(a.created_at).toLocaleString('pt-PT')}</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin:3px 0">
+            Por: <strong style="color:var(--text-primary)">${a.admin?.name||'Sistema'}</strong>
+            ${a.ip_address?`<span class="text-muted ms-2" style="font-size:0.72rem">IP: ${a.ip_address}</span>`:''}
+          </div>
+          ${detailStr?`<div class="d-flex flex-wrap gap-1 mt-1">${detailStr}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+
+    if (res.pagination?.pages > 1) {
+      document.getElementById('pagination').innerHTML = Array.from({length:res.pagination.pages},(_,i)=>`
+        <button class="btn btn-sm ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadLog(${i+1})">${i+1}</button>`).join('');
+    } else { document.getElementById('pagination').innerHTML = ''; }
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+const usr=window.InkuAuth?.getUser();
+if(!usr||usr.role!=='admin'){window.location.href='/dashboard.html';}
+if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',loadLog);
+</script>
+</body>
+</html>

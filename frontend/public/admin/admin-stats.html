@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estatísticas — Admin INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Administração</span>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
+      <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-messages.html"  class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/admin/admin-approvers.html" class="sidebar-link"><i class="bi bi-shield-check"></i>Aprovadores</a>
+      <a href="/admin/admin-stats.html"     class="sidebar-link active"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
+      <a href="/admin/admin-log.html"       class="sidebar-link"><i class="bi bi-journal-text"></i>Registo</a>
+      <span class="sidebar-section-label">Plataforma</span>
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title"><i class="bi bi-graph-up-arrow me-2" style="color:var(--blue-600)"></i>Estatísticas da Plataforma</span>
+      <div class="ms-auto">
+        <button onclick="loadStats()" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- KPIs -->
+      <div class="row g-3 mb-4" id="kpi-row">
+        <div class="col-6 col-lg-3">
+          <div class="metric-card">
+            <div class="metric-icon blue"><i class="bi bi-people-fill"></i></div>
+            <div><div class="metric-value" id="kpi-users">—</div><div class="metric-label">Total Utilizadores</div>
+            <div class="metric-trend" id="kpi-users-month">+0 este mês</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="metric-card">
+            <div class="metric-icon green"><i class="bi bi-folder2-open"></i></div>
+            <div><div class="metric-value" id="kpi-projects">—</div><div class="metric-label">Total Projectos</div>
+            <div class="metric-trend" id="kpi-projects-month">+0 este mês</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="metric-card">
+            <div class="metric-icon orange"><i class="bi bi-rocket-takeoff"></i></div>
+            <div><div class="metric-value" id="kpi-startups">—</div><div class="metric-label">Total Startups</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#f0fdf4;color:var(--success)"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="metric-value" id="kpi-completed">—</div><div class="metric-label">Proj. Concluídos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="row g-4 mb-4">
+        <!-- Utilizadores por Role -->
+        <div class="col-lg-4">
+          <div class="inkuai-card h-100">
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">
+              <i class="bi bi-pie-chart me-2" style="color:var(--blue-600)"></i>Utilizadores por Role
+            </h6>
+            <div style="position:relative;height:220px">
+              <canvas id="chartRoles"></canvas>
+            </div>
+            <div id="roles-legend" class="mt-3 d-flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Projectos por Estado -->
+        <div class="col-lg-4">
+          <div class="inkuai-card h-100">
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">
+              <i class="bi bi-bar-chart me-2" style="color:var(--success)"></i>Projectos por Estado
+            </h6>
+            <div style="position:relative;height:220px">
+              <canvas id="chartProjects"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Startups por Estado -->
+        <div class="col-lg-4">
+          <div class="inkuai-card h-100">
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">
+              <i class="bi bi-bar-chart-fill me-2" style="color:var(--warning)"></i>Startups por Estado
+            </h6>
+            <div style="position:relative;height:220px">
+              <canvas id="chartStartups"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FUNDECIT Progress -->
+      <div class="inkuai-card mb-4">
+        <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">
+          <i class="bi bi-award me-2" style="color:var(--warning)"></i>Progresso FUNDECIT — Edital Nº 1/2026
+        </h6>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="font-size:0.875rem;font-weight:600;color:var(--text-primary)">Utilizadores registados (meta: 100)</span>
+              <span id="pf-users-val" style="font-size:0.875rem;color:var(--blue-600);font-weight:700">0/100</span>
+            </div>
+            <div class="progress" style="height:10px;background:var(--blue-50);border-radius:5px">
+              <div id="pf-users-bar" class="progress-bar" style="width:0%;background:var(--blue-600);border-radius:5px;transition:width 1s"></div>
+            </div>
+            <small class="text-muted">Meta: Mês 12</small>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="font-size:0.875rem;font-weight:600;color:var(--text-primary)">Projectos activos (meta: 10)</span>
+              <span id="pf-proj-val" style="font-size:0.875rem;color:var(--success);font-weight:700">0/10</span>
+            </div>
+            <div class="progress" style="height:10px;background:#f0fdf4;border-radius:5px">
+              <div id="pf-proj-bar" class="progress-bar" style="width:0%;background:var(--success);border-radius:5px;transition:width 1s"></div>
+            </div>
+            <small class="text-muted">Meta: Mês 18</small>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="font-size:0.875rem;font-weight:600;color:var(--text-primary)">Startups incubadas (meta: 10)</span>
+              <span id="pf-start-val" style="font-size:0.875rem;color:var(--warning);font-weight:700">0/10</span>
+            </div>
+            <div class="progress" style="height:10px;background:#fff7ed;border-radius:5px">
+              <div id="pf-start-bar" class="progress-bar" style="width:0%;background:var(--warning);border-radius:5px;transition:width 1s"></div>
+            </div>
+            <small class="text-muted">Meta: Mês 18</small>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-between mb-2">
+              <span style="font-size:0.875rem;font-weight:600;color:var(--text-primary)">Protótipos concluídos (meta: 3)</span>
+              <span id="pf-comp-val" style="font-size:0.875rem;color:#7c3aed;font-weight:700">0/3</span>
+            </div>
+            <div class="progress" style="height:10px;background:#f5f3ff;border-radius:5px">
+              <div id="pf-comp-bar" class="progress-bar" style="width:0%;background:#7c3aed;border-radius:5px;transition:width 1s"></div>
+            </div>
+            <small class="text-muted">Meta: Mês 22</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela resumo -->
+      <div class="inkuai-card">
+        <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px">
+          <i class="bi bi-table me-2" style="color:var(--blue-600)"></i>Resumo Geral da Plataforma
+        </h6>
+        <div class="table-responsive">
+          <table class="inkuai-table">
+            <thead><tr><th>Indicador</th><th>Valor Actual</th><th>Meta FUNDECIT</th><th>Progresso</th></tr></thead>
+            <tbody id="summary-table"><tr><td colspan="4" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+let charts = {};
+
+function destroyChart(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+async function loadStats() {
+  try {
+    const [statsRes, dashRes] = await Promise.all([
+      window.InkuAPI.get('/admin/stats/platform'),
+      window.InkuAPI.get('/admin/dashboard')
+    ]);
+    const s = statsRes.stats || {};
+    const d = dashRes;
+
+    // KPIs
+    document.getElementById('kpi-users').textContent     = s.totalUsers||0;
+    document.getElementById('kpi-projects').textContent  = s.totalProjects||0;
+    document.getElementById('kpi-startups').textContent  = s.totalStartups||0;
+    document.getElementById('kpi-completed').textContent = s.completedProjects||0;
+    document.getElementById('kpi-users-month').textContent   = `+${s.newUsersMonth||0} este mês`;
+    document.getElementById('kpi-projects-month').textContent= `+${s.newProjectsMonth||0} este mês`;
+
+    // Gráfico roles
+    if (d.charts?.usersByRole) {
+      destroyChart('roles');
+      const labels = d.charts.usersByRole.map(r=>r.role);
+      const values = d.charts.usersByRole.map(r=>parseInt(r.count||0));
+      const roleColors = {admin:'#dc2626',mentor:'#d97706',researcher:'#0284c7',student:'#2563eb'};
+      charts['roles'] = new Chart(document.getElementById('chartRoles'), {
+        type: 'doughnut',
+        data: { labels, datasets:[{ data:values, backgroundColor: labels.map(l=>roleColors[l]||'#6b7280'), borderWidth:2, borderColor:'#fff' }] },
+        options: { plugins:{ legend:{display:false} }, cutout:'65%', responsive:true, maintainAspectRatio:false }
+      });
+      document.getElementById('roles-legend').innerHTML = labels.map((l,i)=>`
+        <span class="badge" style="background:${roleColors[l]||'#6b7280'}20;color:${roleColors[l]||'#6b7280'};font-size:0.72rem">
+          ${l}: ${values[i]}</span>`).join('');
+    }
+
+    // Gráfico projectos
+    if (d.charts?.projectsByStatus) {
+      destroyChart('projects');
+      const statusColors = {draft:'#9ca3af',submitted:'#f59e0b',under_review:'#3b82f6',approved:'#22c55e',in_progress:'#0284c7',completed:'#16a34a',rejected:'#dc2626'};
+      const labels = d.charts.projectsByStatus.map(r=>r.status);
+      const values = d.charts.projectsByStatus.map(r=>parseInt(r.count||0));
+      charts['projects'] = new Chart(document.getElementById('chartProjects'), {
+        type: 'bar',
+        data: { labels, datasets:[{ data:values, backgroundColor: labels.map(l=>statusColors[l]||'#6b7280'), borderRadius:6, borderSkipped:false }] },
+        options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}, responsive:true, maintainAspectRatio:false }
+      });
+    }
+
+    // Gráfico startups
+    if (d.charts?.startupsByStatus) {
+      destroyChart('startups');
+      const stColors = {draft:'#9ca3af',active:'#16a34a',paused:'#d97706',graduated:'#0284c7',rejected:'#dc2626'};
+      const labels = d.charts.startupsByStatus.map(r=>r.status);
+      const values = d.charts.startupsByStatus.map(r=>parseInt(r.count||0));
+      charts['startups'] = new Chart(document.getElementById('chartStartups'), {
+        type: 'bar',
+        data: { labels, datasets:[{ data:values, backgroundColor: labels.map(l=>stColors[l]||'#6b7280'), borderRadius:6, borderSkipped:false }] },
+        options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}, responsive:true, maintainAspectRatio:false }
+      });
+    }
+
+    // FUNDECIT Progress bars
+    const u=s.totalUsers||0, p=s.activeProjects||0, st=s.totalStartups||0, c=s.completedProjects||0;
+    const setProgress = (valId,barId,val,max)=>{
+      document.getElementById(valId).textContent=`${val}/${max}`;
+      setTimeout(()=>{ document.getElementById(barId).style.width=Math.min(val/max*100,100)+'%'; },100);
+    };
+    setProgress('pf-users-val','pf-users-bar',u,100);
+    setProgress('pf-proj-val','pf-proj-bar',p,10);
+    setProgress('pf-start-val','pf-start-bar',st,10);
+    setProgress('pf-comp-val','pf-comp-bar',c,3);
+
+    // Tabela resumo
+    const rows = [
+      ['Utilizadores registados',u,'≥ 100',u>=100?'✅ Atingido':'🔄 Em curso'],
+      ['Projectos activos',p,'≥ 10',p>=10?'✅ Atingido':'🔄 Em curso'],
+      ['Startups incubadas',st,'≥ 10',st>=10?'✅ Atingido':'🔄 Em curso'],
+      ['Projectos concluídos (protótipos)',c,'≥ 3',c>=3?'✅ Atingido':'🔄 Em curso'],
+      ['Utilizadores novos este mês',s.newUsersMonth||0,'—','📊 Info'],
+    ];
+    document.getElementById('summary-table').innerHTML = rows.map(r=>`
+      <tr>
+        <td style="font-weight:600;color:var(--text-primary)">${r[0]}</td>
+        <td style="color:var(--blue-600);font-weight:700">${r[1]}</td>
+        <td style="color:var(--text-muted)">${r[2]}</td>
+        <td>${r[3]}</td>
+      </tr>`).join('');
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+const usr=window.InkuAuth?.getUser();
+if(!usr||!['admin','mentor'].includes(usr.role)){window.location.href='/dashboard.html';}
+if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',loadStats);
+</script>
+</body>
+</html>

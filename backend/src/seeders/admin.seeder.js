@@ -1,56 +1,79 @@
 'use strict';
-require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
-async function run() {
-  const { User } = require('../models/sql/index');
-  const users = [
-    { name:'Administrador INKU·AI',  email:'admin@inkuai.ao',             password:'Admin@12345',   role:'admin' },
-    { name:'Mestre Nkanga Pedro',    email:'nkanga.pedro@ip.unikivi.ao',  password:'Mentor@12345',  role:'mentor' },
-    { name:'Estudante Demo',         email:'estudante@ip.unikivi.ao',     password:'Student@12345', role:'student' },
-  ];
-  for (const u of users) {
-    const existing = await User.findOne({ where: { email: u.email } });
-    if (!existing) {
-      await User.create({ name:u.name, email:u.email, password_hash:u.password,
-        role:u.role, institution:'IP/UNIKIVI', is_verified:true, is_active:true });
-      console.log(`✅ Criado: ${u.email} (${u.role})`);
-    } else {
-      console.log(`ℹ️  Já existe: ${u.email}`);
-    }
+async function seed() {
+  try {
+    const { sequelize } = require('../config/database');
+    await sequelize.authenticate();
+    console.log('✅ Base de dados conectada');
+
+    // Sync todos os modelos (cria tabelas se não existem)
+    await sequelize.sync({ alter: true });
+    console.log('✅ Tabelas sincronizadas (novas: messages, approvers, admin_actions)');
+
+    const { User } = require('../models/sql/index');
+    const hash = await bcrypt.hash('Admin@12345', 10);
+
+    // Admin
+    const [admin, cAdmin] = await User.findOrCreate({
+      where: { email: 'admin@inkuai.ao' },
+      defaults: {
+        name: 'Administrador INKU·AI',
+        email: 'admin@inkuai.ao',
+        password_hash: hash,
+        role: 'admin',
+        institution: 'IP/UNIKIVI',
+        is_verified: true,
+        is_active: true,
+        bio: 'Administrador da plataforma INKU·AI'
+      }
+    });
+    console.log(`${cAdmin ? '✅ Criado' : '⚠️  Já existe'}: admin@inkuai.ao / Admin@12345`);
+
+    // Mentor
+    const hashM = await bcrypt.hash('Mentor@12345', 10);
+    const [, cMentor] = await User.findOrCreate({
+      where: { email: 'nkanga.pedro@ip.unikivi.ao' },
+      defaults: {
+        name: 'Nkanga Pedro',
+        email: 'nkanga.pedro@ip.unikivi.ao',
+        password_hash: hashM,
+        role: 'mentor',
+        institution: 'IP/UNIKIVI',
+        is_verified: true,
+        is_active: true,
+        bio: 'Docente responsável — Data Science & AI-Based Decision Making'
+      }
+    });
+    console.log(`${cMentor ? '✅ Criado' : '⚠️  Já existe'}: nkanga.pedro@ip.unikivi.ao / Mentor@12345`);
+
+    // Estudante
+    const hashE = await bcrypt.hash('Student@12345', 10);
+    const [, cStudent] = await User.findOrCreate({
+      where: { email: 'estudante@ip.unikivi.ao' },
+      defaults: {
+        name: 'Estudante Exemplo',
+        email: 'estudante@ip.unikivi.ao',
+        password_hash: hashE,
+        role: 'student',
+        institution: 'IP/UNIKIVI',
+        is_verified: true,
+        is_active: true
+      }
+    });
+    console.log(`${cStudent ? '✅ Criado' : '⚠️  Já existe'}: estudante@ip.unikivi.ao / Student@12345`);
+
+    console.log('\n🚀 INKU·AI — Seeder concluído com sucesso!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  Admin   : admin@inkuai.ao / Admin@12345');
+    console.log('  Mentor  : nkanga.pedro@ip.unikivi.ao / Mentor@12345');
+    console.log('  Estudante: estudante@ip.unikivi.ao / Student@12345');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    process.exit(0);
+  } catch(err) {
+    console.error('❌ Erro no seeder:', err.message);
+    process.exit(1);
   }
 }
 
-module.exports = { run };
-
-// Execução directa: node src/seeders/admin.seeder.js
-if (require.main === module) {
-  (async () => {
-    try {
-      const { sequelize } = require('../config/database');
-      const connectMongoDB = require('../config/mongodb');
-      await sequelize.authenticate();
-      await sequelize.sync({ alter: true });
-      await connectMongoDB();
-
-      console.log('\n╔══════════════════════════════════════╗');
-      console.log('║   INKU·AI — Criar dados iniciais     ║');
-      console.log('╚══════════════════════════════════════╝\n');
-
-      await run();
-
-      console.log('\n╔════════════════════════════════════════════════════╗');
-      console.log('║             CONTAS CRIADAS COM SUCESSO!            ║');
-      console.log('╠════════════════════════════════════════════════════╣');
-      console.log('║  Admin:      admin@inkuai.ao        Admin@12345   ║');
-      console.log('║  Mentor:     nkanga.pedro@ip.unikivi.ao           ║');
-      console.log('║              password: Mentor@12345               ║');
-      console.log('║  Estudante:  estudante@ip.unikivi.ao Student@12345║');
-      console.log('╚════════════════════════════════════════════════════╝\n');
-      process.exit(0);
-    } catch (err) {
-  console.error(err);
-  console.error(err.stack);
-  process.exit(1);
-}
-  })();
-}
+seed();

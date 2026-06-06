@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprovadores — Admin INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Administração</span>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
+      <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-messages.html"  class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/admin/admin-approvers.html" class="sidebar-link active"><i class="bi bi-shield-check"></i>Aprovadores</a>
+      <a href="/admin/admin-stats.html"     class="sidebar-link"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
+      <a href="/admin/admin-log.html"       class="sidebar-link"><i class="bi bi-journal-text"></i>Registo</a>
+      <span class="sidebar-section-label">Plataforma</span>
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title"><i class="bi bi-shield-check me-2" style="color:var(--blue-600)"></i>Gestão de Aprovadores</span>
+      <div class="ms-auto">
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#addApproverModal">
+          <i class="bi bi-plus-lg me-2"></i>Adicionar Aprovador
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Info -->
+      <div class="inkuai-card mb-4" style="background:var(--blue-50);border-color:var(--blue-100)">
+        <div class="d-flex align-items-start gap-3">
+          <i class="bi bi-info-circle-fill fs-4" style="color:var(--blue-600);flex-shrink:0;margin-top:2px"></i>
+          <div>
+            <div style="font-weight:700;color:var(--blue-700);margin-bottom:4px">O que são Aprovadores?</div>
+            <p class="mb-0" style="font-size:0.875rem;color:var(--blue-800)">
+              Os aprovadores são utilizadores designados pelo administrador que podem <strong>aprovar ou rejeitar projectos e startups</strong>,
+              <strong>avançar etapas</strong>, <strong>ver estatísticas</strong> e <strong>enviar mensagens</strong> relacionadas.
+              Um aprovador pode ter âmbito global (todos os projectos/startups) ou ser limitado a um projecto ou startup específico.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de aprovadores -->
+      <div class="inkuai-card">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h6 style="font-weight:700;color:var(--text-primary);margin:0">
+            <i class="bi bi-shield-check me-2" style="color:var(--blue-600)"></i>Aprovadores Activos
+          </h6>
+          <span class="badge" style="background:var(--blue-50);color:var(--blue-700)" id="total-badge">0 aprovadores</span>
+        </div>
+        <div id="approvers-list">
+          <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Adicionar Aprovador -->
+<div class="modal fade" id="addApproverModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-shield-plus me-2" style="color:var(--blue-600)"></i>Adicionar Aprovador</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label-dark">Email do Utilizador *</label>
+          <input type="email" id="ap-email" class="form-control-dark" placeholder="email@ip.unikivi.ao">
+          <small class="text-muted">Introduza o email do utilizador a designar como aprovador</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-dark">Âmbito de Aprovação *</label>
+          <select id="ap-scope" class="form-control-dark" onchange="toggleScopeId()">
+            <option value="all">Global — Todos os projectos e startups</option>
+            <option value="project">Projecto específico</option>
+            <option value="startup">Startup específica</option>
+          </select>
+        </div>
+        <div id="scope-id-group" style="display:none">
+          <label class="form-label-dark">ID do Projecto / Startup *</label>
+          <input type="text" id="ap-scope-id" class="form-control-dark" placeholder="UUID do projecto ou startup">
+          <small class="text-muted">Copie o ID da página de detalhes do projecto ou startup</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="add-approver-btn"><i class="bi bi-shield-plus me-2"></i>Designar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+function toggleScopeId() {
+  const scope = document.getElementById('ap-scope').value;
+  document.getElementById('scope-id-group').style.display = scope==='all' ? 'none' : '';
+}
+
+async function loadApprovers() {
+  const list = document.getElementById('approvers-list');
+  list.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get('/admin/approvers');
+    const approvers = res.approvers||[];
+    document.getElementById('total-badge').textContent = `${approvers.length} aprovadores`;
+    if (!approvers.length) {
+      list.innerHTML = `<div class="text-center py-5">
+        <i class="bi bi-shield-x fs-1 d-block mb-3" style="color:var(--text-muted)"></i>
+        <p style="color:var(--text-muted)">Nenhum aprovador designado.<br>
+        <small>Adicione aprovadores para delegar a aprovação de projectos e startups.</small></p></div>`;
+      return;
+    }
+    const scopeLabels = {all:'Global',project:'Projecto',startup:'Startup'};
+    const scopeColors = {all:'var(--blue-600)',project:'var(--success)',startup:'var(--warning)'};
+    const scopeBg    = {all:'var(--blue-50)',project:'#f0fdf4',startup:'#fff7ed'};
+    list.innerHTML = `
+      <div class="table-responsive">
+        <table class="inkuai-table">
+          <thead><tr><th>Utilizador</th><th>Email</th><th>Role</th><th>Âmbito</th><th>Designado em</th><th>Acções</th></tr></thead>
+          <tbody>${approvers.map(a=>`
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div style="width:34px;height:34px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);font-size:0.85rem">${(a.approver?.name||'?')[0]}</div>
+                  <span style="font-weight:600;color:var(--text-primary)">${a.approver?.name||'—'}</span>
+                </div>
+              </td>
+              <td style="font-size:0.82rem;color:var(--text-muted)">${a.approver?.email||'—'}</td>
+              <td><span class="badge" style="font-size:0.72rem;background:var(--blue-50);color:var(--blue-700)">${a.approver?.role||'—'}</span></td>
+              <td>
+                <span class="badge" style="background:${scopeBg[a.scope]};color:${scopeColors[a.scope]};font-size:0.72rem">
+                  ${scopeLabels[a.scope]||a.scope}
+                </span>
+                ${a.scope_id?`<br><small class="text-muted" style="font-size:0.65rem">${a.scope_id.substring(0,8)}...</small>`:''}
+              </td>
+              <td style="font-size:0.78rem;color:var(--text-muted)">${new Date(a.created_at).toLocaleDateString('pt-PT')}</td>
+              <td>
+                <button onclick="removeApprover('${a.id}','${(a.approver?.name||'').replace(/'/g,"\\'")}',)" 
+                  class="btn btn-sm btn-outline-danger py-1" title="Remover aprovador">
+                  <i class="bi bi-shield-x me-1"></i>Remover
+                </button>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function removeApprover(id, name) {
+  if (!confirm(`Remover "${name}" como aprovador?`)) return;
+  try {
+    await window.InkuAPI.delete(`/admin/approvers/${id}`);
+    window.showToast?.('Aprovador removido.','success');
+    loadApprovers();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+document.getElementById('add-approver-btn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('add-approver-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A designar...';
+  try {
+    const emailVal = document.getElementById('ap-email').value.trim();
+    const scope    = document.getElementById('ap-scope').value;
+    const scope_id = document.getElementById('ap-scope-id').value.trim() || null;
+    // Procurar utilizador por email
+    const res = await window.InkuAPI.get(`/admin/users?search=${encodeURIComponent(emailVal)}&limit=1`);
+    const users = res.data||[];
+    if (!users.length) throw { message:`Utilizador com email "${emailVal}" não encontrado.` };
+    await window.InkuAPI.post('/admin/approvers', { user_id: users[0].id, scope, scope_id });
+    bootstrap.Modal.getInstance(document.getElementById('addApproverModal')).hide();
+    window.showToast?.(`${users[0].name} designado como aprovador!`,'success');
+    loadApprovers();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-shield-plus me-2"></i>Designar'; }
+});
+
+const usr=window.InkuAuth?.getUser();
+if(!usr||usr.role!=='admin'){window.location.href='/dashboard.html';}
+if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',loadApprovers);
+</script>
+</body>
+</html>

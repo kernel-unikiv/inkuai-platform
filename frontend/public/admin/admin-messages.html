@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensagens — Admin INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Administração</span>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
+      <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-messages.html"  class="sidebar-link active"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/admin/admin-approvers.html" class="sidebar-link"><i class="bi bi-shield-check"></i>Aprovadores</a>
+      <a href="/admin/admin-stats.html"     class="sidebar-link"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
+      <a href="/admin/admin-log.html"       class="sidebar-link"><i class="bi bi-journal-text"></i>Registo</a>
+      <span class="sidebar-section-label">Plataforma</span>
+      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title"><i class="bi bi-chat-dots-fill me-2" style="color:var(--blue-600)"></i>Mensagens</span>
+      <div class="ms-auto d-flex gap-2">
+        <button class="btn-outline-inkuai btn-sm" data-bs-toggle="modal" data-bs-target="#bulkModal">
+          <i class="bi bi-broadcast me-1"></i>Mensagem em Massa
+        </button>
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newMsgModal">
+          <i class="bi bi-plus-lg me-2"></i>Nova Mensagem
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Abas Caixa de Entrada / Enviadas -->
+      <div class="d-flex gap-2 mb-4">
+        <button id="tab-inbox" onclick="setTab('inbox')" class="btn btn-primary btn-sm">
+          <i class="bi bi-inbox me-1"></i>Caixa de Entrada <span id="inbox-count" class="badge bg-white text-primary ms-1">0</span>
+        </button>
+        <button id="tab-sent" onclick="setTab('sent')" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-send me-1"></i>Enviadas
+        </button>
+      </div>
+
+      <div class="inkuai-card">
+        <div id="messages-list">
+          <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+        </div>
+        <div id="pagination" class="d-flex justify-content-center gap-2 mt-3"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Nova Mensagem -->
+<div class="modal fade" id="newMsgModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-envelope me-2" style="color:var(--blue-600)"></i>Nova Mensagem</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label-dark">Email do Destinatário *</label>
+          <input type="email" id="nm-email" class="form-control-dark" placeholder="email@ip.unikivi.ao">
+          <small class="text-muted">Introduza o email do utilizador</small>
+        </div>
+        <div class="mb-3"><label class="form-label-dark">Assunto</label><input type="text" id="nm-subject" class="form-control-dark" placeholder="Assunto da mensagem"></div>
+        <div><label class="form-label-dark">Mensagem *</label><textarea id="nm-body" class="form-control-dark" rows="5" placeholder="Escreva a mensagem..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="send-nm-btn"><i class="bi bi-send me-2"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Mensagem em Massa -->
+<div class="modal fade" id="bulkModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-broadcast me-2" style="color:var(--blue-600)"></i>Mensagem em Massa</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label-dark">Enviar para</label>
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="loadRecipients('all')">Todos os Utilizadores</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadRecipients('student')">Estudantes</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadRecipients('researcher')">Investigadores</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadRecipients('mentor')">Mentores</button>
+          </div>
+          <div id="recipients-preview" class="mt-2 p-2 rounded-3" style="background:var(--bg-page);font-size:0.8rem;color:var(--text-muted);min-height:40px">
+            Clique num botão para seleccionar destinatários...
+          </div>
+        </div>
+        <div class="mb-3"><label class="form-label-dark">Assunto *</label><input type="text" id="bk-subject" class="form-control-dark" placeholder="Assunto da mensagem"></div>
+        <div><label class="form-label-dark">Mensagem *</label><textarea id="bk-body" class="form-control-dark" rows="6" placeholder="Escreva a mensagem para todos os destinatários..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="send-bk-btn"><i class="bi bi-broadcast me-2"></i>Enviar para <span id="bk-count">0</span> utilizadores</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Mensagem -->
+<div class="modal fade" id="viewMsgModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewMsgTitle">Mensagem</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="viewMsgBody">...</div>
+      <div class="modal-footer"><button class="btn btn-light" data-bs-dismiss="modal">Fechar</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+let currentTab = 'inbox';
+let bulkUserIds = [];
+
+function setTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-inbox').className = tab==='inbox' ? 'btn btn-primary btn-sm' : 'btn btn-outline-secondary btn-sm';
+  document.getElementById('tab-sent').className  = tab==='sent'  ? 'btn btn-primary btn-sm' : 'btn btn-outline-secondary btn-sm';
+  loadMessages();
+}
+
+async function loadMessages(page=1) {
+  const list = document.getElementById('messages-list');
+  list.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/admin/messages?type=${currentTab}&page=${page}&limit=15`);
+    const msgs = res.data || [];
+    if (currentTab==='inbox') document.getElementById('inbox-count').textContent = res.pagination?.total||0;
+    if (!msgs.length) { list.innerHTML='<div class="text-center py-5 text-muted"><i class="bi bi-envelope fs-1 d-block mb-3"></i>Sem mensagens.</div>'; return; }
+    list.innerHTML = msgs.map(m => {
+      const other = currentTab==='inbox' ? m.sender : m.receiver;
+      const unread = currentTab==='inbox' && !m.is_read;
+      return `<div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-2 cursor-pointer" 
+        onclick="viewMessage('${m.id}','${(m.subject||'Sem assunto').replace(/'/g,"\\'")}','${(m.body||'').replace(/'/g,"\\'")}','${other?.name||'—'}','${new Date(m.created_at).toLocaleString('pt-PT')}')"
+        style="background:${unread?'var(--blue-50)':'var(--bg-page)'};border:1px solid ${unread?'var(--blue-100)':'var(--border-light)'};cursor:pointer;transition:background 0.15s">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);flex-shrink:0">${(other?.name||'?')[0]}</div>
+        <div style="flex:1;overflow:hidden">
+          <div class="d-flex align-items-center gap-2">
+            <span style="font-weight:${unread?'700':'600'};color:var(--text-primary)">${other?.name||'—'}</span>
+            ${unread?'<span class="badge bg-primary" style="font-size:0.65rem">Nova</span>':''}
+            <span class="ms-auto text-muted" style="font-size:0.75rem;white-space:nowrap">${new Date(m.created_at).toLocaleDateString('pt-PT')}</span>
+          </div>
+          <div style="font-weight:${unread?'600':'400'};color:var(--text-primary);font-size:0.875rem">${m.subject||'Sem assunto'}</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.body?.substring(0,80)||''}...</div>
+        </div>
+      </div>`;
+    }).join('');
+    if (res.pagination?.pages>1) {
+      document.getElementById('pagination').innerHTML = Array.from({length:res.pagination.pages},(_,i)=>`
+        <button class="btn btn-sm ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadMessages(${i+1})">${i+1}</button>`).join('');
+    }
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+function viewMessage(id, subject, body, senderName, date) {
+  document.getElementById('viewMsgTitle').textContent = subject;
+  document.getElementById('viewMsgBody').innerHTML = `
+    <div class="p-3 rounded-3 mb-3" style="background:var(--bg-page);border:1px solid var(--border-light)">
+      <strong>${currentTab==='inbox'?'De':'Para'}:</strong> ${senderName}<br>
+      <strong>Data:</strong> ${date}
+    </div>
+    <div style="white-space:pre-wrap;color:var(--text-primary)">${body}</div>`;
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('viewMsgModal')).show();
+  if (currentTab==='inbox') window.InkuAPI.patch(`/admin/messages/${id}/read`).catch(()=>{});
+  setTimeout(loadMessages, 500);
+}
+
+async function loadRecipients(role) {
+  try {
+    const ep = role==='all' ? '/admin/users?limit=200' : `/admin/users?role=${role}&limit=200`;
+    const res = await window.InkuAPI.get(ep);
+    const users = res.data||[];
+    bulkUserIds = users.map(u=>u.id);
+    document.getElementById('bk-count').textContent = bulkUserIds.length;
+    document.getElementById('recipients-preview').innerHTML =
+      `<span style="color:var(--blue-700);font-weight:600">${bulkUserIds.length} destinatários seleccionados</span>: ` +
+      users.slice(0,8).map(u=>`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">${u.name}</span>`).join(' ') +
+      (users.length>8?` <em>...e mais ${users.length-8}</em>`:'');
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+document.getElementById('send-nm-btn')?.addEventListener('click', async()=>{
+  const btn=document.getElementById('send-nm-btn');
+  btn.disabled=true;
+  try {
+    // Procurar utilizador pelo email
+    const emailVal = document.getElementById('nm-email').value.trim();
+    const res = await window.InkuAPI.get(`/admin/users?search=${encodeURIComponent(emailVal)}&limit=1`);
+    const users = res.data||[];
+    if(!users.length) throw {message:`Utilizador com email "${emailVal}" não encontrado.`};
+    await window.InkuAPI.post('/admin/messages',{
+      receiver_id: users[0].id,
+      subject: document.getElementById('nm-subject').value,
+      body: document.getElementById('nm-body').value
+    });
+    bootstrap.Modal.getInstance(document.getElementById('newMsgModal')).hide();
+    window.showToast?.('Mensagem enviada!','success');
+    loadMessages();
+  } catch(err){ window.showToast?.(err.message,'error'); }
+  finally{btn.disabled=false;}
+});
+
+document.getElementById('send-bk-btn')?.addEventListener('click', async()=>{
+  if(!bulkUserIds.length){ window.showToast?.('Seleccione os destinatários primeiro.','warning'); return; }
+  const body = document.getElementById('bk-body').value.trim();
+  if(!body){ window.showToast?.('Escreva uma mensagem.','warning'); return; }
+  const btn=document.getElementById('send-bk-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A enviar...';
+  try {
+    const res = await window.InkuAPI.post('/admin/messages/bulk',{
+      user_ids: bulkUserIds,
+      subject: document.getElementById('bk-subject').value,
+      body
+    });
+    bootstrap.Modal.getInstance(document.getElementById('bulkModal')).hide();
+    window.showToast?.(`${res.sent} mensagens enviadas!`,'success');
+    bulkUserIds=[];
+    loadMessages();
+  } catch(err){ window.showToast?.(err.message,'error'); }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="bi bi-broadcast me-2"></i>Enviar para <span id="bk-count">0</span> utilizadores'; }
+});
+
+const usr=window.InkuAuth?.getUser();
+if(!usr||!['admin','mentor'].includes(usr.role)){window.location.href='/dashboard.html';}
+if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',loadMessages);
+</script>
+</body>
+</html>
