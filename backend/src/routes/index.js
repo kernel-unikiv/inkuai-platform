@@ -16,3 +16,16 @@ router.get('/', (req, res) => res.json({
   institution: 'IP/UNIKIVI', fundecit: 'Edital Nº 1/2026'
 }));
 module.exports = router;
+// Mensagens para utilizadores comuns (inbox/reply)
+router.get('/messages',           authenticate, async(req,res,next)=>{
+  try {
+    const adminService = require('./admin.routes');
+    next();
+  } catch(e){ next(e); }
+});
+
+// ── Mensagens públicas (qualquer utilizador autenticado pode ver inbox/enviar resposta)
+const adminCtrl = require('../controllers/admin.controller');
+router.get('/messages',           authenticate, adminCtrl.getMessages);
+router.post('/messages',          authenticate, adminCtrl.sendMessage);
+router.patch('/messages/:id/read',authenticate, adminCtrl.markMessageRead);
