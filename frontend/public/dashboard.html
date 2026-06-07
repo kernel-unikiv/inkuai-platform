@@ -63,6 +63,7 @@
       </button>
       <span class="topbar-title">Dashboard</span>
       <span class="topbar-badge ms-2 d-none d-md-inline">FUNDECIT 2026</span>
+      <div id="notif-mount" class="d-flex align-items-center"></div>
       <div class="ms-auto d-flex align-items-center gap-3">
         <button class="btn btn-link p-0 position-relative" style="color:var(--text-muted)">
           <i class="bi bi-bell fs-5"></i>
@@ -202,5 +203,6 @@
   if (user?.role === 'admin') document.getElementById('admin-link').style.display = '';
   if (user?.name) document.getElementById('user-avatar').textContent = user.name[0].toUpperCase();
 </script>
+<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>

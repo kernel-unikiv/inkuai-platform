@@ -6,9 +6,21 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .msg-item { cursor:pointer; border-bottom:1px solid var(--border-light); transition:background .15s; }
+    .msg-item:hover { background:var(--bg-page) !important; }
+    .msg-item.active { background:var(--blue-50) !important; border-left:3px solid var(--blue-600); }
+    .msg-unread { background:var(--blue-50) !important; }
+    .notif-item { border-bottom:1px solid var(--border-light); transition:background .15s; }
+    .notif-item:hover { background:var(--bg-page); }
+    .notif-unread { background:var(--blue-50); }
+    #msg-list { max-height:calc(100vh - 220px); overflow-y:auto; }
+    #detail-panel { min-height:400px; }
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
@@ -20,14 +32,10 @@
       <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
       <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
       <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
       <a href="/messages.html"   class="sidebar-link active">
         <i class="bi bi-chat-dots-fill"></i>Mensagens
-        <span id="sidebar-unread" class="badge bg-danger ms-auto" style="display:none;font-size:0.6rem">0</span>
+        <span id="nav-unread" class="badge bg-danger ms-auto" style="display:none;font-size:0.6rem">0</span>
       </a>
       <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
@@ -44,25 +52,46 @@
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main-content">
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title"><i class="bi bi-chat-dots-fill me-2" style="color:var(--blue-600)"></i>Mensagens</span>
-      <div class="ms-auto">
-        <span id="unread-count" class="badge" style="background:var(--blue-50);color:var(--blue-700)">0 não lidas</span>
+      <div class="ms-auto d-flex gap-2">
+        <!-- Botão Notificações -->
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary btn-sm position-relative" data-bs-toggle="dropdown" id="notif-btn" onclick="loadNotifications()">
+            <i class="bi bi-bell-fill"></i>
+            <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:0.6rem">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-0" style="width:340px;max-height:420px;overflow-y:auto" id="notif-dropdown">
+            <div class="d-flex align-items-center justify-content-between p-3" style="border-bottom:1px solid var(--border-light)">
+              <strong style="font-size:0.875rem">Notificações</strong>
+              <button onclick="markAllNotifsRead()" class="btn btn-link btn-sm p-0 text-decoration-none" style="font-size:0.78rem;color:var(--blue-600)">Marcar todas como lidas</button>
+            </div>
+            <div id="notif-list">
+              <div class="text-center py-3 text-muted" style="font-size:0.82rem">A carregar...</div>
+            </div>
+          </div>
+        </div>
+        <!-- Nova mensagem -->
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newMsgModal">
+          <i class="bi bi-plus-lg me-2"></i>Nova Mensagem
+        </button>
       </div>
     </div>
 
     <div class="page-content">
-      <div class="row g-4">
+      <div class="row g-3">
 
-        <!-- Lista de mensagens -->
+        <!-- COLUNA ESQUERDA: lista de mensagens -->
         <div class="col-lg-4">
           <!-- Abas -->
-          <div class="d-flex gap-2 mb-3">
+          <div class="d-flex mb-3" style="background:var(--bg-page);border-radius:var(--radius-sm);padding:4px">
             <button id="tab-inbox" onclick="setTab('inbox')"
-              class="btn btn-primary btn-sm flex-fill">
+              class="btn btn-primary btn-sm flex-fill me-1">
               <i class="bi bi-inbox me-1"></i>Recebidas
+              <span id="unread-count" class="badge bg-white text-primary ms-1" style="font-size:0.65rem">0</span>
             </button>
             <button id="tab-sent" onclick="setTab('sent')"
               class="btn btn-outline-secondary btn-sm flex-fill">
@@ -72,18 +101,22 @@
 
           <!-- Lista -->
           <div class="inkuai-card" style="padding:0;overflow:hidden">
-            <div id="msg-list" style="max-height:600px;overflow-y:auto">
+            <div id="msg-list">
               <div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>
             </div>
           </div>
         </div>
 
-        <!-- Detalhe da mensagem seleccionada -->
+        <!-- COLUNA DIREITA: detalhe -->
         <div class="col-lg-8">
-          <div class="inkuai-card" id="msg-detail" style="min-height:400px">
-            <div class="text-center py-5" style="color:var(--text-muted)">
+          <div class="inkuai-card" id="detail-panel">
+            <!-- Estado inicial -->
+            <div class="text-center py-5" id="empty-state">
               <i class="bi bi-chat-dots fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
-              <p>Seleccione uma mensagem para ler</p>
+              <p style="color:var(--text-muted)">Seleccione uma mensagem para ler</p>
+              <button class="btn-outline-inkuai mt-2" data-bs-toggle="modal" data-bs-target="#newMsgModal">
+                <i class="bi bi-plus-lg me-2"></i>Escrever mensagem
+              </button>
             </div>
           </div>
         </div>
@@ -92,185 +125,380 @@
   </main>
 </div>
 
+<!-- ══ Modal Nova Mensagem ══ -->
+<div class="modal fade" id="newMsgModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-envelope-plus me-2" style="color:var(--blue-600)"></i>Nova Mensagem</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label-dark">Para (email) *</label>
+          <input type="email" id="nm-to" class="form-control-dark" placeholder="email@ip.unikivi.ao">
+          <small class="text-muted">Email institucional do destinatário</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-dark">Assunto</label>
+          <input type="text" id="nm-subject" class="form-control-dark" placeholder="Assunto da mensagem">
+        </div>
+        <div>
+          <label class="form-label-dark">Mensagem *</label>
+          <textarea id="nm-body" class="form-control-dark" rows="6" placeholder="Escreva a mensagem..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="nm-send-btn"><i class="bi bi-send me-2"></i>Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-let currentTab = 'inbox';
-let currentPage = 1;
+// ─── Estado Global ─────────────────────────────────────────
+let currentTab    = 'inbox';
+let selectedMsgId = null;
+const usr = window.InkuAuth?.getUser();
 
+// ─── Init ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!usr) { window.location.href = '/login.html'; return; }
+  if (usr.name) document.getElementById('user-avatar').textContent = usr.name[0].toUpperCase();
+  if (['admin','mentor'].includes(usr.role)) document.getElementById('admin-link').style.display = '';
+  loadMessages();
+  loadNotifBadge();
+});
+
+// ─── Abas ──────────────────────────────────────────────────
 function setTab(tab) {
-  currentTab = tab;
-  currentPage = 1;
-  document.getElementById('tab-inbox').className = tab==='inbox'
+  currentTab    = tab;
+  selectedMsgId = null;
+  document.getElementById('tab-inbox').className = tab === 'inbox'
+    ? 'btn btn-primary btn-sm flex-fill me-1'
+    : 'btn btn-outline-secondary btn-sm flex-fill me-1';
+  document.getElementById('tab-sent').className = tab === 'sent'
     ? 'btn btn-primary btn-sm flex-fill'
     : 'btn btn-outline-secondary btn-sm flex-fill';
-  document.getElementById('tab-sent').className = tab==='sent'
-    ? 'btn btn-primary btn-sm flex-fill'
-    : 'btn btn-outline-secondary btn-sm flex-fill';
-  // Limpar detalhe
-  document.getElementById('msg-detail').innerHTML = `
-    <div class="text-center py-5" style="color:var(--text-muted)">
-      <i class="bi bi-chat-dots fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
-      <p>Seleccione uma mensagem para ler</p>
-    </div>`;
+  showEmptyState();
   loadMessages();
 }
 
-async function loadMessages(page=1) {
-  currentPage = page;
+function showEmptyState() {
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="text-center py-5">
+      <i class="bi bi-chat-dots fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
+      <p style="color:var(--text-muted)">Seleccione uma mensagem para ler</p>
+      <button class="btn-outline-inkuai mt-2" data-bs-toggle="modal" data-bs-target="#newMsgModal">
+        <i class="bi bi-plus-lg me-2"></i>Escrever mensagem
+      </button>
+    </div>`;
+}
+
+// ─── Carregar lista de mensagens ───────────────────────────
+async function loadMessages(page = 1) {
   const list = document.getElementById('msg-list');
   list.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
   try {
-    const res = await window.InkuAPI.get(`/messages?type=${currentTab}&page=${page}&limit=20`);
+    const res  = await window.InkuAPI.get(`/messages?type=${currentTab}&page=${page}&limit=25`);
     const msgs = res.data || [];
-    const total = res.pagination?.total || 0;
 
-    // Contar não lidas
+    // Badge não lidas
     if (currentTab === 'inbox') {
       const unread = msgs.filter(m => !m.is_read).length;
-      document.getElementById('unread-count').textContent = `${unread} não lidas`;
-      const sb = document.getElementById('sidebar-unread');
-      if (unread > 0) { sb.style.display = ''; sb.textContent = unread; }
-      else { sb.style.display = 'none'; }
+      const el = document.getElementById('unread-count');
+      el.textContent = unread;
+      el.style.display = unread > 0 ? '' : 'none';
+      const nav = document.getElementById('nav-unread');
+      nav.textContent = unread;
+      nav.style.display = unread > 0 ? '' : 'none';
     }
 
     if (!msgs.length) {
       list.innerHTML = `
-        <div class="text-center py-5" style="color:var(--text-muted)">
-          <i class="bi bi-${currentTab==='inbox'?'inbox':'send'} fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
-          <p style="font-size:0.875rem">${currentTab==='inbox'?'Sem mensagens recebidas.':'Sem mensagens enviadas.'}</p>
+        <div class="text-center py-5">
+          <i class="bi bi-${currentTab === 'inbox' ? 'inbox' : 'send'} fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
+          <p style="color:var(--text-muted);font-size:0.875rem">
+            ${currentTab === 'inbox' ? 'Sem mensagens recebidas.' : 'Sem mensagens enviadas.'}
+          </p>
         </div>`;
       return;
     }
 
     list.innerHTML = msgs.map(m => {
-      const other = currentTab==='inbox' ? m.sender : m.receiver;
-      const unread = currentTab==='inbox' && !m.is_read;
+      const other = currentTab === 'inbox' ? m.sender : m.receiver;
+      const unread = currentTab === 'inbox' && !m.is_read;
       const date = new Date(m.created_at);
-      const dateStr = isToday(date)
-        ? date.toLocaleTimeString('pt-PT', {hour:'2-digit',minute:'2-digit'})
-        : date.toLocaleDateString('pt-PT', {day:'2-digit',month:'2-digit'});
+      const isToday = new Date().toDateString() === date.toDateString();
+      const dateStr = isToday
+        ? date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })
+        : date.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' });
+
       return `
-        <div onclick="viewMessage(${JSON.stringify(m).replace(/'/g,"&#39;")})"
-          class="msg-item d-flex align-items-start gap-3 p-3"
-          style="cursor:pointer;border-bottom:1px solid var(--border-light);background:${unread?'var(--blue-50)':'transparent'};transition:background 0.15s"
-          onmouseenter="this.style.background='${unread?'#dbeafe':'var(--bg-page)'}';"
-          onmouseleave="this.style.background='${unread?'var(--blue-50)':'transparent'}';">
-          <!-- Avatar -->
-          <div style="width:38px;height:38px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);flex-shrink:0;font-size:0.9rem">
-            ${(other?.name||'?')[0].toUpperCase()}
+        <div class="msg-item p-3 ${unread ? 'msg-unread' : ''} ${m.id === selectedMsgId ? 'active' : ''}"
+          onclick="openMessage('${m.id}')">
+          <div class="d-flex align-items-start gap-2">
+            <!-- Avatar -->
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);
+              display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);font-size:0.9rem;flex-shrink:0">
+              ${(other?.name || '?')[0].toUpperCase()}
+            </div>
+            <div style="flex:1;overflow:hidden;min-width:0">
+              <div class="d-flex align-items-center gap-1">
+                <span style="font-weight:${unread ? '700' : '500'};color:var(--text-primary);font-size:0.85rem;
+                  flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${other?.name || '—'}</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);flex-shrink:0">${dateStr}</span>
+              </div>
+              <div style="font-size:0.8rem;color:${unread ? 'var(--text-primary)' : 'var(--text-secondary)'};
+                font-weight:${unread ? '600' : '400'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                ${m.subject || '(sem assunto)'}
+              </div>
+              <div style="font-size:0.75rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                ${(m.body || '').substring(0, 55)}...
+              </div>
+            </div>
+            ${unread ? '<div style="width:8px;height:8px;border-radius:50%;background:var(--blue-600);flex-shrink:0;margin-top:5px"></div>' : ''}
           </div>
-          <div style="flex:1;overflow:hidden;min-width:0">
-            <div class="d-flex align-items-center gap-1">
-              <span style="font-weight:${unread?'700':'500'};color:var(--text-primary);font-size:0.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1">${other?.name||'—'}</span>
-              <span style="font-size:0.72rem;color:var(--text-muted);white-space:nowrap;flex-shrink:0">${dateStr}</span>
-            </div>
-            <div style="font-size:0.82rem;color:${unread?'var(--text-primary)':'var(--text-muted)'};font-weight:${unread?'600':'400'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-              ${m.subject||'Sem assunto'}
-            </div>
-            <div style="font-size:0.78rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-              ${m.body?.substring(0,60)||''}...
-            </div>
-          </div>
-          ${unread?'<div style="width:8px;height:8px;border-radius:50%;background:var(--blue-600);flex-shrink:0;margin-top:6px"></div>':''}
         </div>`;
     }).join('');
 
-    // Paginação na lista
+    // Paginação
     if (res.pagination?.pages > 1) {
-      list.innerHTML += `<div class="d-flex justify-content-center gap-1 p-3">
+      list.innerHTML += `<div class="d-flex justify-content-center gap-1 p-2">
         ${Array.from({length:res.pagination.pages},(_,i)=>`
           <button class="btn btn-sm ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadMessages(${i+1})">${i+1}</button>`).join('')}
       </div>`;
     }
-  } catch(err) { window.showToast?.(err.message,'error'); }
-}
-
-function isToday(date) {
-  const today = new Date();
-  return date.getDate()===today.getDate() && date.getMonth()===today.getMonth() && date.getFullYear()===today.getFullYear();
-}
-
-async function viewMessage(m) {
-  // Marcar como lida
-  if (currentTab==='inbox' && !m.is_read) {
-    window.InkuAPI.patch(`/messages/${m.id}/read`).then(loadMessages).catch(()=>{});
+  } catch(err) {
+    list.innerHTML = `<div class="text-center py-4 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>${err.message}</div>`;
   }
-
-  const other = currentTab==='inbox' ? m.sender : m.receiver;
-  const date  = new Date(m.created_at).toLocaleString('pt-PT');
-
-  document.getElementById('msg-detail').innerHTML = `
-    <!-- Cabeçalho -->
-    <div class="d-flex align-items-start gap-3 mb-4 pb-4" style="border-bottom:1px solid var(--border-light)">
-      <div style="width:48px;height:48px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);font-size:1.1rem;flex-shrink:0">
-        ${(other?.name||'?')[0].toUpperCase()}
-      </div>
-      <div style="flex:1">
-        <h5 style="font-weight:700;color:var(--text-primary);margin-bottom:4px">${m.subject||'Sem assunto'}</h5>
-        <div style="font-size:0.85rem;color:var(--text-muted)">
-          <strong style="color:var(--text-secondary)">${currentTab==='inbox'?'De':'Para'}:</strong>
-          ${other?.name||'—'}
-          <span style="font-size:0.78rem;margin-left:6px;padding:1px 8px;background:var(--blue-50);color:var(--blue-700);border-radius:10px">${other?.role||''}</span>
-        </div>
-        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px">
-          <i class="bi bi-clock me-1"></i>${date}
-        </div>
-      </div>
-      ${m.context_type?`
-        <span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">
-          <i class="bi bi-${m.context_type==='project'?'folder':'rocket'} me-1"></i>${m.context_type}
-        </span>`:''}
-    </div>
-
-    <!-- Corpo -->
-    <div style="color:var(--text-primary);line-height:1.8;white-space:pre-wrap;font-size:0.9rem;margin-bottom:32px">${m.body||''}</div>
-
-    <!-- Responder (se recebida) -->
-    ${currentTab==='inbox'?`
-    <div style="border-top:1px solid var(--border-light);padding-top:20px">
-      <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px">
-        <i class="bi bi-reply me-2" style="color:var(--blue-600)"></i>Responder
-      </h6>
-      <textarea id="reply-body" class="form-control-dark mb-3" rows="4"
-        placeholder="Escreva a sua resposta..."></textarea>
-      <button onclick="sendReply('${m.sender_id}','${(m.subject||'').replace(/'/g,"\\'")}',)"
-        class="btn-inkuai">
-        <i class="bi bi-send me-2"></i>Enviar Resposta
-      </button>
-    </div>`:``}`;
 }
 
-async function sendReply(receiverId, originalSubject) {
-  const body = document.getElementById('reply-body')?.value?.trim();
-  if (!body) { window.showToast?.('Escreva uma mensagem antes de enviar.','warning'); return; }
-  const btn = document.querySelector('button[onclick^="sendReply"]');
-  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A enviar...'; }
+// ─── Abrir mensagem ────────────────────────────────────────
+async function openMessage(id) {
+  selectedMsgId = id;
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
+
+  // Destacar item seleccionado
+  document.querySelectorAll('.msg-item').forEach(el => el.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
+
   try {
-    await window.InkuAPI.post('/messages', {
-      receiver_id: receiverId,
-      subject: `Re: ${originalSubject}`,
-      body
-    });
-    window.showToast?.('Resposta enviada!','success');
-    document.getElementById('msg-detail').innerHTML = `
-      <div class="text-center py-5" style="color:var(--text-muted)">
-        <i class="bi bi-check-circle-fill fs-1 d-block mb-3" style="color:var(--success)"></i>
-        <p>Resposta enviada com sucesso!</p>
+    // Buscar a mensagem directamente da lista carregada — sem endpoint individual,
+    // buscamos de novo da lista e filtramos (ou usamos o que já temos no DOM)
+    const res  = await window.InkuAPI.get(`/messages?type=${currentTab}&limit=100`);
+    const msgs = res.data || [];
+    const m    = msgs.find(x => x.id === id);
+    if (!m) throw { message: 'Mensagem não encontrada.' };
+
+    // Marcar como lida
+    if (currentTab === 'inbox' && !m.is_read) {
+      window.InkuAPI.patch(`/messages/${id}/read`).then(() => loadMessages()).catch(() => {});
+    }
+
+    const other   = currentTab === 'inbox' ? m.sender : m.receiver;
+    const dateStr = new Date(m.created_at).toLocaleString('pt-PT');
+
+    panel.innerHTML = `
+      <!-- Cabeçalho -->
+      <div class="d-flex align-items-start gap-3 pb-4 mb-4" style="border-bottom:1px solid var(--border-light)">
+        <div style="width:50px;height:50px;border-radius:50%;background:var(--blue-50);border:2px solid var(--blue-100);
+          display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);font-size:1.2rem;flex-shrink:0">
+          ${(other?.name || '?')[0].toUpperCase()}
+        </div>
+        <div style="flex:1">
+          <h5 style="font-weight:700;color:var(--text-primary);margin-bottom:6px">${m.subject || '(sem assunto)'}</h5>
+          <div style="font-size:0.85rem;color:var(--text-muted)">
+            <strong style="color:var(--text-secondary)">${currentTab === 'inbox' ? 'De' : 'Para'}:</strong>
+            <span style="color:var(--text-primary);font-weight:600;margin:0 6px">${other?.name || '—'}</span>
+            <span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.7rem">${other?.role || ''}</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">
+            <i class="bi bi-clock me-1"></i>${dateStr}
+            ${m.context_type ? `<span class="ms-3 badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.68rem">
+              <i class="bi bi-${m.context_type==='project'?'folder':'rocket'} me-1"></i>${m.context_type}</span>` : ''}
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          ${currentTab === 'inbox' ? `
+            <button onclick="openReply('${m.sender_id}','${(m.subject||'').replace(/'/g,"\\'")}',)"
+              class="btn btn-sm btn-outline-primary" title="Responder">
+              <i class="bi bi-reply me-1"></i>Responder
+            </button>` : ''}
+          <button onclick="openForward('${m.id}')" class="btn btn-sm btn-outline-secondary" title="Reencaminhar">
+            <i class="bi bi-forward me-1"></i>Reencaminhar
+          </button>
+        </div>
+      </div>
+
+      <!-- Corpo -->
+      <div id="msg-body-text" style="color:var(--text-primary);line-height:1.9;white-space:pre-wrap;font-size:0.9rem;min-height:120px">
+        ${escapeHtml(m.body || '')}
+      </div>
+
+      <!-- Área de resposta (oculta por defeito) -->
+      <div id="reply-area" style="display:none;margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light)">
+        <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px">
+          <i class="bi bi-reply me-2" style="color:var(--blue-600)"></i>Resposta a <span id="reply-to-name">${other?.name||'—'}</span>
+        </h6>
+        <div class="mb-3">
+          <label class="form-label-dark">Assunto</label>
+          <input type="text" id="reply-subject" class="form-control-dark" value="Re: ${(m.subject||'').replace(/"/g,'&quot;')}">
+        </div>
+        <textarea id="reply-body" class="form-control-dark mb-3" rows="5"
+          placeholder="Escreva a sua resposta..."></textarea>
+        <div class="d-flex gap-2">
+          <button onclick="sendReply('${m.sender_id}')" class="btn-inkuai" id="reply-send-btn">
+            <i class="bi bi-send me-2"></i>Enviar Resposta
+          </button>
+          <button onclick="document.getElementById('reply-area').style.display='none'" class="btn-outline-inkuai">
+            Cancelar
+          </button>
+        </div>
       </div>`;
-    loadMessages();
-  } catch(err) { window.showToast?.(err.message,'error'); }
-  finally { if(btn){ btn.disabled=false; btn.innerHTML='<i class="bi bi-send me-2"></i>Enviar Resposta'; } }
+  } catch(err) {
+    panel.innerHTML = `<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
+  }
 }
 
-// Init
-const usr = window.InkuAuth?.getUser();
-if (!usr) { window.location.href='/login.html'; }
-if (usr?.name) document.getElementById('user-avatar').textContent = usr.name[0].toUpperCase();
-if (['admin','mentor'].includes(usr?.role)) document.getElementById('admin-link').style.display='';
-document.addEventListener('DOMContentLoaded', loadMessages);
+// ─── Mostrar área de resposta ──────────────────────────────
+function openReply(senderId, originalSubject) {
+  const area = document.getElementById('reply-area');
+  area.style.display = '';
+  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('reply-body').focus();
+}
+
+// ─── Reencaminhar → abre nova mensagem pré-preenchida ──────
+async function openForward(msgId) {
+  const res  = await window.InkuAPI.get(`/messages?type=${currentTab}&limit=100`).catch(()=>({data:[]}));
+  const m    = (res.data||[]).find(x=>x.id===msgId);
+  if (!m) return;
+  document.getElementById('nm-subject').value = `Fwd: ${m.subject||''}`;
+  document.getElementById('nm-body').value    = `\n\n──────────────────\nReencaminhado de: ${m.sender?.name||'—'}\n${m.body||''}`;
+  document.getElementById('nm-to').value      = '';
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('newMsgModal')).show();
+}
+
+// ─── Enviar resposta ───────────────────────────────────────
+async function sendReply(receiverId) {
+  const body    = document.getElementById('reply-body')?.value?.trim();
+  const subject = document.getElementById('reply-subject')?.value?.trim();
+  if (!body) { window.showToast?.('Escreva uma mensagem antes de enviar.','warning'); return; }
+  const btn = document.getElementById('reply-send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A enviar...';
+  try {
+    await window.InkuAPI.post('/messages', { receiver_id: receiverId, subject, body });
+    window.showToast?.('Resposta enviada com sucesso!','success');
+    document.getElementById('reply-area').style.display = 'none';
+    loadMessages();
+  } catch(err) {
+    window.showToast?.(err.message,'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-send me-2"></i>Enviar Resposta';
+  }
+}
+
+// ─── Enviar nova mensagem ──────────────────────────────────
+document.getElementById('nm-send-btn')?.addEventListener('click', async () => {
+  const toEmail = document.getElementById('nm-to').value.trim();
+  const subject = document.getElementById('nm-subject').value.trim();
+  const body    = document.getElementById('nm-body').value.trim();
+  if (!toEmail) { window.showToast?.('Introduza o email do destinatário.','warning'); return; }
+  if (!body)    { window.showToast?.('Escreva a mensagem antes de enviar.','warning'); return; }
+  const btn = document.getElementById('nm-send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A enviar...';
+  try {
+    // Procurar utilizador pelo email
+    const res   = await window.InkuAPI.get(`/users/search?search=${encodeURIComponent(toEmail)}&limit=5`);
+    const users = res.data || [];
+    const found = users.find(u => u.email?.toLowerCase() === toEmail.toLowerCase());
+    if (!found) throw { message: `Não foi encontrado nenhum utilizador com o email "${toEmail}".` };
+    await window.InkuAPI.post('/messages', { receiver_id: found.id, subject, body });
+    bootstrap.Modal.getInstance(document.getElementById('newMsgModal')).hide();
+    document.getElementById('nm-to').value      = '';
+    document.getElementById('nm-subject').value = '';
+    document.getElementById('nm-body').value    = '';
+    window.showToast?.(`Mensagem enviada para ${found.name}!`, 'success');
+    setTab('sent');
+  } catch(err) {
+    window.showToast?.(err.message,'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-send me-2"></i>Enviar';
+  }
+});
+
+// ─── Notificações ──────────────────────────────────────────
+async function loadNotifBadge() {
+  try {
+    const res = await window.InkuAPI.get('/notifications?unread_only=true&limit=50');
+    const count = res.pagination?.total || res.data?.length || 0;
+    const badge = document.getElementById('notif-badge');
+    badge.textContent = count > 9 ? '9+' : count;
+    badge.style.display = count > 0 ? '' : 'none';
+  } catch {}
+}
+
+async function loadNotifications() {
+  const list = document.getElementById('notif-list');
+  list.innerHTML = '<div class="text-center py-3 text-muted" style="font-size:0.82rem">A carregar...</div>';
+  try {
+    const res   = await window.InkuAPI.get('/notifications?limit=20');
+    const notifs = res.data || [];
+    if (!notifs.length) {
+      list.innerHTML = '<div class="text-center py-4 text-muted" style="font-size:0.82rem"><i class="bi bi-bell-slash d-block mb-2 fs-4"></i>Sem notificações.</div>';
+      return;
+    }
+    const typeIcon  = { success:'bi-check-circle-fill', error:'bi-x-circle-fill', warning:'bi-exclamation-triangle-fill', info:'bi-info-circle-fill' };
+    const typeColor = { success:'#16a34a', error:'#dc2626', warning:'#d97706', info:'#2563eb' };
+    list.innerHTML = notifs.map(n => `
+      <div class="notif-item p-3 d-flex align-items-start gap-2 ${!n.is_read ? 'notif-unread' : ''}"
+        onclick="readNotif('${n.id}','${n.action_url||''}',)" style="cursor:pointer">
+        <i class="bi ${typeIcon[n.type]||'bi-info-circle-fill'} mt-1 flex-shrink-0"
+          style="color:${typeColor[n.type]||'#2563eb'};font-size:1rem"></i>
+        <div style="flex:1;overflow:hidden">
+          <div style="font-weight:${n.is_read?'500':'700'};font-size:0.82rem;color:var(--text-primary)">${n.title}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n.message||''}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px">${new Date(n.created_at).toLocaleString('pt-PT')}</div>
+        </div>
+        ${!n.is_read ? '<div style="width:7px;height:7px;border-radius:50%;background:#2563eb;flex-shrink:0;margin-top:5px"></div>' : ''}
+      </div>`).join('');
+  } catch(err) {
+    list.innerHTML = `<div class="text-center py-3 text-danger" style="font-size:0.82rem">${err.message}</div>`;
+  }
+}
+
+async function readNotif(id, url) {
+  try { await window.InkuAPI.patch(`/notifications/${id}/read`); } catch {}
+  loadNotifBadge();
+  if (url && url !== 'undefined' && url !== '') window.location.href = url;
+  else loadNotifications();
+}
+
+async function markAllNotifsRead() {
+  try {
+    await window.InkuAPI.patch('/notifications/read-all');
+    window.showToast?.('Todas as notificações marcadas como lidas.','success');
+    loadNotifBadge();
+    loadNotifications();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+// ─── Utilitário HTML escape ────────────────────────────────
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
+<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>
