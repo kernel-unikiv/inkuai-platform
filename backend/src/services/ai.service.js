@@ -7,7 +7,11 @@ const {
 } = require('../models/sql/index');
 const { AppError } = require('../utils/apiResponse');
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+if (!anthropicApiKey) {
+  console.error('Missing ANTHROPIC_API_KEY environment variable. Set ANTHROPIC_API_KEY to your Anthropic API key.');
+}
+const anthropic = new Anthropic({ apiKey: anthropicApiKey });
 
 // ══ PROMPTS BASE ════════════════════════════════════════════
 const SYSTEM_ADMIN = `És o INKU·AI Assistant, a IA integrada na plataforma de incubação da Universidade Kimpa Vita (IP/UNIKIVI), Angola. Candidatura FUNDECIT Edital Nº 1/2026.
