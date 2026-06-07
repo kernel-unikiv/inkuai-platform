@@ -53,3 +53,12 @@ module.exports = {
   User, Startup, Project, TeamMember, Evaluation,
   Notification, Message, Approver, AdminAction
 };
+
+// ── IA
+const AIConversation  = require('./AIConversation.model');
+const AIPendingAction = require('./AIPendingAction.model');
+User.hasMany(AIConversation,  { foreignKey:'user_id', as:'aiConversations' });
+AIConversation.belongsTo(User,{ foreignKey:'user_id', as:'user' });
+User.hasMany(AIPendingAction, { foreignKey:'reviewed_by', as:'reviewedActions' });
+
+module.exports = Object.assign(module.exports, { AIConversation, AIPendingAction });

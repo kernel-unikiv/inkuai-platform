@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INKU·AI Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    /* ── Chat UI ─────────────────────────────────────── */
+    .chat-wrap   { display:flex; height:calc(100vh - 64px); overflow:hidden; }
+    .chat-sidebar{ width:260px; border-right:1px solid var(--border-light); display:flex; flex-direction:column; background:#fff; flex-shrink:0; }
+    .chat-main   { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .chat-messages{ flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:16px; background:var(--bg-page); }
+    .chat-input-bar{ padding:16px 20px; background:#fff; border-top:1px solid var(--border-light); }
+    .msg-user    { align-self:flex-end; max-width:72%; }
+    .msg-ai      { align-self:flex-start; max-width:78%; }
+    .msg-bubble  { padding:12px 16px; border-radius:16px; font-size:0.875rem; line-height:1.7; }
+    .msg-user .msg-bubble  { background:var(--blue-600); color:#fff; border-bottom-right-radius:4px; }
+    .msg-ai   .msg-bubble  { background:#fff; color:var(--text-primary); border:1px solid var(--border-light); border-bottom-left-radius:4px; box-shadow:var(--shadow-sm); }
+    .msg-meta  { font-size:0.7rem; color:var(--text-muted); margin-top:4px; }
+    .msg-user .msg-meta { text-align:right; }
+    .conv-item { padding:10px 14px; cursor:pointer; border-radius:8px; margin:2px 6px; font-size:0.82rem; transition:background .15s; }
+    .conv-item:hover  { background:var(--bg-page); }
+    .conv-item.active { background:var(--blue-50); color:var(--blue-700); font-weight:600; }
+    .action-card { background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; padding:14px; margin-top:10px; }
+    .typing-dot  { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--text-muted); animation:blink 1.2s infinite; margin:0 2px; }
+    .typing-dot:nth-child(2){ animation-delay:.2s; }
+    .typing-dot:nth-child(3){ animation-delay:.4s; }
+    @keyframes blink{ 0%,80%,100%{opacity:0} 40%{opacity:1} }
+    .tab-btn { padding:8px 14px; font-size:0.82rem; border:none; background:transparent; color:var(--text-muted); border-bottom:2px solid transparent; cursor:pointer; }
+    .tab-btn.active { color:var(--blue-600); border-bottom-color:var(--blue-600); font-weight:600; }
+    pre code { font-size:0.78rem; white-space:pre-wrap; }
+    .action-pending-card { background:#fff; border:1px solid var(--border-light); border-radius:10px; padding:16px; margin-bottom:12px; }
+    .action-pending-card:hover { border-color:var(--border-blue); box-shadow:var(--shadow-sm); }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV (fora do dashboard-layout pois o chat ocupa tudo) -->
+<div class="topbar" style="position:sticky;top:0;z-index:200">
+  <a href="/dashboard.html" class="btn btn-link p-0 me-3" style="color:var(--text-muted)"><i class="bi bi-arrow-left"></i></a>
+  <div class="d-flex align-items-center gap-2">
+    <div style="width:32px;height:32px;background:var(--blue-600);border-radius:8px;display:flex;align-items:center;justify-content:center">
+      <i class="bi bi-robot text-white" style="font-size:0.9rem"></i>
+    </div>
+    <div>
+      <div class="topbar-title" style="font-size:0.95rem">INKU·AI Assistant</div>
+      <div style="font-size:0.68rem;color:var(--success)"><i class="bi bi-circle-fill me-1" style="font-size:0.5rem"></i>Online · Claude Sonnet</div>
+    </div>
+  </div>
+  <!-- Abas -->
+  <div class="ms-4 d-none d-md-flex gap-1" style="border-bottom:none">
+    <button class="tab-btn active" onclick="setMainTab('chat')" id="t-chat">💬 Chat</button>
+    <button class="tab-btn" onclick="setMainTab('actions')" id="t-actions">⚡ Acções Pendentes <span id="actions-badge" class="badge bg-danger ms-1" style="display:none;font-size:0.6rem">0</span></button>
+    <button class="tab-btn" onclick="setMainTab('monitor')" id="t-monitor">📊 Monitorização</button>
+  </div>
+  <div class="ms-auto d-flex gap-2">
+    <div id="notif-mount" class="d-flex align-items-center"></div>
+    <button onclick="downloadReport()" class="btn btn-outline-secondary btn-sm" title="Gerar PDF da plataforma">
+      <i class="bi bi-file-earmark-pdf me-1"></i><span class="d-none d-md-inline">Relatório PDF</span>
+    </button>
+    <button onclick="newConversation()" class="btn-inkuai">
+      <i class="bi bi-plus-lg me-1"></i><span class="d-none d-md-inline">Nova conversa</span>
+    </button>
+  </div>
+</div>
+
+<!-- PAINEL PRINCIPAL -->
+<div class="chat-wrap">
+
+  <!-- SIDEBAR: histórico de conversas -->
+  <div class="chat-sidebar">
+    <div class="p-3" style="border-bottom:1px solid var(--border-light)">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Conversas</div>
+    </div>
+    <!-- Contextos rápidos -->
+    <div class="p-2" style="border-bottom:1px solid var(--border-light)">
+      <div style="font-size:0.68rem;color:var(--text-muted);padding:4px 8px;font-weight:600">NOVO CHAT CONTEXTUAL</div>
+      <div class="conv-item" onclick="newConversation('admin_platform')" id="ctx-admin" style="display:none">
+        <i class="bi bi-shield-fill me-2" style="color:#dc2626"></i>Gerir Plataforma
+      </div>
+      <div class="conv-item" onclick="newConversation('project_review')">
+        <i class="bi bi-folder me-2" style="color:var(--blue-600)"></i>Rever Projecto
+      </div>
+      <div class="conv-item" onclick="newConversation('general')">
+        <i class="bi bi-chat me-2" style="color:var(--success)"></i>Conversa Geral
+      </div>
+    </div>
+    <div id="conv-list" style="flex:1;overflow-y:auto;padding:6px 0">
+      <div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="chat-main">
+
+    <!-- TAB: CHAT ─────────────────────────────────────── -->
+    <div id="tab-chat">
+      <!-- Mensagens -->
+      <div class="chat-messages" id="chat-messages">
+        <!-- Boas vindas -->
+        <div class="msg-ai">
+          <div class="d-flex align-items-start gap-2">
+            <div style="width:32px;height:32px;background:var(--blue-600);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="bi bi-robot text-white" style="font-size:0.85rem"></i>
+            </div>
+            <div>
+              <div class="msg-bubble">
+                <strong>Olá! Sou o INKU·AI Assistant. 👋</strong><br><br>
+                Posso ajudar-te com:
+                <ul style="margin:8px 0 0 0;padding-left:18px">
+                  <li>📊 Análise e monitorização da plataforma</li>
+                  <li>🔬 Revisão e avaliação de projectos</li>
+                  <li>💡 Sugestões de melhorias e estratégia</li>
+                  <li>📄 Geração de relatórios PDF</li>
+                  <li>⚡ Propor acções (com aprovação do admin)</li>
+                </ul>
+                <br>Como posso ajudar-te hoje?
+              </div>
+              <div class="msg-meta">INKU·AI · agora</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sugestões rápidas -->
+      <div id="quick-suggestions" class="px-4 pb-2 d-flex flex-wrap gap-2">
+        <button onclick="sendQuick('Como está o progresso face às metas FUNDECIT?')" class="btn btn-sm btn-outline-primary">📊 Progresso FUNDECIT</button>
+        <button onclick="sendQuick('Que projectos precisam de atenção urgente?')" class="btn btn-sm btn-outline-warning">⚠️ Projectos urgentes</button>
+        <button onclick="sendQuick('Dá-me sugestões de melhorias para a plataforma')" class="btn btn-sm btn-outline-success">💡 Melhorias</button>
+        <button onclick="sendQuick('Quantos utilizadores temos e qual é a taxa de crescimento?')" class="btn btn-sm btn-outline-secondary">👥 Utilizadores</button>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-bar">
+        <div class="d-flex gap-2 align-items-end">
+          <div style="flex:1;position:relative">
+            <textarea id="chat-input" class="form-control-dark" rows="1"
+              placeholder="Escreve uma mensagem para o INKU·AI..."
+              style="resize:none;max-height:120px;padding-right:50px;border-radius:12px"
+              onkeydown="handleKey(event)"
+              oninput="autoResize(this)"></textarea>
+            <button id="send-btn" onclick="sendMessage()" class="btn btn-link position-absolute"
+              style="right:8px;bottom:8px;color:var(--blue-600);padding:4px">
+              <i class="bi bi-send-fill fs-5"></i>
+            </button>
+          </div>
+          <button onclick="runMonitor()" class="btn btn-outline-secondary btn-sm" title="Executar monitorização automática" id="monitor-btn">
+            <i class="bi bi-eye-fill"></i>
+          </button>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-2">
+          <select id="context-select" class="form-control-dark" style="width:auto;font-size:0.78rem">
+            <option value="general">🌐 Geral</option>
+            <option value="admin_platform">🛡️ Admin — Plataforma</option>
+            <option value="project_review">📁 Rever Projecto</option>
+          </select>
+          <input type="text" id="context-id-input" class="form-control-dark" placeholder="ID do projecto (opcional)"
+            style="width:200px;font-size:0.78rem;display:none">
+          <span style="font-size:0.72rem;color:var(--text-muted)" id="context-hint">Modo: conversa geral</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ACÇÕES PENDENTES ──────────────────────────── -->
+    <div id="tab-actions" style="display:none;flex:1;overflow-y:auto;padding:24px">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h5 style="font-weight:700;color:var(--text-primary);margin:0">Acções Propostas pela IA</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem;margin:4px 0 0">Reveja e aprove ou rejeite cada acção proposta pelo assistente.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button onclick="loadPendingActions('rejected')" class="btn btn-sm btn-outline-secondary">Ver Rejeitadas</button>
+          <button onclick="loadPendingActions('approved')" class="btn btn-sm btn-outline-secondary">Ver Aprovadas</button>
+          <button onclick="loadPendingActions('pending')" class="btn btn-sm btn-primary">Pendentes</button>
+        </div>
+      </div>
+      <div id="actions-list">
+        <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+      </div>
+    </div>
+
+    <!-- TAB: MONITORIZAÇÃO ─────────────────────────────── -->
+    <div id="tab-monitor" style="display:none;flex:1;overflow-y:auto;padding:24px">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h5 style="font-weight:700;color:var(--text-primary);margin:0">Monitorização Automática</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem;margin:4px 0 0">A IA analisa a plataforma e propõe acções correctivas.</p>
+        </div>
+        <button onclick="runMonitor()" class="btn-inkuai" id="monitor-run-btn">
+          <i class="bi bi-play-fill me-2"></i>Executar Análise
+        </button>
+      </div>
+      <div id="monitor-result">
+        <div class="inkuai-card text-center py-5" style="color:var(--text-muted)">
+          <i class="bi bi-eye-fill fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
+          <p>Clique em "Executar Análise" para a IA analisar a plataforma.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/notifications.js"></script>
+<script>
+// ─── Estado ────────────────────────────────────────────────
+let currentConvId = null;
+let isTyping      = false;
+const usr = window.InkuAuth?.getUser();
+
+// ─── Init ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!usr) { window.location.href = '/login.html'; return; }
+  // Mostrar opção admin
+  if (['admin','mentor'].includes(usr.role)) {
+    document.getElementById('ctx-admin').style.display = '';
+    document.getElementById('monitor-btn').style.display = '';
+  } else {
+    document.getElementById('monitor-btn').style.display = 'none';
+    document.getElementById('t-monitor').style.display = 'none';
+    document.getElementById('t-actions').style.display = 'none';
+  }
+  loadConversations();
+  loadPendingActions();
+  loadPendingCount();
+  // Mostrar contexto certo
+  document.getElementById('context-select').addEventListener('change', updateContextHint);
+});
+
+function updateContextHint() {
+  const ctx = document.getElementById('context-select').value;
+  const hints = { general:'Modo: conversa geral', admin_platform:'Modo: gestão da plataforma', project_review:'Modo: revisão de projecto' };
+  document.getElementById('context-hint').textContent = hints[ctx] || '';
+  document.getElementById('context-id-input').style.display = ctx === 'project_review' ? '' : 'none';
+}
+
+// ─── Abas ──────────────────────────────────────────────────
+function setMainTab(tab) {
+  ['chat','actions','monitor'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t===tab ? (t==='chat'?'flex':'block') : 'none';
+    document.getElementById(`t-${t}`)?.classList.toggle('active', t===tab);
+  });
+  if (tab==='chat') document.getElementById('tab-chat').style.display='flex';
+  if (tab==='actions') loadPendingActions();
+}
+
+// ─── Conversas ─────────────────────────────────────────────
+async function loadConversations() {
+  const list = document.getElementById('conv-list');
+  try {
+    const res = await window.InkuAPI.get('/ai/conversations?limit=30');
+    const convs = res.conversations || [];
+    if (!convs.length) {
+      list.innerHTML = '<div class="text-center py-4 text-muted" style="font-size:0.78rem">Sem conversas ainda.</div>';
+      return;
+    }
+    const ctxIcon = { admin_platform:'🛡️', project_review:'📁', general:'💬', project:'📁' };
+    list.innerHTML = convs.map(c => `
+      <div class="conv-item ${c.id===currentConvId?'active':''}" onclick="loadConversation('${c.id}')">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span>${ctxIcon[c.context]||'💬'}</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.title||'Sem título'}</span>
+        </div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px">${new Date(c.updated_at).toLocaleDateString('pt-PT')}</div>
+      </div>`).join('');
+  } catch {}
+}
+
+async function loadConversation(id) {
+  currentConvId = id;
+  document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
+  setMainTab('chat');
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res  = await window.InkuAPI.get(`/ai/conversations/${id}`);
+    const msgs = res.messages || [];
+    container.innerHTML = '';
+    msgs.forEach(m => appendMessage(m.role, m.content, new Date(m.timestamp)));
+    container.scrollTop = container.scrollHeight;
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+function newConversation(context) {
+  currentConvId = null;
+  if (context) document.getElementById('context-select').value = context;
+  updateContextHint();
+  document.getElementById('chat-messages').innerHTML = `
+    <div class="msg-ai">
+      <div class="d-flex align-items-start gap-2">
+        <div style="width:32px;height:32px;background:var(--blue-600);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="bi bi-robot text-white" style="font-size:0.85rem"></i>
+        </div>
+        <div>
+          <div class="msg-bubble">Olá! Nova conversa iniciada. Como posso ajudar?</div>
+          <div class="msg-meta">INKU·AI · agora</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('chat-input').focus();
+  setMainTab('chat');
+}
+
+// ─── Enviar mensagem ───────────────────────────────────────
+async function sendMessage() {
+  const input   = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message || isTyping) return;
+  const ctx     = document.getElementById('context-select').value;
+  const ctxId   = document.getElementById('context-id-input').value.trim() || null;
+
+  // Mostrar mensagem do utilizador
+  appendMessage('user', message);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quick-suggestions').style.display = 'none';
+  isTyping = true;
+
+  // Mostrar indicador de digitação
+  const typingId = 'typing-' + Date.now();
+  appendTyping(typingId);
+
+  try {
+    const res = await window.InkuAPI.post('/ai/chat', {
+      message, conversation_id: currentConvId,
+      context: ctx, context_id: ctxId
+    });
+
+    removeTyping(typingId);
+    currentConvId = res.conversation_id;
+    appendMessage('assistant', res.response);
+
+    // Mostrar cartões de acção se houver
+    if (res.has_actions && res.pending_actions?.length > 0) {
+      appendActionCards(res.pending_actions);
+      loadPendingCount();
+    }
+
+    loadConversations();
+  } catch(err) {
+    removeTyping(typingId);
+    appendMessage('assistant', `❌ Erro: ${err.message}`);
+  } finally {
+    isTyping = false;
+    document.getElementById('chat-messages').scrollTop = 9999;
+  }
+}
+
+function sendQuick(msg) {
+  document.getElementById('chat-input').value = msg;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ─── Renderizar mensagens ──────────────────────────────────
+function appendMessage(role, content, date) {
+  const container = document.getElementById('chat-messages');
+  const isUser    = role === 'user';
+  const time      = date ? date.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'}) : 'agora';
+  const name      = isUser ? (usr?.name?.split(' ')[0] || 'Tu') : 'INKU·AI';
+
+  const html = `
+    <div class="msg-${isUser?'user':'ai'}">
+      <div class="d-flex align-items-start gap-2 ${isUser?'flex-row-reverse':''}">
+        ${!isUser?`<div style="width:32px;height:32px;background:var(--blue-600);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="bi bi-robot text-white" style="font-size:0.85rem"></i></div>`:''}
+        <div>
+          <div class="msg-bubble">${formatMsg(content)}</div>
+          <div class="msg-meta">${name} · ${time}</div>
+        </div>
+      </div>
+    </div>`;
+  container.insertAdjacentHTML('beforeend', html);
+  container.scrollTop = container.scrollHeight;
+}
+
+function appendTyping(id) {
+  const container = document.getElementById('chat-messages');
+  container.insertAdjacentHTML('beforeend', `
+    <div class="msg-ai" id="${id}">
+      <div class="d-flex align-items-start gap-2">
+        <div style="width:32px;height:32px;background:var(--blue-600);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="bi bi-robot text-white" style="font-size:0.85rem"></i>
+        </div>
+        <div class="msg-bubble" style="background:#fff;border:1px solid var(--border-light)">
+          <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+        </div>
+      </div>
+    </div>`);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+function appendActionCards(actions) {
+  const container = document.getElementById('chat-messages');
+  if (!actions.length) return;
+  const html = `
+    <div class="msg-ai">
+      <div class="d-flex align-items-start gap-2">
+        <div style="width:32px;height:32px;background:var(--warning);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="bi bi-lightning-fill text-white" style="font-size:0.85rem"></i>
+        </div>
+        <div style="flex:1">
+          <div class="action-card">
+            <div style="font-weight:700;font-size:0.85rem;color:#92400e;margin-bottom:8px">
+              ⚡ ${actions.length} acção(ões) aguardam aprovação do Admin
+            </div>
+            ${actions.map(a=>`
+              <div style="font-size:0.8rem;color:#78350f;padding:4px 0;border-top:1px solid #fed7aa">
+                <i class="bi bi-arrow-right me-1"></i>
+                <strong>${a.action_type?.replace(/_/g,' ')}</strong>
+                ${a.target_type?`em ${a.target_type}`:''}
+              </div>`).join('')}
+            <button onclick="setMainTab('actions')" class="btn btn-sm btn-warning mt-2 w-100">
+              Ver e Aprovar Acções
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  container.insertAdjacentHTML('beforeend', html);
+  container.scrollTop = container.scrollHeight;
+}
+
+function formatMsg(text) {
+  // Converter markdown básico para HTML
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code style="background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;font-size:0.82rem">$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+// ─── Acções Pendentes ──────────────────────────────────────
+async function loadPendingActions(status = 'pending') {
+  if (!['admin','mentor'].includes(usr?.role)) return;
+  const list = document.getElementById('actions-list');
+  list.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
+  try {
+    const res     = await window.InkuAPI.get(`/ai/actions?status=${status}&limit=20`);
+    const actions = res.data || [];
+    if (!actions.length) {
+      list.innerHTML = `<div class="text-center py-5"><i class="bi bi-check-circle-fill fs-1 d-block mb-3" style="color:var(--blue-100)"></i><p class="text-muted">Sem acções ${status === 'pending' ? 'pendentes' : status}.</p></div>`;
+      return;
+    }
+    const typeIcon  = { approve_project:'bi-check-circle-fill', reject_project:'bi-x-circle-fill', advance_stage:'bi-arrow-right-circle-fill', send_notification:'bi-bell-fill', send_message:'bi-chat-dots-fill', suspend_user:'bi-pause-circle-fill' };
+    const typeColor = { approve_project:'#16a34a', reject_project:'#dc2626', advance_stage:'#2563eb', send_notification:'#d97706', send_message:'#7c3aed', suspend_user:'#d97706' };
+    list.innerHTML = actions.map(a => {
+      let payload = {}; try { payload = JSON.parse(a.payload||'{}'); } catch {}
+      const icon  = typeIcon[a.action_type]  || 'bi-activity';
+      const color = typeColor[a.action_type] || '#6b7280';
+      const isPending = a.status === 'pending';
+      return `
+        <div class="action-pending-card">
+          <div class="d-flex align-items-start gap-3">
+            <div style="width:42px;height:42px;border-radius:10px;background:${color}15;border:1px solid ${color}30;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="bi ${icon}" style="color:${color};font-size:1.1rem"></i>
+            </div>
+            <div style="flex:1">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span style="font-weight:700;color:var(--text-primary);font-size:0.875rem">${a.action_type?.replace(/_/g,' ')}</span>
+                <span class="badge" style="background:${a.status==='pending'?'#fff7ed':a.status==='approved'?'#f0fdf4':'#fef2f2'};
+                  color:${a.status==='pending'?'#d97706':a.status==='approved'?'#16a34a':'#dc2626'};font-size:0.68rem">
+                  ${a.status}
+                </span>
+                ${a.target_type?`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.68rem">${a.target_type}</span>`:''}
+              </div>
+              <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:10px;line-height:1.5">${a.reason?.substring(0,200)||'Sem justificação.'}</p>
+              ${Object.keys(payload).length?`<div style="background:var(--bg-page);border-radius:6px;padding:8px;font-size:0.75rem;font-family:monospace;color:var(--text-secondary);margin-bottom:10px">${JSON.stringify(payload,null,2)}</div>`:''}
+              <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">Proposta em: ${new Date(a.created_at).toLocaleString('pt-PT')}</div>
+              ${isPending ? `
+              <div class="d-flex gap-2">
+                <button onclick="reviewAction('${a.id}',true)" class="btn btn-sm btn-success flex-fill">
+                  <i class="bi bi-check-lg me-1"></i>Aprovar e Executar
+                </button>
+                <button onclick="reviewAction('${a.id}',false)" class="btn btn-sm btn-outline-danger flex-fill">
+                  <i class="bi bi-x-lg me-1"></i>Rejeitar
+                </button>
+              </div>` : `<div style="font-size:0.78rem;color:var(--text-muted)">
+                Processada em: ${a.reviewed_at ? new Date(a.reviewed_at).toLocaleString('pt-PT') : '—'}
+              </div>`}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function reviewAction(id, approved) {
+  const note = approved
+    ? (prompt('Nota opcional para o utilizador (deixe em branco para continuar):') || '')
+    : (prompt('Motivo da rejeição (obrigatório):') || 'Rejeitado pelo administrador.');
+  if (!approved && !note) return;
+  try {
+    const res = await window.InkuAPI.patch(`/ai/actions/${id}`, { approved, note });
+    window.showToast?.(res.message || (approved?'Acção executada!':'Rejeitada.'),'success');
+    loadPendingActions();
+    loadPendingCount();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function loadPendingCount() {
+  if (!['admin','mentor'].includes(usr?.role)) return;
+  try {
+    const res   = await window.InkuAPI.get('/ai/actions?status=pending&limit=1');
+    const count = res.pagination?.total || 0;
+    const badge = document.getElementById('actions-badge');
+    badge.textContent = count;
+    badge.style.display = count > 0 ? '' : 'none';
+  } catch {}
+}
+
+// ─── Monitorização ─────────────────────────────────────────
+async function runMonitor() {
+  if (!['admin','mentor'].includes(usr?.role)) {
+    window.showToast?.('Só administradores podem executar monitorização.','warning'); return;
+  }
+  const btn = document.getElementById('monitor-run-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A analisar...';
+  const resultDiv = document.getElementById('monitor-result');
+  resultDiv.innerHTML = '<div class="inkuai-card text-center py-4"><div class="spinner-border text-primary mb-3"></div><p class="text-muted">A IA está a analisar a plataforma...</p></div>';
+  setMainTab('monitor');
+  try {
+    const res = await window.InkuAPI.post('/ai/monitor');
+    resultDiv.innerHTML = `
+      <div class="inkuai-card mb-3" style="border-left:4px solid var(--blue-600)">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-robot" style="color:var(--blue-600);font-size:1.2rem"></i>
+          <h6 style="font-weight:700;margin:0">Relatório de Monitorização</h6>
+          <span class="ms-auto badge" style="background:var(--blue-50);color:var(--blue-700)">${new Date().toLocaleString('pt-PT')}</span>
+        </div>
+        <div style="white-space:pre-wrap;line-height:1.8;font-size:0.875rem;color:var(--text-primary)">${formatMsg(res.report)}</div>
+        ${res.proposed_actions>0?`
+          <div class="mt-3 p-3 rounded-3" style="background:#fff7ed;border:1px solid #fed7aa">
+            <i class="bi bi-lightning-fill text-warning me-2"></i>
+            <strong>${res.proposed_actions} acção(ões)</strong> foram propostas e aguardam a tua aprovação.
+            <button onclick="setMainTab('actions')" class="btn btn-sm btn-warning ms-2">Ver Acções</button>
+          </div>`:
+          '<div class="mt-2 text-success" style="font-size:0.82rem"><i class="bi bi-check-circle me-1"></i>Nenhuma acção urgente proposta.</div>'}
+      </div>`;
+    loadConversations();
+    loadPendingCount();
+    window.showToast?.('Análise concluída!','success');
+  } catch(err) {
+    resultDiv.innerHTML = `<div class="text-danger text-center py-4"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
+    window.showToast?.(err.message,'error');
+  } finally {
+    btn.disabled=false; btn.innerHTML='<i class="bi bi-play-fill me-2"></i>Executar Análise';
+  }
+}
+
+// ─── Download PDF ──────────────────────────────────────────
+async function downloadReport() {
+  if (!['admin','mentor'].includes(usr?.role)) {
+    window.showToast?.('Só administradores podem gerar relatórios.','warning'); return;
+  }
+  const btn = event?.currentTarget;
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A gerar...'; }
+  try {
+    const token = window.InkuAuth?.getToken();
+    const res   = await fetch(`${window.InkuAPI?.BASE_URL||'/api/v1'}/ai/report/pdf`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) throw { message: 'Erro ao gerar relatório.' };
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `INKUAI_Relatorio_${new Date().toISOString().split('T')[0]}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    window.showToast?.('PDF gerado com sucesso!','success');
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { if(btn){ btn.disabled=false; btn.innerHTML='<i class="bi bi-file-earmark-pdf me-1"></i>Relatório PDF'; } }
+}
+</script>
+</body>
+</html>

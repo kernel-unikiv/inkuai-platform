@@ -50,3 +50,9 @@ const api = {
 
 window.InkuAPI = api;
 window.InkuAuth = { getToken, getUser, setAuth, clearAuth };
+
+// Exportar BASE_URL para uso externo (ex: download de ficheiros)
+if (typeof window !== 'undefined') {
+  window.InkuAPI = window.InkuAPI || {};
+  window.InkuAPI.BASE_URL = API_BASE;
+}

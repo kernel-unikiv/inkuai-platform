@@ -51,6 +51,7 @@ router.patch('/notifications/:id/read', authenticate, async (req, res, next) => 
 });
 
 // ── Admin (só admin e mentor)
+router.use('/ai', authenticate, require('./ai.routes'));
 router.use('/admin', authenticate, authorize('admin','mentor'), require('./admin.routes'));
 
 // ── API info
