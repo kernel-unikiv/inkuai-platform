@@ -60,5 +60,6 @@ const AIPendingAction = require('./AIPendingAction.model');
 User.hasMany(AIConversation,  { foreignKey:'user_id', as:'aiConversations' });
 AIConversation.belongsTo(User,{ foreignKey:'user_id', as:'user' });
 User.hasMany(AIPendingAction, { foreignKey:'reviewed_by', as:'reviewedActions' });
+AIPendingAction.belongsTo(User, { foreignKey:'reviewed_by', as:'reviewer' });
 
 module.exports = Object.assign(module.exports, { AIConversation, AIPendingAction });

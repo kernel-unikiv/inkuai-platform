@@ -1,7 +1,7 @@
 {
   "name": "inkuai-backend",
   "version": "1.0.0",
-  "description": "INKU\u00b7AI Platform Backend \u2014 IP/UNIKIVI FUNDECIT 2026",
+  "description": "INKU·AI Platform Backend — IP/UNIKIVI FUNDECIT 2026",
   "main": "server.js",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
