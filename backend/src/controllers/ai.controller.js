@@ -3,14 +3,19 @@ const aiService = require('../services/ai.service');
 const { ApiResponse } = require('../utils/apiResponse');
 
 class AIController {
+
+  // Rota unificada — roteia automaticamente por role
   async chat(req, res, next) {
     try {
-      const { message, conversation_id, context, context_id } = req.body;
+      const { message, conversation_id, project_id, context } = req.body;
       if (!message?.trim()) return res.status(400).json({ success:false, message:'Mensagem obrigatória.' });
-      const result = await aiService.chat({
-        userId: req.user.id, conversationId: conversation_id,
-        message, context: context||'general', contextId: context_id||null
-      });
+      const isAdmin = ['admin','mentor'].includes(req.user.role);
+      let result;
+      if (isAdmin && context === 'admin_platform') {
+        result = await aiService.chatAdmin({ userId:req.user.id, conversationId:conversation_id, message });
+      } else {
+        result = await aiService.chatUser({ userId:req.user.id, conversationId:conversation_id, message, projectId:project_id });
+      }
       return ApiResponse.success(res, result);
     } catch(e) { next(e); }
   }
@@ -49,7 +54,7 @@ class AIController {
     try {
       const { approved, note } = req.body;
       const result = await aiService.reviewAction(req.params.id, req.user.id, !!approved, note);
-      return ApiResponse.success(res, { message: approved?'Acção executada!':'Acção rejeitada.', ...result });
+      return ApiResponse.success(res, { message: approved?'Acção executada!':'Rejeitada.', ...result });
     } catch(e) { next(e); }
   }
 
@@ -62,12 +67,12 @@ class AIController {
 
   async generateReport(req, res, next) {
     try {
-      const pdfBuffer = await aiService.generatePlatformReport(req.user.id);
-      const filename  = `INKUAI_Relatorio_${new Date().toISOString().split('T')[0]}.pdf`;
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-      res.setHeader('Content-Length', pdfBuffer.length);
-      res.send(pdfBuffer);
+      const pdf  = await aiService.generatePlatformReport(req.user.id);
+      const name = `INKUAI_${new Date().toISOString().split('T')[0]}.pdf`;
+      res.setHeader('Content-Type','application/pdf');
+      res.setHeader('Content-Disposition',`attachment; filename="${name}"`);
+      res.setHeader('Content-Length', pdf.length);
+      res.send(pdf);
     } catch(e) { next(e); }
   }
 

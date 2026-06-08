@@ -41,6 +41,7 @@
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title"><i class="bi bi-chat-dots-fill me-2" style="color:var(--blue-600)"></i>Mensagens</span>
+      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
       <div class="ms-auto d-flex gap-2">
         <button class="btn-outline-inkuai btn-sm" data-bs-toggle="modal" data-bs-target="#bulkModal">
           <i class="bi bi-broadcast me-1"></i>Mensagem em Massa
@@ -264,5 +265,6 @@ if(!usr||!['admin','mentor'].includes(usr.role)){window.location.href='/dashboar
 if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
 document.addEventListener('DOMContentLoaded',loadMessages);
 </script>
+<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>

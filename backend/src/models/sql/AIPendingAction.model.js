@@ -16,13 +16,7 @@ const AIPendingAction = sequelize.define('AIPendingAction', {
   // Justificação da IA
   status:       { type: DataTypes.STRING(20), defaultValue: 'pending' },
   // 'pending'|'approved'|'rejected'
-  reviewed_by:  {
-    type: DataTypes.UUID,
-    allowNull: true,
-    references: { model: 'users', key: 'id' },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  },
+  reviewed_by:  { type: DataTypes.UUID, defaultValue: null },
   reviewed_at:  { type: DataTypes.DATE, defaultValue: null }
 }, { tableName: 'ai_pending_actions', timestamps: true, underscored: true });
 

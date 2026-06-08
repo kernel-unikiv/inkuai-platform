@@ -40,6 +40,7 @@
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <a href="/projects.html" class="btn btn-link p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-arrow-left"></i></a>
       <span class="topbar-title" id="page-title">Detalhes do Projecto</span>
+      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
       <div class="ms-auto d-flex gap-2" id="action-btns"></div>
     </div>
     <div class="page-content" id="project-content">
@@ -186,5 +187,6 @@ if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
 if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
 document.addEventListener('DOMContentLoaded', loadProject);
 </script>
+<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>

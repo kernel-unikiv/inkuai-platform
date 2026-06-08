@@ -42,6 +42,7 @@
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title"><i class="bi bi-graph-up-arrow me-2" style="color:var(--blue-600)"></i>Estatísticas da Plataforma</span>
+      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
       <div class="ms-auto">
         <button onclick="loadStats()" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
       </div>
@@ -285,5 +286,6 @@ if(!usr||!['admin','mentor'].includes(usr.role)){window.location.href='/dashboar
 if(usr?.name)document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
 document.addEventListener('DOMContentLoaded',loadStats);
 </script>
+<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>

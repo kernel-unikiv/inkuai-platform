@@ -1,48 +1,80 @@
 'use strict';
+// ── Sidebar Component — PC / Tablet / Móvel ─────────────────
+(function() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
 
-function initSidebar() {
-  const user = window.InkuAuth?.getUser();
-  if (!user) return;
+    // Injectar overlay se não existir
+    if (!document.querySelector('.sidebar-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'sidebar-overlay';
+      overlay.id = 'sidebar-overlay';
+      overlay.onclick = closeSidebar;
+      document.body.insertBefore(overlay, document.body.firstChild);
+    }
 
-  // Preencher user info no sidebar
-  const nameEls = document.querySelectorAll('[data-user-name]');
-  const roleEls = document.querySelectorAll('[data-user-role]');
-  const emailEls = document.querySelectorAll('[data-user-email]');
+    // Toggle button
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', toggleSidebar);
+    }
 
-  nameEls.forEach(el => el.textContent = user.name || 'Utilizador');
-  roleEls.forEach(el => el.textContent = user.role || 'student');
-  emailEls.forEach(el => el.textContent = user.email || '');
+    // Auth: preencher dados do utilizador
+    const usr = window.InkuAuth?.getUser?.();
+    if (usr) {
+      document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = usr.name || '');
+      document.querySelectorAll('[data-user-role]').forEach(el => el.textContent = usr.role || '');
+      document.querySelectorAll('[data-user-email]').forEach(el => el.textContent = usr.email || '');
+    }
 
-  // Activar link actual
-  const path = window.location.pathname;
-  document.querySelectorAll('.sidebar-link').forEach(link => {
-    if (path.includes(link.getAttribute('href'))) link.classList.add('active');
+    // Marcar link activo automaticamente
+    const path = window.location.pathname;
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('active');
+      }
+    });
+
+    // Fechar sidebar ao redimensionar para desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) closeSidebar();
+    });
   });
 
-  // Toggle mobile
-  const toggleBtn = document.getElementById('sidebar-toggle');
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.createElement('div');
-  overlay.className = 'sidebar-overlay';
-  document.body.appendChild(overlay);
-
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-    });
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('show');
-    });
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar) return;
+    const isOpen = sidebar.classList.contains('open');
+    isOpen ? closeSidebar() : openSidebar();
   }
-}
 
-// Logout
-window.doLogout = async function() {
-  try { await window.InkuAPI?.post('/auth/logout'); } catch {}
-  window.InkuAuth?.clearAuth();
-  window.location.href = '/login.html';
-};
+  function openSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    sidebar?.classList.add('open');
+    overlay?.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
 
-document.addEventListener('DOMContentLoaded', initSidebar);
+  function closeSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    sidebar?.classList.remove('open');
+    overlay?.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // doLogout global
+  window.doLogout = function() {
+    window.InkuAuth?.logout?.();
+    localStorage.removeItem('inkuai_token');
+    localStorage.removeItem('inkuai_user');
+    window.location.href = '/login.html';
+  };
+
+  window.toggleSidebar  = toggleSidebar;
+  window.openSidebar    = openSidebar;
+  window.closeSidebar   = closeSidebar;
+})();
