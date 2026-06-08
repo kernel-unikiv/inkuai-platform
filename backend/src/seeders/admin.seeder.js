@@ -8,7 +8,7 @@ async function seed() {
     console.log('✅ Base de dados conectada');
 
     // Sync todos os modelos (cria tabelas se não existem)
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: false });
     console.log('✅ Tabelas sincronizadas (novas: messages, approvers, admin_actions)');
 
     const { User } = require('../models/sql/index');

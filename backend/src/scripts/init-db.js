@@ -1,21 +1,26 @@
-const { sequelize } = require("../config/database");
-require("../models/sql");
+'use strict';
+require('dotenv').config();
+const { sequelize } = require('../config/database');
+require('../models/sql');
 
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled rejection during DB initialization:", reason);
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection during DB initialization:', reason);
   process.exit(1);
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true });
-    console.log("Tabelas criadas");
+    console.log('✅ Ligação à base de dados estabelecida');
+
+    // Usar sync sem alter — cria tabelas novas, não toca nas existentes
+    // Isto evita o erro de ALTER COLUMN com REFERENCES inline no PostgreSQL
+    await sequelize.sync({ force: false });
+    console.log('✅ Tabelas sincronizadas (novas criadas, existentes mantidas)');
     process.exit(0);
   } catch (err) {
-    console.error("❌ Falha ao inicializar o banco de dados");
-    console.error(err && err.message ? err.message : err);
-    if (err && err.stack) console.error(err.stack);
+    console.error('❌ Falha ao inicializar o banco de dados');
+    console.error(err?.message || err);
     process.exit(1);
   }
 })();
