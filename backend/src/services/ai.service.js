@@ -1,5 +1,6 @@
 'use strict';
-require('dotenv').config();
+// NÃO usar dotenv.config() aqui — o server.js já o faz
+// No Render.com as env vars são injectadas directamente no process.env
 
 const { Op } = require('sequelize');
 const {
@@ -8,18 +9,28 @@ const {
 } = require('../models/sql/index');
 const { AppError } = require('../utils/apiResponse');
 
-// ── Cliente Anthropic lazy (só criar quando API key existir) ──
+// ── Cliente Anthropic lazy ─────────────────────────────────────
 let _anthropic = null;
 function getClient() {
   if (_anthropic) return _anthropic;
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key || key.trim() === '') {
+
+  // Tentar obter a chave de várias formas
+  const key = (process.env.ANTHROPIC_API_KEY || '').trim();
+
+  if (!key) {
+    // Diagnóstico útil
+    const envKeys = Object.keys(process.env).filter(k => k.toLowerCase().includes('anthrop') || k.toLowerCase().includes('api_key'));
     throw new AppError(
-      'ANTHROPIC_API_KEY não configurada. Adicione a variável de ambiente no Render.com → Environment → ANTHROPIC_API_KEY=sk-ant-...', 503
+      `ANTHROPIC_API_KEY não configurada no ambiente. ` +
+      `Variáveis relacionadas encontradas: [${envKeys.join(', ') || 'nenhuma'}]. ` +
+      `No Render.com: Dashboard → o teu serviço → Environment → Add Environment Variable → ANTHROPIC_API_KEY = sk-ant-...`,
+      503
     );
   }
+
   const Anthropic = require('@anthropic-ai/sdk');
-  _anthropic = new Anthropic({ apiKey: key.trim() });
+  // Passar a key explicitamente — nunca depender do default do SDK
+  _anthropic = new Anthropic({ apiKey: key });
   return _anthropic;
 }
 
