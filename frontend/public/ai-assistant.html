@@ -2,787 +2,915 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>INKU·AI Assistant</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/css/main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ═══ RESET & BASE ══════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { display: flex; flex-direction: column; font-family: 'Inter', system-ui, sans-serif; background: var(--bg-page); }
+    /* ═══════════════════════════════════════════════════
+       INKU·AI Chat — Estilo Claude/WhatsApp
+       ═══════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', -apple-system, sans-serif; background: #f0f4fb; overflow: hidden; }
 
-    /* ═══ NAVBAR ════════════════════════════════════════════ */
-    .ai-nav {
-      height: 56px; background: #fff; border-bottom: 1px solid var(--border-light);
-      display: flex; align-items: center; padding: 0 16px; gap: 10px;
-      flex-shrink: 0; z-index: 100; box-shadow: var(--shadow-sm);
+    /* ──────────────────────────────────────────────────
+       LAYOUT
+    ────────────────────────────────────────────────── */
+    .app { display: flex; height: 100vh; }
+
+    /* ──────────────────────────────────────────────────
+       SIDEBAR
+    ────────────────────────────────────────────────── */
+    .sidebar {
+      width: 260px; flex-shrink: 0;
+      background: #1a1a2e; /* azul muito escuro */
+      display: flex; flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,.06);
+      transition: transform .3s ease;
     }
-    .ai-nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .ai-nav-icon {
-      width: 34px; height: 34px; background: var(--blue-600); border-radius: 9px;
+    .sidebar-top {
+      padding: 16px; border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .ai-nav-status { font-size: 0.68rem; color: var(--success); display: flex; align-items: center; gap: 3px; }
-    .ai-nav-status::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--success); }
+    .sidebar-brand { font-weight: 700; font-size: .95rem; color: #fff; }
+    .sidebar-sub   { font-size: .65rem; color: rgba(255,255,255,.4); }
 
-    /* ═══ TABS NAVBAR ═══════════════════════════════════════ */
-    .nav-tabs-ai { display: flex; gap: 2px; overflow-x: auto; flex-shrink: 0; }
-    .nav-tab-btn {
-      padding: 6px 14px; font-size: 0.8rem; border: none; background: transparent;
-      color: var(--text-muted); border-radius: 6px; cursor: pointer; white-space: nowrap;
-      transition: all .15s; font-weight: 500;
+    .new-chat-btn {
+      margin: 12px; padding: 9px 14px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; color: rgba(255,255,255,.8); font-size: .82rem;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      transition: background .15s;
     }
-    .nav-tab-btn:hover  { background: var(--bg-page); color: var(--text-primary); }
-    .nav-tab-btn.active { background: var(--blue-50); color: var(--blue-700); font-weight: 600; }
+    .new-chat-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
 
-    /* ═══ LAYOUT PRINCIPAL ══════════════════════════════════ */
-    .ai-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
-
-    /* ═══ SIDEBAR CONVERSAS ═════════════════════════════════ */
-    .ai-sidebar {
-      width: 240px; background: #fff; border-right: 1px solid var(--border-light);
-      display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden;
-      transition: transform .3s ease, width .3s ease;
+    .sidebar-section {
+      padding: 8px 12px 4px;
+      font-size: .65rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(255,255,255,.3);
     }
-    .ai-sidebar.collapsed { width: 0; }
-    .sidebar-head {
-      padding: 12px 14px; border-bottom: 1px solid var(--border-light);
-      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    }
-    .conv-list { flex: 1; overflow-y: auto; padding: 6px; }
     .conv-item {
-      padding: 8px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 2px;
-      transition: background .15s; font-size: 0.8rem;
+      margin: 2px 8px; padding: 9px 10px; border-radius: 8px;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      transition: background .15s;
     }
-    .conv-item:hover  { background: var(--bg-page); }
-    .conv-item.active { background: var(--blue-50); color: var(--blue-700); }
-    .conv-item-title  { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
-    .conv-item-date   { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
-    .conv-ctx-btn {
-      display: flex; align-items: center; gap: 7px; padding: 7px 10px;
-      border-radius: 7px; cursor: pointer; font-size: 0.78rem; color: var(--text-secondary);
-      transition: background .15s; border: none; background: transparent; width: 100%; text-align: left;
-    }
-    .conv-ctx-btn:hover { background: var(--bg-page); color: var(--text-primary); }
+    .conv-item:hover  { background: rgba(255,255,255,.07); }
+    .conv-item.active { background: rgba(37,99,235,.35); }
+    .conv-icon { font-size: .85rem; flex-shrink: 0; }
+    .conv-title { font-size: .8rem; color: rgba(255,255,255,.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .conv-date  { font-size: .65rem; color: rgba(255,255,255,.3); white-space: nowrap; }
 
-    /* ═══ CHAT MAIN ═════════════════════════════════════════ */
-    .chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .sidebar-conv-list { flex: 1; overflow-y: auto; padding-bottom: 8px; }
+    .sidebar-conv-list::-webkit-scrollbar { width: 3px; }
+    .sidebar-conv-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
 
-    .chat-messages {
-      flex: 1; overflow-y: auto; padding: 20px;
-      display: flex; flex-direction: column; gap: 14px;
-      background: var(--bg-page);
+    .sidebar-footer {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 12px;
+    }
+    .user-chip {
+      display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+      background: rgba(255,255,255,.06); border-radius: 9px;
+    }
+    .user-chip-av {
+      width: 30px; height: 30px; border-radius: 50%; background: #2563eb;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .82rem; color: #fff; flex-shrink: 0;
+    }
+    .user-chip-name { font-size: .8rem; font-weight: 600; color: #fff; }
+    .user-chip-role { font-size: .65rem; color: rgba(255,255,255,.4); }
+
+    /* ──────────────────────────────────────────────────
+       ÁREA PRINCIPAL
+    ────────────────────────────────────────────────── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+    /* Header */
+    .chat-header {
+      height: 56px; background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; padding: 0 20px; gap: 12px;
+      flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .header-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .header-name   { font-weight: 600; font-size: .9rem; color: #0f172a; }
+    .header-status { font-size: .72rem; color: #16a34a; display: flex; align-items: center; gap: 4px; }
+    .header-status::before { content:''; width:6px; height:6px; border-radius:50%; background:#16a34a; }
+    .header-tabs {
+      display: flex; gap: 2px; margin-left: auto;
+      background: #f1f5f9; border-radius: 8px; padding: 3px;
+    }
+    .htab {
+      padding: 5px 14px; font-size: .78rem; border: none; background: transparent;
+      border-radius: 6px; color: #64748b; cursor: pointer; font-weight: 500;
+      transition: all .15s; white-space: nowrap;
+    }
+    .htab.active { background: #fff; color: #1e40af; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .htab-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%; background: #ef4444;
+      font-size: .6rem; font-weight: 700; color: #fff; margin-left: 4px;
     }
 
-    /* ═══ MENSAGENS ═════════════════════════════════════════ */
-    .msg-wrap      { display: flex; align-items: flex-end; gap: 8px; }
-    .msg-wrap.user { flex-direction: row-reverse; }
-    .msg-avatar {
-      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+    /* ──────────────────────────────────────────────────
+       CHAT PANEL (estilo WhatsApp/Claude)
+    ────────────────────────────────────────────────── */
+    #panel-chat {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+      /* Fundo suave com padrão subtil */
+      background: #f0f4fb;
     }
-    .msg-avatar.ai   { background: var(--blue-600); color: #fff; }
-    .msg-avatar.user { background: var(--blue-100); color: var(--blue-700); font-weight: 700; }
-    .msg-bubble {
-      max-width: min(68vw, 520px); padding: 11px 15px; border-radius: 16px;
-      font-size: 0.875rem; line-height: 1.75; word-break: break-word;
-    }
-    .msg-bubble.ai   {
-      background: #fff; border: 1px solid var(--border-light);
-      border-bottom-left-radius: 4px; box-shadow: var(--shadow-sm);
-      color: var(--text-primary);
-    }
-    .msg-bubble.user {
-      background: var(--blue-600); color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-    .msg-meta { font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; padding: 0 4px; }
-    .msg-wrap.user .msg-meta { text-align: right; }
 
-    /* Typing dots */
-    .typing { display: flex; gap: 3px; padding: 12px 16px; align-items: center; }
-    .typing-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted);
-      animation: tdot 1.4s infinite both;
+    .messages-area {
+      flex: 1; overflow-y: auto; padding: 20px 16px;
+      display: flex; flex-direction: column; gap: 4px;
     }
-    .typing-dot:nth-child(2) { animation-delay: .2s; }
-    .typing-dot:nth-child(3) { animation-delay: .4s; }
-    @keyframes tdot { 0%,80%,100%{opacity:.2;transform:scale(1)} 40%{opacity:1;transform:scale(1.15)} }
+    .messages-area::-webkit-scrollbar { width: 4px; }
+    .messages-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+    /* Data separador */
+    .date-sep {
+      text-align: center; margin: 12px 0 8px;
+    }
+    .date-sep span {
+      background: rgba(255,255,255,.8); border: 1px solid #e2e8f0;
+      font-size: .72rem; color: #64748b; padding: 3px 12px; border-radius: 12px;
+    }
+
+    /* Mensagem IA (esquerda) */
+    .msg-ai {
+      display: flex; align-items: flex-end; gap: 8px;
+      max-width: min(75%, 640px); margin-right: auto; margin-bottom: 2px;
+    }
+    .msg-ai-avatar {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; color: #fff; margin-bottom: 2px;
+    }
+    .msg-ai-bubble {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      padding: 10px 14px;
+      font-size: .875rem; line-height: 1.75;
+      color: #1e293b;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
+      word-break: break-word;
+    }
+
+    /* Mensagem utilizador (direita) */
+    .msg-user {
+      display: flex; justify-content: flex-end; margin-bottom: 2px;
+    }
+    .msg-user-bubble {
+      max-width: min(72%, 560px);
+      background: #2563eb;
+      border-radius: 18px 18px 4px 18px;
+      padding: 10px 14px;
+      font-size: .875rem; line-height: 1.7;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    /* Meta (hora) */
+    .msg-meta {
+      font-size: .68rem; color: #94a3b8;
+      margin: 2px 0 6px;
+    }
+    .msg-ai   .msg-meta { margin-left: 36px; }
+    .msg-user .msg-meta { text-align: right; margin-right: 2px; }
+
+    /* Typing indicator */
+    .typing-wrap {
+      display: flex; align-items: flex-end; gap: 8px;
+      max-width: 80px; margin-bottom: 6px;
+    }
+    .typing-bubble {
+      background: #fff; border: 1px solid #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      padding: 12px 16px;
+      display: flex; gap: 4px; align-items: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+    .tdot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #94a3b8; animation: tdot 1.4s infinite both;
+    }
+    .tdot:nth-child(2) { animation-delay: .16s; }
+    .tdot:nth-child(3) { animation-delay: .32s; }
+    @keyframes tdot { 0%,60%,100%{opacity:.2;transform:scale(.8)} 30%{opacity:1;transform:scale(1)} }
+
+    /* Card de acção proposta */
+    .action-proposal {
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;
+      padding: 12px 14px; margin-top: 8px; font-size: .8rem;
+    }
+    .action-proposal-title { font-weight: 600; color: #92400e; margin-bottom: 6px; }
+    .action-proposal-item  { color: #78350f; padding: 2px 0; }
+
+    /* Info badge */
+    .info-badge {
+      text-align: center; margin: 6px 0;
+    }
+    .info-badge span {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      font-size: .72rem; color: #15803d; padding: 3px 12px; border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Sugestões rápidas */
+    .quick-area {
+      padding: 10px 16px 6px;
+      display: flex; flex-wrap: wrap; gap: 7px;
+      border-top: 1px solid #f1f5f9;
+      background: #fff;
+    }
+    .quick-pill {
+      padding: 6px 14px; background: #f8fafc;
+      border: 1px solid #e2e8f0; border-radius: 20px;
+      font-size: .78rem; color: #475569; cursor: pointer;
+      transition: all .15s; white-space: nowrap;
+    }
+    .quick-pill:hover { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+
+    /* ──────────────────────────────────────────────────
+       INPUT BAR
+    ────────────────────────────────────────────────── */
+    .input-bar {
+      background: #fff; border-top: 1px solid #e2e8f0;
+      padding: 12px 16px; flex-shrink: 0;
+    }
+    .input-inner {
+      display: flex; align-items: flex-end; gap: 10px;
+      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 24px; padding: 8px 8px 8px 16px;
+      transition: border-color .15s;
+    }
+    .input-inner:focus-within { border-color: #2563eb; background: #fff; }
+    .input-textarea {
+      flex: 1; border: none; background: transparent; outline: none;
+      font-size: .875rem; line-height: 1.5; resize: none;
+      max-height: 100px; font-family: inherit; color: #1e293b;
+    }
+    .input-textarea::placeholder { color: #94a3b8; }
+    .send-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: #2563eb; color: #fff; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s; font-size: .9rem;
+    }
+    .send-btn:hover   { background: #1d4ed8; transform: scale(1.05); }
+    .send-btn:disabled { background: #e2e8f0; cursor: not-allowed; transform: none; }
+    .ctx-row {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap;
+    }
+    .ctx-select {
+      font-size: .72rem; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 3px 8px; color: #64748b; background: #f8fafc; outline: none; cursor: pointer;
+    }
+    .proj-input {
+      font-size: .72rem; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 3px 10px; color: #64748b; background: #f8fafc; outline: none;
+      width: 180px;
+    }
+
+    /* ──────────────────────────────────────────────────
+       PANELS (Acções + Monitor)
+    ────────────────────────────────────────────────── */
+    .panel-area {
+      flex: 1; overflow-y: auto; padding: 20px; background: #f0f4fb;
+    }
+    .panel-area::-webkit-scrollbar { width: 4px; }
+    .panel-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+    .panel-title { font-size: 1rem; font-weight: 700; color: #0f172a; }
+    .panel-sub   { font-size: .82rem; color: #64748b; margin-top: 3px; }
 
     /* Acção card */
-    .action-inline {
-      background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
-      padding: 12px 14px; margin-top: 8px; font-size: 0.8rem;
-    }
-
-    /* ═══ SUGESTÕES RÁPIDAS ═════════════════════════════════ */
-    .quick-wrap {
-      padding: 10px 16px 4px; display: flex; flex-wrap: wrap; gap: 7px; flex-shrink: 0;
-      border-top: 1px solid var(--border-light); background: #fff;
-    }
-    .quick-btn {
-      padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; cursor: pointer;
-      border: 1px solid var(--border-light); background: #fff; color: var(--text-secondary);
-      transition: all .15s;
-    }
-    .quick-btn:hover { background: var(--blue-50); border-color: var(--blue-200); color: var(--blue-700); }
-
-    /* ═══ INPUT BAR ═════════════════════════════════════════ */
-    .chat-input-bar {
-      padding: 12px 16px; background: #fff;
-      border-top: 1px solid var(--border-light); flex-shrink: 0;
-    }
-    .input-row { display: flex; gap: 8px; align-items: flex-end; }
-    .input-box {
-      flex: 1; padding: 10px 44px 10px 14px;
-      border: 1.5px solid var(--border-light); border-radius: 22px;
-      font-size: 0.875rem; resize: none; outline: none;
-      max-height: 120px; line-height: 1.5; font-family: inherit;
-      background: var(--bg-page); transition: border-color .15s;
-    }
-    .input-box:focus { border-color: var(--blue-400); background: #fff; }
-    .send-btn {
-      width: 40px; height: 40px; border-radius: 50%; background: var(--blue-600);
-      border: none; color: #fff; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; flex-shrink: 0; transition: all .15s;
-    }
-    .send-btn:hover   { background: var(--blue-700); transform: scale(1.05); }
-    .send-btn:disabled{ background: var(--border-light); cursor: not-allowed; transform: none; }
-    .ctx-row {
-      display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap;
-    }
-    .ctx-badge {
-      font-size: 0.72rem; padding: 3px 10px; border-radius: 12px;
-      background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-100);
-      display: inline-flex; align-items: center; gap: 4px;
-    }
-
-    /* ═══ TAB PANELS ════════════════════════════════════════ */
-    .tab-panel { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-page); }
-
-    /* Acções pendentes */
     .action-card {
-      background: #fff; border: 1px solid var(--border-light); border-radius: 12px;
-      padding: 16px; margin-bottom: 12px; transition: box-shadow .2s;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+      padding: 16px; margin-bottom: 12px;
+      transition: box-shadow .2s, border-color .2s;
     }
-    .action-card:hover { box-shadow: var(--shadow-md); }
+    .action-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); border-color: #bfdbfe; }
+    .action-type-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .78rem; font-weight: 600; padding: 4px 10px; border-radius: 8px;
+    }
+    .action-reason {
+      font-size: .82rem; color: #475569; line-height: 1.6;
+      margin: 8px 0 12px; padding: 10px 12px;
+      background: #f8fafc; border-radius: 8px; border-left: 3px solid #2563eb;
+    }
+    .action-approve-btn {
+      background: #16a34a; color: #fff; border: none; border-radius: 8px;
+      padding: 7px 16px; font-size: .8rem; font-weight: 600; cursor: pointer;
+      transition: background .15s;
+    }
+    .action-approve-btn:hover { background: #15803d; }
+    .action-reject-btn {
+      background: transparent; color: #dc2626; border: 1.5px solid #fca5a5;
+      border-radius: 8px; padding: 6px 16px; font-size: .8rem; font-weight: 600;
+      cursor: pointer; transition: all .15s;
+    }
+    .action-reject-btn:hover { background: #fef2f2; }
 
-    /* Monitor */
-    .monitor-card {
-      background: #fff; border-radius: 12px; border: 1px solid var(--border-light);
+    /* Monitor card */
+    .monitor-report {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
       padding: 20px; margin-bottom: 16px;
+      border-left: 4px solid #2563eb;
     }
 
-    /* ═══ OVERLAY MOBILE ════════════════════════════════════ */
-    .sidebar-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4);
-      z-index: 200; cursor: pointer;
+    /* ──────────────────────────────────────────────────
+       MOBILE RESPONSIVE
+    ────────────────────────────────────────────────── */
+    .overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.5); z-index: 200;
     }
-    .sidebar-overlay.show { display: block; }
+    .overlay.show { display: block; }
+    .menu-btn {
+      display: none; background: none; border: none; color: #64748b;
+      font-size: 1.2rem; cursor: pointer; padding: 4px; margin-right: 4px;
+    }
 
-    /* ═══ RESPONSIVE ════════════════════════════════════════ */
     @media (max-width: 767px) {
-      .ai-sidebar {
-        position: fixed; top: 56px; left: 0; bottom: 0; z-index: 300;
-        width: 280px; transform: translateX(-100%);
+      .sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0; z-index: 300;
+        transform: translateX(-100%);
+        width: 280px;
       }
-      .ai-sidebar.open { transform: translateX(0); }
-      .msg-bubble { max-width: 82vw; }
-      .nav-tabs-ai { display: none; }
-      .hide-mobile { display: none !important; }
-      .chat-messages { padding: 12px; }
-      .chat-input-bar { padding: 10px 12px; }
-      .tab-panel { padding: 14px; }
-    }
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .ai-sidebar { width: 200px; }
-      .msg-bubble { max-width: 72vw; }
-    }
-    @media (min-width: 1024px) {
-      .ai-sidebar.mobile-only { display: flex !important; }
+      .sidebar.open { transform: translateX(0); }
+      .menu-btn { display: block; }
+      .header-tabs { display: none; }
+      .msg-ai    { max-width: 88%; }
+      .msg-user-bubble { max-width: 88%; }
+      .messages-area { padding: 14px 10px; }
+      .input-bar { padding: 10px 12px; }
+      .panel-area { padding: 14px; }
     }
 
-    /* ═══ MARKDOWN BÁSICO ═══════════════════════════════════ */
-    .msg-bubble strong { font-weight: 700; }
-    .msg-bubble em     { font-style: italic; }
-    .msg-bubble code   {
-      background: rgba(0,0,0,.07); padding: 1px 5px; border-radius: 4px;
-      font-family: monospace; font-size: 0.82em;
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .sidebar { width: 220px; }
+      .msg-ai  { max-width: 80%; }
+      .msg-user-bubble { max-width: 76%; }
     }
-    .msg-bubble.user code { background: rgba(255,255,255,.2); }
-    .msg-bubble ul, .msg-bubble ol { padding-left: 18px; margin: 6px 0; }
-    .msg-bubble li { margin: 2px 0; }
-    .msg-bubble p  { margin: 0 0 8px; }
-    .msg-bubble p:last-child { margin-bottom: 0; }
+
+    /* ──────────────────────────────────────────────────
+       MARKDOWN no chat
+    ────────────────────────────────────────────────── */
+    .msg-ai-bubble strong,
+    .msg-user-bubble strong { font-weight: 700; }
+    .msg-ai-bubble em   { font-style: italic; }
+    .msg-ai-bubble code {
+      background: #f1f5f9; padding: 1px 5px; border-radius: 4px;
+      font-family: 'Fira Code', monospace; font-size: .82em; color: #1e40af;
+    }
+    .msg-ai-bubble ul,
+    .msg-ai-bubble ol { padding-left: 18px; margin: 6px 0; }
+    .msg-ai-bubble li { margin: 3px 0; }
+    .msg-ai-bubble hr { border: none; border-top: 1px solid #e2e8f0; margin: 10px 0; }
+
+    /* Bloco de código */
+    .code-block {
+      background: #1e293b; border-radius: 8px; padding: 12px 14px;
+      font-family: 'Fira Code', monospace; font-size: .78rem;
+      color: #e2e8f0; overflow-x: auto; margin: 8px 0;
+      white-space: pre;
+    }
+
+    /* Admin badge no header */
+    .admin-chip {
+      background: #fef2f2; border: 1px solid #fca5a5;
+      color: #dc2626; font-size: .68rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
+    }
   </style>
 </head>
 <body>
 
-<!-- ═══ NAVBAR ════════════════════════════════════════════ -->
-<nav class="ai-nav">
-  <!-- Botão menu mobile -->
-  <button id="menu-toggle" class="btn btn-link p-1 me-1" style="color:var(--text-muted);display:none" onclick="toggleSidebar()">
-    <i class="bi bi-list fs-5"></i>
-  </button>
+<div class="app">
+  <!-- OVERLAY mobile -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <!-- Back -->
-  <a href="/dashboard.html" class="btn btn-link p-1 me-1" style="color:var(--text-muted)" title="Voltar">
-    <i class="bi bi-arrow-left"></i>
-  </a>
-
-  <!-- Brand -->
-  <a href="/ai-assistant.html" class="ai-nav-brand me-3">
-    <div class="ai-nav-icon"><i class="bi bi-robot text-white"></i></div>
-    <div class="hide-mobile">
-      <div style="font-weight:700;font-size:0.9rem;color:var(--text-primary)">INKU·AI Assistant</div>
-      <div class="ai-nav-status">Online · Claude Sonnet</div>
-    </div>
-  </a>
-
-  <!-- Tabs (desktop) -->
-  <div class="nav-tabs-ai">
-    <button class="nav-tab-btn active" onclick="setTab('chat')"    id="t-chat">💬 Chat</button>
-    <button class="nav-tab-btn"        onclick="setTab('actions')" id="t-actions" style="display:none">
-      ⚡ Acções <span id="actions-badge" class="badge bg-danger ms-1" style="display:none;font-size:.6rem">0</span>
-    </button>
-    <button class="nav-tab-btn"        onclick="setTab('monitor')" id="t-monitor" style="display:none">📊 Monitor</button>
-  </div>
-
-  <!-- Direita -->
-  <div class="ms-auto d-flex align-items-center gap-2">
-    <div id="notif-mount"></div>
-    <button id="pdf-btn" onclick="downloadReport()" class="btn btn-outline-secondary btn-sm" style="display:none" title="PDF">
-      <i class="bi bi-file-earmark-pdf me-1"></i><span class="hide-mobile">PDF</span>
-    </button>
-    <button onclick="newConversation()" class="btn btn-primary btn-sm">
-      <i class="bi bi-plus-lg"></i><span class="hide-mobile ms-1">Novo</span>
-    </button>
-  </div>
-</nav>
-
-<!-- ═══ BODY ══════════════════════════════════════════════ -->
-<div class="ai-body">
-
-  <!-- Overlay mobile -->
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-  <!-- ═══ SIDEBAR ════════════════════════════════════════ -->
-  <aside class="ai-sidebar" id="ai-sidebar">
-    <div class="sidebar-head">
-      <span style="font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Conversas</span>
-      <button onclick="newConversation()" class="btn btn-link p-0" style="color:var(--blue-600);font-size:.8rem"><i class="bi bi-plus-lg"></i></button>
+  <!-- ═══ SIDEBAR ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo"><i class="bi bi-robot" style="color:#fff;font-size:.9rem"></i></div>
+      <div>
+        <div class="sidebar-brand">INKU<span style="color:#818cf8">·AI</span></div>
+        <div class="sidebar-sub">IP/UNIKIVI · Mbanza Kongo</div>
+      </div>
+      <button onclick="closeSidebar()" class="btn btn-link ms-auto p-0 d-md-none" style="color:rgba(255,255,255,.4)"><i class="bi bi-x-lg"></i></button>
     </div>
 
-    <!-- Contextos rápidos -->
-    <div style="padding:6px;border-bottom:1px solid var(--border-light)">
-      <button class="conv-ctx-btn" id="ctx-admin" onclick="newConversation('admin_platform')" style="display:none">
-        <i class="bi bi-shield-fill" style="color:#dc2626"></i>Gerir Plataforma
-      </button>
-      <button class="conv-ctx-btn" onclick="newConversation('project_review')">
-        <i class="bi bi-folder-fill" style="color:var(--blue-600)"></i>Rever Projecto
-      </button>
-      <button class="conv-ctx-btn" onclick="newConversation('general')">
-        <i class="bi bi-chat-dots-fill" style="color:var(--success)"></i>Nova Conversa
-      </button>
+    <button class="new-chat-btn" onclick="startNewChat()">
+      <i class="bi bi-plus-lg"></i> Nova Conversa
+    </button>
+
+    <!-- Contextos rápidos (só admin vê o de plataforma) -->
+    <div id="admin-contexts" style="display:none">
+      <div class="sidebar-section">Admin</div>
+      <div class="conv-item" onclick="startNewChat('admin_platform')">
+        <span class="conv-icon">🛡️</span>
+        <span class="conv-title">Gerir Plataforma</span>
+      </div>
+      <div class="conv-item" onclick="setMainTab('actions')">
+        <span class="conv-icon">⚡</span>
+        <span class="conv-title">Acções Pendentes <span id="sb-badge" style="display:none;background:#ef4444;color:#fff;font-size:.6rem;padding:1px 5px;border-radius:8px;margin-left:4px">0</span></span>
+      </div>
+      <div class="conv-item" onclick="setMainTab('monitor')">
+        <span class="conv-icon">📊</span>
+        <span class="conv-title">Monitorização</span>
+      </div>
     </div>
 
-    <!-- Lista conversas -->
-    <div class="conv-list" id="conv-list">
-      <div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>
+    <div class="sidebar-section" style="margin-top:8px">Conversas</div>
+    <div class="sidebar-conv-list" id="conv-list">
+      <div style="text-align:center;padding:20px"><div class="spinner-border spinner-border-sm text-secondary"></div></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-chip-av" id="sb-avatar">U</div>
+        <div>
+          <div class="user-chip-name" id="sb-name">Utilizador</div>
+          <div class="user-chip-role" id="sb-role">student</div>
+        </div>
+        <a href="/dashboard.html" class="ms-auto" style="color:rgba(255,255,255,.3);font-size:.9rem" title="Dashboard"><i class="bi bi-box-arrow-right"></i></a>
+      </div>
     </div>
   </aside>
 
-  <!-- ═══ CONTEÚDO ════════════════════════════════════════ -->
-  <div class="chat-main">
+  <!-- ═══ ÁREA PRINCIPAL ════════════════════════════════ -->
+  <div class="main">
 
-    <!-- TAB CHAT ──────────────────────────────────────── -->
-    <div id="panel-chat" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
-      <div class="chat-messages" id="chat-messages">
-        <!-- Mensagem de boas vindas injectada por JS -->
+    <!-- Header -->
+    <div class="chat-header">
+      <button class="menu-btn" onclick="openSidebar()"><i class="bi bi-list"></i></button>
+      <div class="header-avatar"><i class="bi bi-robot" style="color:#fff;font-size:.85rem"></i></div>
+      <div>
+        <div class="header-name">INKU·AI <span class="admin-chip" id="admin-chip" style="display:none">ADMIN</span></div>
+        <div class="header-status">Online · Claude Sonnet</div>
       </div>
+      <div class="header-tabs ms-auto" id="header-tabs" style="display:none">
+        <button class="htab active" onclick="setMainTab('chat')" id="t-chat">💬 Chat</button>
+        <button class="htab" onclick="setMainTab('actions')" id="t-actions">
+          ⚡ Acções<span id="hdr-badge" class="htab-badge" style="display:none">0</span>
+        </button>
+        <button class="htab" onclick="setMainTab('monitor')" id="t-monitor">📊 Monitor</button>
+      </div>
+      <div class="d-flex align-items-center gap-2" style="margin-left:auto" id="hdr-right">
+        <div id="notif-mount"></div>
+        <button id="pdf-btn" onclick="downloadPdf()" class="btn btn-sm btn-outline-secondary" style="display:none;font-size:.75rem">
+          <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+        </button>
+      </div>
+    </div>
 
-      <!-- Sugestões (ocultadas após 1ª mensagem) -->
-      <div class="quick-wrap" id="quick-wrap"></div>
-
-      <!-- Input -->
-      <div class="chat-input-bar">
-        <div class="input-row">
-          <div style="flex:1;position:relative">
-            <textarea id="chat-input" class="input-box" rows="1"
-              placeholder="Escreve uma mensagem..."
-              onkeydown="handleKey(event)" oninput="autoGrow(this)"></textarea>
-          </div>
-          <button id="send-btn" class="send-btn" onclick="sendMessage()" title="Enviar">
-            <i class="bi bi-send-fill" style="font-size:.9rem"></i>
+    <!-- ─── PANEL CHAT ─────────────────────────────── -->
+    <div id="panel-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="messages-area" id="msgs"></div>
+      <div class="quick-area" id="quick-area"></div>
+      <div class="input-bar">
+        <div class="input-inner">
+          <textarea id="txt" class="input-textarea" rows="1"
+            placeholder="Mensagem para INKU·AI..."
+            onkeydown="onKey(event)" oninput="grow(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="send()">
+            <i class="bi bi-send-fill"></i>
           </button>
         </div>
-        <div class="ctx-row">
-          <span class="ctx-badge" id="ctx-badge">💬 Geral</span>
-          <select id="ctx-select" onchange="updateCtx()" style="font-size:.75rem;border:none;background:transparent;color:var(--text-muted);cursor:pointer;outline:none">
-            <option value="general">Geral</option>
-            <option value="project_review">Projecto</option>
-            <option value="admin_platform" id="opt-admin" style="display:none">Admin — Plataforma</option>
+        <div class="ctx-row" id="ctx-row-admin" style="display:none">
+          <select id="ctx-sel" class="ctx-select" onchange="onCtxChange()">
+            <option value="general">💬 Conversa geral</option>
+            <option value="project_review">📁 Rever projecto</option>
+            <option value="admin_platform">🛡️ Gerir plataforma</option>
           </select>
-          <input type="text" id="proj-id-input" placeholder="ID do projecto" style="display:none;font-size:.75rem;border:1px solid var(--border-light);border-radius:6px;padding:2px 8px;color:var(--text-muted)">
-          <button id="monitor-mini-btn" onclick="setTab('monitor')" class="btn btn-link p-0" style="font-size:.75rem;color:var(--text-muted);display:none">
-            <i class="bi bi-eye me-1"></i>Monitor
-          </button>
+          <input id="proj-input" class="proj-input" placeholder="ID do projecto (opcional)" style="display:none">
         </div>
       </div>
     </div>
 
-    <!-- TAB ACÇÕES ─────────────────────────────────────── -->
-    <div id="panel-actions" class="tab-panel" style="display:none">
+    <!-- ─── PANEL ACÇÕES ──────────────────────────── -->
+    <div id="panel-actions" class="panel-area" style="display:none">
       <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-          <h5 style="font-weight:700;color:var(--text-primary);margin:0">Acções Propostas pela IA</h5>
-          <p style="color:var(--text-muted);font-size:.85rem;margin:4px 0 0">Aprove ou rejeite acções que requerem permissão do Admin.</p>
+          <div class="panel-title">⚡ Acções Propostas pela IA</div>
+          <div class="panel-sub">Aprove ou rejeite. A IA age com permissão.</div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
-          <button onclick="loadActions('pending')"  class="btn btn-primary btn-sm">Pendentes</button>
-          <button onclick="loadActions('approved')" class="btn btn-outline-secondary btn-sm">Aprovadas</button>
-          <button onclick="loadActions('rejected')" class="btn btn-outline-secondary btn-sm">Rejeitadas</button>
+          <button onclick="loadActions('pending')"  class="btn btn-sm btn-primary">Pendentes</button>
+          <button onclick="loadActions('approved')" class="btn btn-sm btn-outline-secondary">Aprovadas</button>
+          <button onclick="loadActions('rejected')" class="btn btn-sm btn-outline-secondary">Rejeitadas</button>
         </div>
       </div>
-      <div id="actions-list">
-        <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
-      </div>
+      <div id="actions-list"></div>
     </div>
 
-    <!-- TAB MONITOR ────────────────────────────────────── -->
-    <div id="panel-monitor" class="tab-panel" style="display:none">
+    <!-- ─── PANEL MONITOR ─────────────────────────── -->
+    <div id="panel-monitor" class="panel-area" style="display:none">
       <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-          <h5 style="font-weight:700;color:var(--text-primary);margin:0">Monitorização Autónoma</h5>
-          <p style="color:var(--text-muted);font-size:.85rem;margin:4px 0 0">A IA analisa e actua. Só pede permissão para acções urgentes.</p>
+          <div class="panel-title">📊 Monitorização Autónoma</div>
+          <div class="panel-sub">A IA actua sozinha. Só pede permissão para acções urgentes.</div>
         </div>
-        <button onclick="runMonitor()" id="monitor-run-btn" class="btn btn-primary">
+        <button onclick="runMonitor()" id="monitor-btn" class="btn btn-primary">
           <i class="bi bi-play-fill me-1"></i>Executar Análise
         </button>
       </div>
       <div id="monitor-result">
-        <div class="monitor-card text-center py-5" style="color:var(--text-muted)">
-          <i class="bi bi-eye-fill fs-1 d-block mb-3" style="color:var(--blue-100)"></i>
-          <p>Clique em "Executar Análise" para a IA monitorizar automaticamente a plataforma.</p>
+        <div class="monitor-report text-center py-5" style="border-left-color:#e2e8f0">
+          <i class="bi bi-eye fs-1 d-block mb-3" style="color:#cbd5e1"></i>
+          <p style="color:#94a3b8">Clique em "Executar Análise" para a IA monitorizar a plataforma.</p>
         </div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /.main -->
+</div><!-- /.app -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/notifications.js"></script>
 <script>
-// ─── Estado ────────────────────────────────────────────────
-let convId   = null;
-let isTyping = false;
-const usr    = window.InkuAuth?.getUser();
+// ─── Estado global ──────────────────────────────────────────
+const usr     = window.InkuAuth?.getUser();
 const isAdmin = ['admin','mentor'].includes(usr?.role);
+let   convId  = null;
+let   busy    = false;
 
-// ─── Init ──────────────────────────────────────────────────
+// ─── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  if (!usr) { window.location.href = '/login.html'; return; }
+  if (!usr) { window.location.href='/login.html'; return; }
 
-  // Mostrar elementos só para admin
+  // Avatar e nome
+  document.getElementById('sb-avatar').textContent = usr.name?.[0]?.toUpperCase() || 'U';
+  document.getElementById('sb-name').textContent   = usr.name  || 'Utilizador';
+  document.getElementById('sb-role').textContent   = usr.role  || 'student';
+
+  // Admin extras
   if (isAdmin) {
-    document.getElementById('ctx-admin').style.display    = '';
-    document.getElementById('opt-admin').style.display    = '';
-    document.getElementById('t-actions').style.display    = '';
-    document.getElementById('t-monitor').style.display    = '';
-    document.getElementById('monitor-mini-btn').style.display = '';
-    document.getElementById('pdf-btn').style.display      = '';
+    document.getElementById('admin-contexts').style.display = '';
+    document.getElementById('header-tabs').style.display    = '';
+    document.getElementById('admin-chip').style.display     = '';
+    document.getElementById('ctx-row-admin').style.display  = '';
+    document.getElementById('pdf-btn').style.display        = '';
+    loadPendingCount();
+    setInterval(loadPendingCount, 60000);
   }
 
-  // Mobile: mostrar botão hambúrguer
-  if (window.innerWidth < 768) {
-    document.getElementById('menu-toggle').style.display = '';
+  // URL param ?tab=actions
+  if (new URLSearchParams(location.search).get('tab') === 'actions') setMainTab('actions');
+  if (new URLSearchParams(location.search).get('project')) {
+    const pid = new URLSearchParams(location.search).get('project');
+    document.getElementById('ctx-sel').value = 'project_review';
+    document.getElementById('proj-input').value = pid;
+    document.getElementById('proj-input').style.display = '';
   }
 
   showWelcome();
-  showQuickSuggestions();
-  loadConversations();
-  if (isAdmin) loadPendingCount();
-
-  // URL params
-  const params = new URLSearchParams(location.search);
-  if (params.get('tab') === 'actions') setTab('actions');
-  if (params.get('project')) {
-    document.getElementById('ctx-select').value = 'project_review';
-    document.getElementById('proj-id-input').value = params.get('project');
-    document.getElementById('proj-id-input').style.display = '';
-    updateCtx();
-  }
+  loadConvList();
 });
 
-// ─── Sidebar mobile ────────────────────────────────────────
-function toggleSidebar() {
-  const sb = document.getElementById('ai-sidebar');
-  const ov = document.getElementById('sidebar-overlay');
-  sb.classList.toggle('open');
-  ov.classList.toggle('show');
-}
+// ─── Sidebar mobile ──────────────────────────────────────────
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
 
-// ─── Abas ──────────────────────────────────────────────────
-function setTab(tab) {
+// ─── Tabs ─────────────────────────────────────────────────────
+function setMainTab(tab) {
   ['chat','actions','monitor'].forEach(t => {
-    const panel = document.getElementById(`panel-${t}`);
-    const btn   = document.getElementById(`t-${t}`);
-    if (panel) panel.style.display = t === tab ? (t === 'chat' ? 'flex' : 'block') : 'none';
-    if (btn)   btn.classList.toggle('active', t === tab);
+    const p = document.getElementById(`panel-${t}`);
+    const b = document.getElementById(`t-${t}`);
+    if (p) p.style.display = t===tab ? (t==='chat'?'flex':'block') : 'none';
+    if (b) b.classList.toggle('active', t===tab);
   });
-  if (tab === 'actions') loadActions('pending');
+  if (tab==='chat') document.getElementById('panel-chat').style.cssText='flex:1;display:flex;flex-direction:column;overflow:hidden';
+  if (tab==='actions') loadActions('pending');
+  closeSidebar();
 }
 
-// ─── Contexto ──────────────────────────────────────────────
-function updateCtx() {
-  const ctx = document.getElementById('ctx-select').value;
-  const labels = { general:'💬 Geral', project_review:'📁 Projecto', admin_platform:'🛡️ Admin' };
-  document.getElementById('ctx-badge').textContent = labels[ctx] || '💬 Geral';
-  document.getElementById('proj-id-input').style.display = ctx === 'project_review' ? '' : 'none';
+// ─── Contexto ─────────────────────────────────────────────────
+function onCtxChange() {
+  const v = document.getElementById('ctx-sel').value;
+  document.getElementById('proj-input').style.display = v==='project_review' ? '' : 'none';
   showQuickSuggestions();
 }
 
-// ─── Sugestões ─────────────────────────────────────────────
-function showQuickSuggestions() {
-  const ctx = document.getElementById('ctx-select').value;
-  const wrap = document.getElementById('quick-wrap');
-  const adminSuggestions = [
-    '📊 Como estamos face às metas FUNDECIT?',
-    '⚠️ Que projectos precisam de atenção urgente?',
-    '💡 Que melhorias propões para a plataforma?',
-    '👥 Analisa o crescimento de utilizadores',
-  ];
-  const userSuggestions = [
-    '🔍 Analisa o meu projecto e dá feedback',
-    '🚀 Como posso melhorar a arquitectura?',
-    '📝 Ajuda-me a documentar o projecto',
-    '🤖 Que tecnologias de IA devo usar?',
-  ];
-  const suggestions = isAdmin && ctx === 'admin_platform' ? adminSuggestions : userSuggestions;
-  wrap.innerHTML = suggestions.map(s =>
-    `<button class="quick-btn" onclick="sendQuick('${s.replace(/'/g,"\\'")}')">${s}</button>`
-  ).join('');
-}
-
-// ─── Boas vindas ────────────────────────────────────────────
+// ─── Boas vindas ──────────────────────────────────────────────
 function showWelcome() {
-  const msgs = document.getElementById('chat-messages');
-  const adminContent = `<strong>Olá ${usr?.name?.split(' ')[0] || 'Admin'}! Sou o INKU·AI. 🤖</strong><br><br>
-    Opero de forma autónoma para monitorizar a plataforma. Quando necessito de aprovação para acções importantes, aparecem no tab <strong>Acções</strong>.<br><br>
-    Posso ajudar-te com:
-    <ul style="margin:8px 0 0;padding-left:18px">
-      <li>📊 Análise e monitorização da plataforma</li>
-      <li>⚡ Acções autónomas (notificações, avaliações)</li>
-      <li>📄 Relatório PDF completo da plataforma</li>
-      <li>🔍 Revisão e aprovação de projectos</li>
-    </ul>`;
-  const userContent = `<strong>Olá ${usr?.name?.split(' ')[0] || 'Investigador'}! 👋</strong><br><br>
-    Sou o INKU·AI, o teu assistente para projectos de software e IA.<br><br>
-    Estou aqui exclusivamente para ajudar-te a <strong>melhorar o teu projecto</strong>:
-    <ul style="margin:8px 0 0;padding-left:18px">
-      <li>🔍 Análise técnica e feedback</li>
-      <li>🏗️ Arquitectura e boas práticas</li>
-      <li>🤖 Sugestões de tecnologias IA/ML</li>
-      <li>📝 Documentação científica</li>
-    </ul><br>
-    Começa por dizer-me em que projecto estás a trabalhar!`;
-  appendBubble('ai', isAdmin ? adminContent : userContent);
+  const box = document.getElementById('msgs');
+  box.innerHTML = '';
+  const now = new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  const adminMsg = `<strong>Olá, ${usr.name?.split(' ')[0]}!</strong> 👋\n\nSou o INKU·AI, o sistema de IA autónomo da plataforma.\n\nActuo de forma independente na monitorização, mas peço sempre a tua aprovação para acções importantes.\n\nPodes usar o tab **Acções** para rever o que proponho, e **Monitor** para executar uma análise agora.`;
+  const userMsg  = `<strong>Olá, ${usr.name?.split(' ')[0]}!</strong> 👋\n\nSou o INKU·AI, o teu assistente para projectos de IA e software.\n\nEstou aqui para te ajudar a **melhorar o teu projecto** — código, arquitectura, documentação, tecnologias IA/ML e muito mais.\n\nComeça por me dizer em que projecto estás a trabalhar!`;
+  appendAI(isAdmin ? adminMsg : userMsg, now);
+  showQuickSuggestions();
 }
 
-// ─── Conversas ─────────────────────────────────────────────
-async function loadConversations() {
+function showQuickSuggestions() {
+  const box = document.getElementById('quick-area');
+  const ctx = document.getElementById('ctx-sel')?.value || 'general';
+  const adminPills = isAdmin && ctx==='admin_platform'
+    ? ['📊 Progresso FUNDECIT?','⚠️ Projectos urgentes?','💡 Melhorias na plataforma','👥 Análise de utilizadores']
+    : ['🔍 Analisa o meu projecto','🚀 Melhora a arquitectura','📝 Ajuda com documentação','🤖 Que IA devo usar?'];
+  const pills = isAdmin ? adminPills : ['🔍 Analisa o meu projecto','🚀 Melhora a arquitectura','📝 Ajuda com documentação','🤖 Que IA devo usar?'];
+  box.innerHTML = pills.map(p=>`<button class="quick-pill" onclick="sendQuick('${p.replace(/'/g,"\\'")}')">${p}</button>`).join('');
+}
+
+// ─── Conversas ────────────────────────────────────────────────
+async function loadConvList() {
   try {
-    const res  = await window.InkuAPI.get('/ai/conversations?limit=30');
+    const res   = await window.InkuAPI.get('/ai/conversations?limit=30');
     const convs = res.conversations || [];
     const list  = document.getElementById('conv-list');
     const icons = { admin_platform:'🛡️', project_review:'📁', general:'💬', project:'📁' };
     list.innerHTML = convs.length
-      ? convs.map(c => `
-          <div class="conv-item ${c.id===convId?'active':''}" onclick="loadConv('${c.id}')">
-            <div class="conv-item-title">${icons[c.context]||'💬'} ${c.title||'Conversa'}</div>
-            <div class="conv-item-date">${new Date(c.updated_at).toLocaleDateString('pt-PT')}</div>
+      ? convs.map(c=>`
+          <div class="conv-item ${c.id===convId?'active':''}" onclick="openConv('${c.id}')">
+            <span class="conv-icon">${icons[c.context]||'💬'}</span>
+            <div style="flex:1;min-width:0">
+              <div class="conv-title">${c.title||'Conversa'}</div>
+              <div class="conv-date">${new Date(c.updated_at).toLocaleDateString('pt-PT')}</div>
+            </div>
           </div>`).join('')
-      : `<div class="text-center py-4" style="color:var(--text-muted);font-size:.8rem">Sem conversas ainda.</div>`;
+      : `<div style="text-align:center;padding:24px;color:rgba(255,255,255,.3);font-size:.78rem">Sem conversas ainda</div>`;
   } catch {}
 }
 
-async function loadConv(id) {
-  convId = id;
-  if (window.innerWidth < 768) toggleSidebar();
-  setTab('chat');
-  const box = document.getElementById('chat-messages');
-  box.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+async function openConv(id) {
+  convId = id; closeSidebar(); setMainTab('chat');
+  const box = document.getElementById('msgs');
+  box.innerHTML = `<div style="text-align:center;padding:30px"><div class="spinner-border spinner-border-sm text-secondary"></div></div>`;
+  document.getElementById('quick-area').innerHTML = '';
   try {
     const res  = await window.InkuAPI.get(`/ai/conversations/${id}`);
-    const msgs = res.messages || [];
     box.innerHTML = '';
-    document.getElementById('quick-wrap').innerHTML = '';
-    msgs.forEach(m => appendBubble(m.role === 'user' ? 'user' : 'ai', fmtMsg(m.content), new Date(m.timestamp)));
+    if (res.messages?.length) {
+      // Agrupar por data
+      let lastDate = '';
+      res.messages.forEach(m => {
+        const d = new Date(m.timestamp||Date.now());
+        const ds = d.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric'});
+        if (ds !== lastDate) { appendDateSep(ds); lastDate = ds; }
+        const time = d.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+        if (m.role==='user')      appendUser(m.content, time);
+        else if (m.role==='assistant') appendAI(m.content, time);
+      });
+    } else {
+      showWelcome();
+    }
     box.scrollTop = box.scrollHeight;
-    loadConversations();
-  } catch(err) { window.showToast?.(err.message,'error'); }
+    loadConvList();
+  } catch(e) { window.showToast?.(e.message,'error'); }
 }
 
-function newConversation(ctx) {
-  convId = null;
-  if (ctx) { document.getElementById('ctx-select').value = ctx; updateCtx(); }
-  document.getElementById('chat-messages').innerHTML = '';
-  showWelcome();
-  showQuickSuggestions();
-  setTab('chat');
-  document.getElementById('chat-input').focus();
-  if (window.innerWidth < 768) toggleSidebar();
+function startNewChat(ctx) {
+  convId = null; closeSidebar();
+  if (ctx && document.getElementById('ctx-sel')) document.getElementById('ctx-sel').value = ctx;
+  onCtxChange(); setMainTab('chat'); showWelcome();
+  document.getElementById('txt').focus();
 }
 
-// ─── Enviar mensagem ────────────────────────────────────────
-async function sendMessage() {
-  const input   = document.getElementById('chat-input');
-  const message = input.value.trim();
-  if (!message || isTyping) return;
-  const ctx     = document.getElementById('ctx-select').value;
-  const projId  = document.getElementById('proj-id-input').value.trim() || null;
+// ─── Enviar mensagem ──────────────────────────────────────────
+async function send() {
+  const txt = document.getElementById('txt');
+  const msg = txt.value.trim();
+  if (!msg || busy) return;
+  const ctx   = document.getElementById('ctx-sel')?.value || 'general';
+  const projId = document.getElementById('proj-input')?.value?.trim() || null;
 
-  appendBubble('user', escHtml(message));
-  input.value = ''; input.style.height = 'auto';
-  document.getElementById('quick-wrap').innerHTML = '';
-  isTyping = true;
-  document.getElementById('send-btn').disabled = true;
+  const now = new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  appendUser(msg, now);
+  txt.value = ''; txt.style.height = 'auto';
+  document.getElementById('quick-area').innerHTML = '';
+  busy = true; document.getElementById('send-btn').disabled = true;
 
-  const typId = 'ty' + Date.now();
-  appendTyping(typId);
+  const tid = 'ty'+Date.now(); appendTyping(tid);
 
   try {
-    const body = { message, conversation_id: convId, context: ctx };
+    const body = { message:msg, conversation_id:convId, context:ctx };
     if (projId) body.project_id = projId;
     const res = await window.InkuAPI.post('/ai/chat', body);
-    removeTyping(typId);
+    removeEl(tid);
     convId = res.conversation_id;
-    appendBubble('ai', fmtMsg(res.response));
-
-    // Acções autónomas executadas
+    const replyTime = new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+    appendAI(res.response, replyTime);
     if (res.autonomous_actions?.length > 0) {
-      appendInfo(`✅ INKU·AI executou ${res.autonomous_actions.length} acção(ões) automaticamente.`);
+      appendInfoBadge(`✅ INKU·AI executou ${res.autonomous_actions.length} acção(ões) automaticamente`);
     }
-    // Acções pendentes
     if (res.has_pending && res.pending_actions?.length > 0) {
-      appendActionAlert(res.pending_actions);
+      appendActionProposal(res.pending_actions, replyTime);
       if (isAdmin) loadPendingCount();
     }
-    loadConversations();
-  } catch(err) {
-    removeTyping(typId);
-    appendBubble('ai', `❌ Erro: ${err.message || 'Não foi possível conectar ao assistente.'}`);
+    loadConvList();
+  } catch(e) {
+    removeEl(tid);
+    const t = new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+    appendAI(`❌ **Erro:** ${e.message}`, t);
   } finally {
-    isTyping = false;
-    document.getElementById('send-btn').disabled = false;
-    document.getElementById('chat-messages').scrollTop = 9999;
+    busy = false; document.getElementById('send-btn').disabled = false;
+    document.getElementById('msgs').scrollTop = 9999;
   }
 }
+function sendQuick(msg) { document.getElementById('txt').value = msg; send(); }
+function onKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function grow(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
 
-function sendQuick(msg) {
-  document.getElementById('chat-input').value = msg;
-  sendMessage();
+// ─── Renderizar mensagens ─────────────────────────────────────
+function appendDateSep(label) {
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',
+    `<div class="date-sep"><span>${label}</span></div>`);
 }
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+function appendUser(text, time) {
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',`
+    <div class="msg-user">
+      <div class="msg-user-bubble">${esc(text)}</div>
+    </div>
+    <div class="msg-meta">${time}</div>`);
+  scroll();
 }
-
-function autoGrow(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+function appendAI(text, time) {
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',`
+    <div class="msg-ai">
+      <div class="msg-ai-avatar"><i class="bi bi-robot" style="font-size:.72rem"></i></div>
+      <div class="msg-ai-bubble">${fmt(text)}</div>
+    </div>
+    <div class="msg-meta">${time||''}</div>`);
+  scroll();
 }
-
-// ─── Renderizar ─────────────────────────────────────────────
-function appendBubble(who, html, date) {
-  const box  = document.getElementById('chat-messages');
-  const time = date ? date.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'}) : 'agora';
-  const name = who === 'user' ? (usr?.name?.split(' ')[0]||'Tu') : 'INKU·AI';
-  const isU  = who === 'user';
-  box.insertAdjacentHTML('beforeend', `
-    <div class="msg-wrap ${isU?'user':''}">
-      <div class="msg-avatar ${isU?'user':'ai'}">
-        ${isU ? (usr?.name?.[0]?.toUpperCase()||'U') : '<i class="bi bi-robot" style="font-size:.85rem"></i>'}
-      </div>
-      <div>
-        <div class="msg-bubble ${isU?'user':'ai'}">${html}</div>
-        <div class="msg-meta">${name} · ${time}</div>
-      </div>
-    </div>`);
-  box.scrollTop = box.scrollHeight;
-}
-
 function appendTyping(id) {
-  const box = document.getElementById('chat-messages');
-  box.insertAdjacentHTML('beforeend', `
-    <div class="msg-wrap" id="${id}">
-      <div class="msg-avatar ai"><i class="bi bi-robot" style="font-size:.85rem"></i></div>
-      <div class="msg-bubble ai"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',`
+    <div class="typing-wrap" id="${id}">
+      <div class="msg-ai-avatar"><i class="bi bi-robot" style="font-size:.72rem"></i></div>
+      <div class="typing-bubble"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>
     </div>`);
-  box.scrollTop = box.scrollHeight;
+  scroll();
 }
-function removeTyping(id) { document.getElementById(id)?.remove(); }
-
-function appendInfo(text) {
-  const box = document.getElementById('chat-messages');
-  box.insertAdjacentHTML('beforeend', `
-    <div style="text-align:center">
-      <span style="font-size:.75rem;color:var(--success);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:4px 12px;display:inline-block">
-        <i class="bi bi-check-circle me-1"></i>${text}
-      </span>
-    </div>`);
-  box.scrollTop = box.scrollHeight;
+function appendInfoBadge(text) {
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',`<div class="info-badge"><span>${text}</span></div>`);
+  scroll();
 }
-
-function appendActionAlert(actions) {
-  const box = document.getElementById('chat-messages');
-  box.insertAdjacentHTML('beforeend', `
-    <div class="msg-wrap">
-      <div class="msg-avatar" style="background:#d97706;color:#fff"><i class="bi bi-lightning-fill" style="font-size:.85rem"></i></div>
-      <div>
-        <div class="action-inline">
-          <div style="font-weight:700;font-size:.82rem;color:#92400e;margin-bottom:6px">⚡ ${actions.length} acção(ões) requerem a tua aprovação</div>
-          ${actions.map(a=>`<div style="font-size:.78rem;color:#78350f;padding:2px 0">→ ${(a.action_type||'').replace(/_/g,' ')}</div>`).join('')}
-          <button onclick="setTab('actions')" class="btn btn-warning btn-sm w-100 mt-2" style="font-size:.78rem">Ver e Aprovar</button>
+function appendActionProposal(actions, time) {
+  document.getElementById('msgs').insertAdjacentHTML('beforeend',`
+    <div class="msg-ai">
+      <div class="msg-ai-avatar" style="background:linear-gradient(135deg,#d97706,#b45309)"><i class="bi bi-lightning-fill" style="font-size:.72rem"></i></div>
+      <div class="msg-ai-bubble">
+        <div class="action-proposal">
+          <div class="action-proposal-title">⚡ ${actions.length} acção(ões) aguardam a tua aprovação</div>
+          ${actions.map(a=>`<div class="action-proposal-item">→ ${(a.action_type||'').replace(/_/g,' ')}</div>`).join('')}
+          <button onclick="setMainTab('actions')" class="action-approve-btn mt-2">Ver e Aprovar</button>
         </div>
       </div>
-    </div>`);
-  box.scrollTop = box.scrollHeight;
+    </div>
+    <div class="msg-meta">${time}</div>`);
+  scroll();
+}
+function scroll() { const b=document.getElementById('msgs'); b.scrollTop=b.scrollHeight; }
+function removeEl(id) { document.getElementById(id)?.remove(); }
+
+// ─── Formatação ───────────────────────────────────────────────
+function esc(t) { return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(text) {
+  let t = (text||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Blocos de código
+  t = t.replace(/```(\w*)\n?([\s\S]*?)```/g, (_,_lang,code)=>`<div class="code-block">${code.trim()}</div>`);
+  // Inline
+  t = t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  t = t.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
+  // Listas
+  t = t.replace(/^- (.+)$/gm,'<li>$1</li>');
+  t = t.replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>');
+  // Quebras de linha
+  t = t.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  return t;
 }
 
-// ─── Formatar texto ──────────────────────────────────────────
-function fmtMsg(text) {
-  return (text || '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/`([^`]+)`/g,'<code>$1</code>')
-    .replace(/^### (.+)$/gm,'<strong>$1</strong>')
-    .replace(/^## (.+)$/gm,'<strong>$1</strong>')
-    .replace(/^- (.+)$/gm,'• $1')
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/\n/g,'<br>');
-}
-function escHtml(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ─── Acções Pendentes ────────────────────────────────────────
-async function loadActions(status = 'pending') {
-  if (!isAdmin) return;
+// ─── Acções ────────────────────────────────────────────────────
+async function loadActions(status='pending') {
+  if(!isAdmin) return;
   const list = document.getElementById('actions-list');
-  list.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
+  list.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner-border text-primary"></div></div>';
   try {
-    const res = await window.InkuAPI.get(`/ai/actions?status=${status}&limit=20`);
-    const acts = res.data || [];
-    if (!acts.length) {
-      list.innerHTML = `<div class="text-center py-5"><i class="bi bi-check-circle-fill fs-1 d-block mb-3" style="color:var(--blue-100)"></i><p class="text-muted">Sem acções ${status}.</p></div>`;
+    const res  = await window.InkuAPI.get(`/ai/actions?status=${status}&limit=20`);
+    const acts = res.data||[];
+    if(!acts.length){
+      list.innerHTML=`<div style="text-align:center;padding:40px;color:#94a3b8"><i class="bi bi-check-circle-fill" style="font-size:2.5rem;color:#e2e8f0;display:block;margin-bottom:12px"></i>Sem acções ${status}.</div>`;
       return;
     }
-    const typeIcon  = { approve_project:'bi-check-circle-fill', reject_project:'bi-x-circle-fill', advance_stage:'bi-arrow-right-circle-fill', send_notification:'bi-bell-fill', send_message:'bi-chat-dots-fill', suspend_user:'bi-pause-circle-fill' };
-    const typeColor = { approve_project:'#16a34a', reject_project:'#dc2626', advance_stage:'#2563eb', send_notification:'#d97706', send_message:'#7c3aed', suspend_user:'#d97706' };
-    list.innerHTML = acts.map(a => {
-      let pl={}; try{pl=JSON.parse(a.payload||'{}');}catch{}
-      const ic=typeIcon[a.action_type]||'bi-activity';
-      const cl=typeColor[a.action_type]||'#6b7280';
+    const tIcon  = {approve_project:'bi-check-circle-fill',reject_project:'bi-x-circle-fill',advance_stage:'bi-arrow-right-circle-fill',send_notification:'bi-bell-fill',send_message:'bi-chat-dots-fill',suspend_user:'bi-pause-circle-fill'};
+    const tColor = {approve_project:'#16a34a',reject_project:'#dc2626',advance_stage:'#2563eb',send_notification:'#d97706',send_message:'#7c3aed',suspend_user:'#d97706'};
+    list.innerHTML = acts.map(a=>{
+      const ic=tIcon[a.action_type]||'bi-activity';
+      const cl=tColor[a.action_type]||'#64748b';
+      const stBg  ={pending:'#fffbeb',approved:'#f0fdf4',rejected:'#fef2f2'}[a.status]||'#f8fafc';
+      const stCl  ={pending:'#d97706',approved:'#16a34a',rejected:'#dc2626'}[a.status]||'#64748b';
       const isPend = a.status==='pending';
-      const stBg   = {pending:'#fff7ed',approved:'#f0fdf4',rejected:'#fef2f2'}[a.status]||'#f8fafc';
-      const stCl   = {pending:'#d97706',approved:'#16a34a',rejected:'#dc2626'}[a.status]||'#6b7280';
       return `<div class="action-card">
-        <div class="d-flex align-items-start gap-3">
-          <div style="width:40px;height:40px;border-radius:10px;background:${cl}18;border:1px solid ${cl}30;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="bi ${ic}" style="color:${cl};font-size:1rem"></i>
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="width:40px;height:40px;border-radius:10px;background:${cl}18;border:1px solid ${cl}25;display:flex;align-items:center;justify-content:center">
+            <i class="bi ${ic}" style="color:${cl};font-size:1.1rem"></i>
           </div>
-          <div style="flex:1;min-width:0">
-            <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
-              <span style="font-weight:700;color:var(--text-primary);font-size:.875rem">${(a.action_type||'').replace(/_/g,' ')}</span>
-              <span class="badge" style="background:${stBg};color:${stCl};font-size:.68rem">${a.status}</span>
-              ${a.target_type?`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:.68rem">${a.target_type}</span>`:''}
+          <div>
+            <div style="font-weight:700;color:#0f172a;font-size:.875rem">${(a.action_type||'').replace(/_/g,' ')}</div>
+            <div class="d-flex gap-2 mt-1">
+              <span style="background:${stBg};color:${stCl};font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:6px">${a.status}</span>
+              ${a.target_type?`<span style="background:#eff6ff;color:#1d4ed8;font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:6px">${a.target_type}</span>`:''}
             </div>
-            <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:10px;line-height:1.5">${(a.reason||'Sem justificação.').substring(0,250)}</p>
-            <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:12px">${new Date(a.created_at).toLocaleString('pt-PT')}</div>
-            ${isPend?`<div class="d-flex gap-2">
-              <button onclick="reviewAction('${a.id}',true)"  class="btn btn-success btn-sm flex-fill"><i class="bi bi-check-lg me-1"></i>Aprovar</button>
-              <button onclick="reviewAction('${a.id}',false)" class="btn btn-outline-danger btn-sm flex-fill"><i class="bi bi-x-lg me-1"></i>Rejeitar</button>
-            </div>`:`<small class="text-muted">Processada: ${a.reviewed_at?new Date(a.reviewed_at).toLocaleString('pt-PT'):'—'}</small>`}
           </div>
+          <div style="margin-left:auto;font-size:.72rem;color:#94a3b8">${new Date(a.created_at).toLocaleString('pt-PT')}</div>
         </div>
+        <div class="action-reason">${(a.reason||'Sem justificação.').substring(0,300)}</div>
+        ${isPend?`<div class="d-flex gap-2">
+          <button onclick="reviewAct('${a.id}',true)"  class="action-approve-btn flex-fill">✅ Aprovar e Executar</button>
+          <button onclick="reviewAct('${a.id}',false)" class="action-reject-btn flex-fill">❌ Rejeitar</button>
+        </div>`:`<small style="color:#94a3b8">Processada: ${a.reviewed_at?new Date(a.reviewed_at).toLocaleString('pt-PT'):'—'}</small>`}
       </div>`;
     }).join('');
-  } catch(err) { window.showToast?.(err.message,'error'); }
+  } catch(e){window.showToast?.(e.message,'error');}
 }
 
-async function reviewAction(id, approved) {
+async function reviewAct(id, approved) {
   const note = approved
-    ? (prompt('Nota para o utilizador (opcional):') || '')
-    : (prompt('Motivo da rejeição:') || 'Rejeitado pelo administrador.');
+    ? (prompt('Nota opcional para o utilizador:')||'')
+    : (prompt('Motivo da rejeição:')||'Rejeitado pelo administrador.');
   try {
-    const res = await window.InkuAPI.patch(`/ai/actions/${id}`,{approved,note});
-    window.showToast?.(res.message||(approved?'Acção executada!':'Rejeitada.'),'success');
+    const r = await window.InkuAPI.patch(`/ai/actions/${id}`,{approved,note});
+    window.showToast?.(r.message||(approved?'✅ Executado!':'Rejeitado.'),'success');
     loadActions(); loadPendingCount();
-  } catch(err){ window.showToast?.(err.message,'error'); }
+  } catch(e){window.showToast?.(e.message,'error');}
 }
 
 async function loadPendingCount() {
-  if (!isAdmin) return;
+  if(!isAdmin) return;
   try {
-    const res = await window.InkuAPI.get('/ai/actions?status=pending&limit=1');
-    const n = res.pagination?.total||0;
-    const b = document.getElementById('actions-badge');
-    b.textContent=n; b.style.display=n>0?'':'none';
-  } catch {}
+    const r=await window.InkuAPI.get('/ai/actions?status=pending&limit=1');
+    const n=r.pagination?.total||0;
+    [document.getElementById('hdr-badge'),document.getElementById('sb-badge')].forEach(el=>{
+      if(!el) return; el.textContent=n; el.style.display=n>0?'':'none';
+    });
+  } catch{}
 }
 
-// ─── Monitorização ───────────────────────────────────────────
+// ─── Monitor ──────────────────────────────────────────────────
 async function runMonitor() {
-  if (!isAdmin){ window.showToast?.('Só administradores.','warning'); return; }
-  const btn = document.getElementById('monitor-run-btn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A analisar...';
-  document.getElementById('monitor-result').innerHTML='<div class="monitor-card text-center py-4"><div class="spinner-border text-primary mb-3"></div><p class="text-muted">A IA está a analisar a plataforma...</p></div>';
-  setTab('monitor');
+  if(!isAdmin){window.showToast?.('Só administradores.','warning');return;}
+  const btn=document.getElementById('monitor-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A analisar...';
+  const div=document.getElementById('monitor-result');
+  div.innerHTML='<div class="monitor-report text-center py-4"><div class="spinner-border text-primary mb-3"></div><p style="color:#64748b">A IA está a analisar a plataforma...</p></div>';
   try {
-    const res = await window.InkuAPI.post('/ai/monitor');
-    document.getElementById('monitor-result').innerHTML=`
-      <div class="monitor-card" style="border-left:4px solid var(--blue-600)">
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <i class="bi bi-robot" style="color:var(--blue-600);font-size:1.1rem"></i>
-          <strong>Relatório de Monitorização</strong>
-          <span class="ms-auto badge" style="background:var(--blue-50);color:var(--blue-700)">${new Date().toLocaleString('pt-PT')}</span>
-        </div>
-        <div style="white-space:pre-wrap;line-height:1.8;font-size:.875rem">${fmtMsg(res.report)}</div>
-        ${res.autonomous_actions>0?`<div class="mt-3 p-3 rounded-3" style="background:#f0fdf4;border:1px solid #bbf7d0"><i class="bi bi-check-circle-fill text-success me-2"></i>${res.autonomous_actions} acção(ões) executadas automaticamente.</div>`:''}
-        ${res.pending_actions>0?`<div class="mt-2 p-3 rounded-3" style="background:#fff7ed;border:1px solid #fed7aa"><i class="bi bi-lightning-fill text-warning me-2"></i>${res.pending_actions} acção(ões) requerem aprovação. <button onclick="setTab('actions')" class="btn btn-sm btn-warning ms-2">Ver</button></div>`:''}
-      </div>`;
-    loadConversations(); loadPendingCount();
+    const r=await window.InkuAPI.post('/ai/monitor');
+    div.innerHTML=`<div class="monitor-report">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-robot" style="color:#2563eb;font-size:1.1rem"></i>
+        <strong>Relatório de Monitorização</strong>
+        <span style="margin-left:auto;font-size:.72rem;color:#94a3b8">${new Date().toLocaleString('pt-PT')}</span>
+      </div>
+      <div style="white-space:pre-wrap;line-height:1.8;font-size:.875rem;color:#1e293b">${fmt(r.report)}</div>
+      ${r.autonomous_actions>0?`<div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.82rem;color:#15803d"><i class="bi bi-check-circle-fill me-2"></i>${r.autonomous_actions} acção(ões) executadas automaticamente.</div>`:''}
+      ${r.pending_actions>0?`<div style="margin-top:8px;padding:10px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:.82rem;color:#92400e"><i class="bi bi-lightning-fill me-2"></i>${r.pending_actions} acção(ões) requerem aprovação. <button onclick="setMainTab('actions')" class="action-approve-btn ms-2" style="padding:3px 12px;font-size:.78rem">Ver</button></div>`:''}
+    </div>`;
+    loadConvList(); loadPendingCount();
     window.showToast?.('Análise concluída!','success');
-  } catch(err){
-    document.getElementById('monitor-result').innerHTML=`<div class="text-danger text-center py-4">${err.message}</div>`;
-    window.showToast?.(err.message,'error');
-  } finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-play-fill me-1"></i>Executar Análise'; }
+  } catch(e){
+    div.innerHTML=`<div style="text-align:center;padding:40px;color:#dc2626">${e.message}</div>`;
+    window.showToast?.(e.message,'error');
+  } finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-play-fill me-1"></i>Executar Análise';}
 }
 
-// ─── PDF ─────────────────────────────────────────────────────
-async function downloadReport() {
-  const btn = document.getElementById('pdf-btn');
+// ─── PDF ──────────────────────────────────────────────────────
+async function downloadPdf() {
+  const btn=document.getElementById('pdf-btn');
   btn.disabled=true;
   try {
-    const token = window.InkuAuth?.getToken();
-    const base  = window.InkuAPI?.BASE_URL || '/api/v1';
-    const res   = await fetch(`${base}/ai/report/pdf`,{headers:{'Authorization':`Bearer ${token}`}});
-    if (!res.ok) { const e=await res.json().catch(()=>({})); throw {message:e.message||'Erro ao gerar PDF.'}; }
-    const blob  = await res.blob();
-    const url   = URL.createObjectURL(blob);
-    const a     = document.createElement('a');
-    a.href=url; a.download=`INKUAI_${new Date().toISOString().split('T')[0]}.pdf`; a.click();
+    const token=window.InkuAuth?.getToken();
+    const base=window.InkuAPI?.BASE_URL||'/api/v1';
+    const res=await fetch(`${base}/ai/report/pdf`,{headers:{'Authorization':`Bearer ${token}`}});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw{message:e.message||'Erro ao gerar PDF.'};}
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`INKUAI_${new Date().toISOString().split('T')[0]}.pdf`;a.click();
     URL.revokeObjectURL(url);
     window.showToast?.('PDF gerado!','success');
-  } catch(err){ window.showToast?.(err.message,'error'); }
-  finally { btn.disabled=false; }
+  } catch(e){window.showToast?.(e.message,'error');}
+  finally{btn.disabled=false;}
 }
 </script>
 </body>

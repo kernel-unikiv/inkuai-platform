@@ -8,6 +8,13 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
+    // ── Diagnóstico de variáveis de ambiente ──
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🚀 INKU·AI Platform a iniciar...');
+    console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? '✅ Configurada' : '⚠️  Não configurada'}`);
+    console.log(`   ANTHROPIC_API_KEY: ${process.env.ANTHROPIC_API_KEY ? '✅ Configurada (' + process.env.ANTHROPIC_API_KEY.substring(0,12) + '...)' : '❌ NÃO CONFIGURADA — Adicione no Render → Environment'}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     const { sequelize } = require('./src/config/database');
     const connectMongoDB = require('./src/config/mongodb');
 
