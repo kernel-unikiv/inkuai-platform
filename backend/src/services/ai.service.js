@@ -31,8 +31,10 @@ function getModel() {
   const { GoogleGenerativeAI } = require('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(key);
   _model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-pro-latest',
+    model: 'gemini-2.5-flash',
     generationConfig: { maxOutputTokens: 1500, temperature: 0.7 }
+  }, {
+    apiVersion: 'v1'
   });
   return _model;
 }
@@ -52,7 +54,10 @@ async function callGemini(systemInstruction, history, userMessage) {
   ];
 
   const result = await model.generateContent({
-    systemInstruction,
+    systemInstruction: {
+      role: 'system',
+      parts: [{ text: systemInstruction }]
+    },
     contents
   });
 
