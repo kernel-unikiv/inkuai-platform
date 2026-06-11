@@ -4,7 +4,7 @@
   "description": "INKU\u00b7AI Platform Backend \u2014 IP/UNIKIVI FUNDECIT 2026",
   "main": "server.js",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/generative-ai": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",

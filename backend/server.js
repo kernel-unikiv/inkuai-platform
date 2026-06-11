@@ -13,7 +13,7 @@ async function startServer() {
     console.log('🚀 INKU·AI Platform a iniciar...');
     console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
     console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? '✅ Configurada' : '⚠️  Não configurada'}`);
-    console.log(`   ANTHROPIC_API_KEY: ${process.env.ANTHROPIC_API_KEY ? '✅ Configurada (' + process.env.ANTHROPIC_API_KEY.substring(0,12) + '...)' : '❌ NÃO CONFIGURADA — Adicione no Render → Environment'}`);
+    console.log(`   GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? '✅ Configurada (' + process.env.GEMINI_API_KEY.substring(0,12) + '...)' : '❌ NÃO CONFIGURADA — https://aistudio.google.com/apikey'}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     const { sequelize } = require('./src/config/database');
     const connectMongoDB = require('./src/config/mongodb');
