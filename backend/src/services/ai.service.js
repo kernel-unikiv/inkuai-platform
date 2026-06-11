@@ -31,7 +31,7 @@ function getModel() {
   const { GoogleGenerativeAI } = require('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(key);
   _model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-1.5-pro',
     generationConfig: { maxOutputTokens: 1500, temperature: 0.7 }
   });
   return _model;
@@ -40,14 +40,22 @@ function getModel() {
 // ── Chamar Gemini com histórico ───────────────────────────────
 async function callGemini(systemInstruction, history, userMessage) {
   const model = getModel();
-  const chat  = model.startChat({
+  const contents = [
+    ...history.slice(-18).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content || '' }]
+    })),
+    {
+      role: 'user',
+      parts: [{ text: userMessage }]
+    }
+  ];
+
+  const result = await model.generateContent({
     systemInstruction,
-    history: history.slice(-18).map(m => ({
-      role:  m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }))
+    contents
   });
-  const result = await chat.sendMessage(userMessage);
+
   return result.response.text();
 }
 
