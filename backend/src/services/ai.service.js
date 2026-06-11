@@ -31,7 +31,7 @@ function getModel() {
   const { GoogleGenerativeAI } = require('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(key);
   _model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-pro',
+    model: 'gemini-1.5-pro-latest',
     generationConfig: { maxOutputTokens: 1500, temperature: 0.7 }
   });
   return _model;
