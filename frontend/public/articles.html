@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artigos & Ideias — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Principal</span>
+      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"   class="sidebar-link active"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/classroom.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <span class="sidebar-section-label">Conta</span>
+      <a href="/messages.html"   class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden">
+          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
+        </div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <span class="topbar-title">Artigos & Ideias</span>
+      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
+      <div class="ms-auto">
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal">
+          <i class="bi bi-plus-lg me-2"></i>Publicar Ideia
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Filtros -->
+      <div class="inkuai-card mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-5">
+            <input type="text" id="search-input" class="form-control-dark" placeholder="🔍 Pesquisar artigos e ideias...">
+          </div>
+          <div class="col-md-4">
+            <select id="cat-filter" class="form-control-dark">
+              <option value="">Todas as categorias</option>
+              <option value="ideia">💡 Ideias</option>
+              <option value="artigo">📄 Artigos</option>
+              <option value="investigacao">🔬 Investigação</option>
+              <option value="inovacao">🚀 Inovação</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn-inkuai w-100" onclick="loadArticles()"><i class="bi bi-search me-2"></i>Pesquisar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Artigos -->
+      <div class="row g-4" id="articles-grid">
+        <div class="col-12 text-center py-5" style="color:var(--text-muted)">
+          <div class="spinner-border text-primary me-2"></div> A carregar...
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-4" id="pagination"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo Artigo/Ideia -->
+<div class="modal fade" id="newArticleModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
+        <h5 class="modal-title"><i class="bi bi-lightbulb-fill me-2" style="color:#f59e0b;"></i>Publicar Ideia / Artigo</h5>
+        <div class="ms-auto me-3">
+          <button type="button" id="ai-autofill-art" class="btn btn-sm"
+            style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;">
+            ✨ Preencher com IA
+          </button>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;color:var(--text-secondary);font-size:0.82rem;padding:10px 14px;">
+          <i class="bi bi-stars me-2" style="color:#f59e0b;"></i>
+          <strong style="color:#fbbf24;">IA disponível</strong> — Use os botões <strong>✨ Sugerir</strong> em cada campo ou <strong>Preencher com IA</strong> para gerar tudo automaticamente.
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <label class="form-label-dark">Título *</label>
+            <div class="position-relative">
+              <input type="text" id="art-title" class="form-control-dark" placeholder="Ex: Uso de IA para Agricultura de Precisão em Angola" style="padding-right:140px;">
+              <button type="button" class="btn btn-sm ai-field-btn" onclick="artAISuggest('art-title','título do artigo/ideia')">✨ Sugerir</button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Categoria *</label>
+            <select id="art-category" class="form-control-dark">
+              <option value="ideia">💡 Ideia</option>
+              <option value="artigo">📄 Artigo</option>
+              <option value="investigacao">🔬 Investigação</option>
+              <option value="inovacao">🚀 Inovação</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Tags (separadas por vírgulas)</label>
+            <input type="text" id="art-tags" class="form-control-dark" placeholder="IA, agricultura, Angola, inovação">
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Resumo</label>
+            <div class="position-relative">
+              <textarea id="art-summary" class="form-control-dark" rows="2" placeholder="Resumo breve do conteúdo..."></textarea>
+              <button type="button" class="btn btn-sm ai-field-btn" style="top:8px;" onclick="artAISuggest('art-summary','resumo do artigo')">✨ Sugerir</button>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Conteúdo Completo *</label>
+            <div class="position-relative">
+              <textarea id="art-content" class="form-control-dark" rows="8" placeholder="Escreva o conteúdo completo aqui..."></textarea>
+              <button type="button" class="btn btn-sm ai-field-btn" style="top:8px;" onclick="artAISuggest('art-content','conteúdo completo e detalhado do artigo/ideia')">✨ Sugerir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="save-article-btn"><i class="bi bi-send me-2"></i>Publicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.ai-field-btn {
+  position:absolute; right:8px; top:6px; z-index:5;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff; border:none; border-radius:20px;
+  padding:3px 10px; font-size:11px; font-weight:600;
+  cursor:pointer; transition:all .2s;
+}
+.ai-field-btn:hover { transform:scale(1.05); color:#fff; }
+.art-card { background:var(--surface-card); border:1px solid var(--border-light); border-radius:14px; padding:20px; transition:all .2s; cursor:pointer; height:100%; }
+.art-card:hover { border-color:#6366f1; transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,.15); }
+.cat-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.cat-ideia       { background:rgba(245,158,11,.15); color:#f59e0b; }
+.cat-artigo      { background:rgba(99,102,241,.15); color:#818cf8; }
+.cat-investigacao{ background:rgba(16,185,129,.15); color:#10b981; }
+.cat-inovacao    { background:rgba(239,68,68,.15); color:#f87171; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+const catLabel = { ideia:'💡 Ideia', artigo:'📄 Artigo', investigacao:'🔬 Investigação', inovacao:'🚀 Inovação' };
+
+async function loadArticles(page=1) {
+  const search   = document.getElementById('search-input').value;
+  const category = document.getElementById('cat-filter').value;
+  const grid = document.getElementById('articles-grid');
+  grid.innerHTML = '<div class="col-12 text-center py-5" style="color:var(--text-muted)"><div class="spinner-border text-primary me-2"></div> A carregar...</div>';
+  try {
+    let ep = `/articles?page=${page}&limit=9`;
+    if (search)   ep += `&search=${encodeURIComponent(search)}`;
+    if (category) ep += `&category=${category}`;
+    const res = await window.InkuAPI.get(ep);
+    const articles = res.data || [];
+    if (!articles.length) {
+      grid.innerHTML = `<div class="col-12 text-center py-5">
+        <i class="bi bi-lightbulb fs-1 d-block mb-3" style="color:var(--text-muted)"></i>
+        <p style="color:var(--text-muted)">Nenhum artigo ou ideia publicado ainda.</p>
+        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal">Publicar primeira ideia</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = articles.map(a => `
+      <div class="col-md-6 col-xl-4">
+        <div class="art-card" onclick="window.location.href='/article-detail.html?id=${a.id}'">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="cat-badge cat-${a.category}">${catLabel[a.category]||a.category}</span>
+            <span style="font-size:0.75rem;color:var(--text-muted)">${new Date(a.created_at).toLocaleDateString('pt-PT')}</span>
+          </div>
+          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:8px;line-height:1.4">${a.title}</h6>
+          <p style="font-size:0.82rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${a.summary||a.content?.substring(0,150)||''}</p>
+          ${a.tags?.length ? `<div class="d-flex flex-wrap gap-1 mb-3">${a.tags.slice(0,3).map(t=>`<span style="background:rgba(99,102,241,.1);color:#818cf8;padding:2px 8px;border-radius:20px;font-size:10px;">${t}</span>`).join('')}</div>` : ''}
+          <div class="d-flex align-items-center justify-content-between pt-2" style="border-top:1px solid var(--border-light)">
+            <div class="d-flex align-items-center gap-2">
+              <div style="width:26px;height:26px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${(a.author?.name||'?')[0].toUpperCase()}</div>
+              <span style="font-size:0.78rem;color:var(--text-muted)">${a.author?.name||'Anónimo'}</span>
+            </div>
+            <div class="d-flex align-items-center gap-3" style="font-size:0.75rem;color:var(--text-muted);">
+              <span><i class="bi bi-eye me-1"></i>${a.views||0}</span>
+              <span><i class="bi bi-heart me-1"></i>${a.likes||0}</span>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+    const pag = res.pagination;
+    if (pag?.pages > 1) {
+      document.getElementById('pagination').innerHTML = Array.from({length:pag.pages},(_,i)=>`
+        <button class="btn btn-sm mx-1 ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadArticles(${i+1})">${i+1}</button>`).join('');
+    }
+  } catch(e) {
+    grid.innerHTML = `<div class="col-12 text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${e.message}</div>`;
+  }
+}
+
+// Save article
+document.getElementById('save-article-btn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('save-article-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A publicar...';
+  try {
+    const tags = document.getElementById('art-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+    await window.InkuAPI.post('/articles', {
+      title:    document.getElementById('art-title').value,
+      content:  document.getElementById('art-content').value,
+      summary:  document.getElementById('art-summary').value,
+      category: document.getElementById('art-category').value,
+      tags_json: JSON.stringify(tags)
+    });
+    bootstrap.Modal.getInstance(document.getElementById('newArticleModal')).hide();
+    window.showToast?.('Artigo publicado!','success');
+    loadArticles();
+    ['art-title','art-content','art-summary','art-tags'].forEach(id => document.getElementById(id).value='');
+  } catch(e) { window.showToast?.(e.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-send me-2"></i>Publicar'; }
+});
+
+// AI Suggest for article fields
+async function artAISuggest(fieldId, fieldName) {
+  const input = document.getElementById(fieldId);
+  const token = localStorage.getItem('inkuai_token');
+  const context = `Categoria: ${document.getElementById('art-category')?.value}. Título: ${document.getElementById('art-title')?.value}`;
+  const btn = event.target;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/v1/ai/form-suggest',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+      body:JSON.stringify({ form_type:'article', field:fieldName, context, partial_text:input.value })
+    });
+    const data = await res.json();
+    if (data.success) showAISuggestionArt(input, data.suggestion);
+    else window.showToast?.('Erro ao gerar sugestão','error');
+  } catch(e){ window.showToast?.(e.message,'error'); }
+  finally { btn.innerHTML=orig; btn.disabled=false; }
+}
+
+function showAISuggestionArt(input, suggestion) {
+  const old = document.getElementById('ai-art-overlay');
+  if(old) old.remove();
+  const div = document.createElement('div');
+  div.id='ai-art-overlay';
+  div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  div.innerHTML=`
+    <div style="background:#1e1e2e;border:1px solid #f59e0b;border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#f59e0b,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;">✨</div>
+        <h5 style="color:#fff;margin:0;font-weight:700;">Sugestão da IA</h5>
+      </div>
+      <div style="background:#12121f;border-radius:10px;padding:16px;margin-bottom:16px;color:#c4c4e0;font-size:13px;line-height:1.7;max-height:300px;overflow-y:auto;border:1px solid #2d2d4e;white-space:pre-wrap;">${suggestion.replace(/</g,'&lt;')}</div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+        <button onclick="document.getElementById('ai-art-overlay').remove()" class="btn btn-sm btn-outline-secondary" style="border-color:#444;color:#aaa;">✗ Cancelar</button>
+        <button onclick="const el=document.getElementById('${input.id}');el.value=(el.value?(el.value+'\\n\\n'):'')+'${suggestion.replace(/'/g,"\\'").replace(/\n/g,'\\n')}';document.getElementById('ai-art-overlay').remove();" class="btn btn-sm" style="background:#374151;color:#d1d5db;border:none;">+ Adicionar</button>
+        <button onclick="document.getElementById('${input.id}').value='${suggestion.replace(/'/g,"\\'").replace(/\n/g,'\\n')}';document.getElementById('ai-art-overlay').remove();window.showToast?.('Aplicado!','success');" class="btn btn-sm" style="background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;border:none;font-weight:600;">✓ Usar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  div.addEventListener('click',e=>{if(e.target===div)div.remove();});
+}
+
+// AI auto-fill article form
+document.getElementById('ai-autofill-art')?.addEventListener('click', async () => {
+  const btn = document.getElementById('ai-autofill-art');
+  const cat = document.getElementById('art-category')?.value;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span> A gerar...';
+  btn.disabled=true;
+  const token = localStorage.getItem('inkuai_token');
+  const fields=[
+    {id:'art-title',  name:'título criativo do artigo/ideia'},
+    {id:'art-summary',name:'resumo do artigo em 2-3 frases'},
+    {id:'art-content',name:'conteúdo completo e detalhado do artigo'},
+    {id:'art-tags',   name:'5 tags relevantes separadas por vírgulas'}
+  ];
+  for(const f of fields){
+    try{
+      const r=await fetch('/api/v1/ai/form-suggest',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+        body:JSON.stringify({form_type:'article',field:f.name,context:`Categoria: ${cat}. Título: ${document.getElementById('art-title')?.value||''}`,partial_text:''})
+      });
+      const d=await r.json();
+      if(d.success) document.getElementById(f.id).value=d.suggestion;
+      await new Promise(r=>setTimeout(r,400));
+    }catch(e){}
+  }
+  window.showToast?.('Formulário preenchido! Reveja antes de publicar.','success');
+  btn.innerHTML='✨ Preencher com IA'; btn.disabled=false;
+});
+
+document.getElementById('search-input')?.addEventListener('keyup', e=>{if(e.key==='Enter')loadArticles();});
+const usr = window.InkuAuth?.getUser();
+if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
+if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded', ()=>loadArticles());
+</script>
+<script src="/assets/js/components/notifications.js"></script>
+</body>
+</html>
