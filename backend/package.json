@@ -1,7 +1,7 @@
 {
   "name": "inkuai-backend",
   "version": "1.0.0",
-  "description": "INKU\u00b7AI Platform Backend \u2014 IP/UNIKIVI FUNDECIT 2026",
+  "description": "INKU·AI Platform Backend — IP/UNIKIVI FUNDECIT 2026",
   "main": "server.js",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
@@ -24,7 +24,8 @@
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
     "uuid": "^9.0.1",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "@anthropic-ai/sdk": "^0.27.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
