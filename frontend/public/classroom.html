@@ -245,7 +245,7 @@ async function init() {
   // Load user's projects into selector
   try {
     const res = await window.InkuAPI.get('/projects/my');
-    const projects = res.data || [];
+    const projects = res.projects || res.data || [];
     const sel = document.getElementById('project-select');
     projects.forEach(p => {
       const opt = document.createElement('option');
@@ -273,7 +273,7 @@ async function loadClassroom() {
   // Load mentor
   try {
     const res = await window.InkuAPI.get(`/submissions/project/${pid}/mentor`);
-    const a = res.data?.assignment;
+    const a = res.assignment || null;
     if (a?.mentor) {
       document.getElementById('mentor-card').style.display='';
       document.getElementById('mentor-name').textContent = a.mentor.name;
@@ -289,7 +289,7 @@ async function loadSubmissions() {
   list.innerHTML = '<div class="text-center py-4" style="color:var(--text-muted)"><div class="spinner-border text-primary"></div></div>';
   try {
     const res = await window.InkuAPI.get(`/submissions/project/${currentProject}`);
-    const subs = res.data?.submissions || [];
+    const subs = res.submissions || [];
     if (!subs.length) {
       list.innerHTML = `<div class="text-center py-5">
         <i class="bi bi-inbox fs-1 d-block mb-3" style="color:var(--text-muted)"></i>

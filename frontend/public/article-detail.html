@@ -137,7 +137,7 @@ async function loadArticle() {
   if (!articleId) { showError('ID do artigo não especificado.'); return; }
   try {
     const res = await window.InkuAPI.get(`/articles/${articleId}`);
-    articleData = res.data?.article;
+    articleData = res.article || res.data?.article;
     if (!articleData) { showError('Artigo não encontrado.'); return; }
     renderArticle(articleData);
   } catch(e) { showError(e.message || 'Erro ao carregar artigo.'); }
