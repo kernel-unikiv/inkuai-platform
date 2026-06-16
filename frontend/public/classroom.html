@@ -114,18 +114,12 @@
           <div class="inkuai-card">
             <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
               <i class="bi bi-upload" style="color:#6366f1;"></i> Submeter Nova Entrega
-              <button type="button" id="ai-fill-sub-btn" class="btn btn-sm ms-auto"
-                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:600;">
-                ✨ Preencher com IA
-              </button>
+              
             </h6>
             <div class="row g-3">
               <div class="col-md-8">
                 <label class="form-label-dark">Título da Entrega *</label>
-                <div class="position-relative">
-                  <input type="text" id="sub-title" class="form-control-dark" placeholder="Ex: Sprint 1 — Protótipo inicial" style="padding-right:130px;">
-                  <button type="button" class="btn btn-sm ai-field-btn" onclick="subAISuggest('sub-title','título da entrega de projecto')">✨ Sugerir</button>
-                </div>
+                <input type="text" id="sub-title" class="form-control-dark" placeholder="Ex: Sprint 1 — Protótipo inicial">
               </div>
               <div class="col-md-4">
                 <label class="form-label-dark">Tipo</label>
@@ -138,19 +132,13 @@
               </div>
               <div class="col-12">
                 <label class="form-label-dark">Descrição / Conteúdo *</label>
-                <div class="position-relative">
-                  <textarea id="sub-desc" class="form-control-dark" rows="5"
+                <textarea id="sub-desc" class="form-control-dark" rows="5"
                     placeholder="Descreva o que foi desenvolvido, dificuldades encontradas, próximos passos..."></textarea>
-                  <button type="button" class="btn btn-sm ai-field-btn" style="top:8px;" onclick="subAISuggest('sub-desc','descrição detalhada da entrega/milestone')">✨ Sugerir</button>
-                </div>
               </div>
               <div class="col-12">
                 <label class="form-label-dark">Código (opcional)</label>
-                <div class="position-relative">
-                  <textarea id="sub-code" class="form-control-dark" rows="4"
+                <textarea id="sub-code" class="form-control-dark" rows="4"
                     placeholder="// Cole aqui excertos de código relevantes..." style="font-family:monospace;font-size:12px;"></textarea>
-                  <button type="button" class="btn btn-sm ai-field-btn" style="top:8px;" onclick="subAISuggest('sub-code','código de exemplo relevante para o projecto')">✨ Código IA</button>
-                </div>
               </div>
               <div class="col-12">
                 <label class="form-label-dark">Links (GitHub, Demo, Docs — um por linha)</label>
@@ -216,12 +204,7 @@
 </div>
 
 <style>
-.ai-field-btn {
-  position:absolute; right:8px; top:6px; z-index:5;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);
-  color:#fff; border:none; border-radius:20px;
-  padding:3px 10px; font-size:11px; font-weight:600; cursor:pointer;
-}
+
 .ai-field-btn:hover{transform:scale(1.05);color:#fff;}
 .nav-link.active { border-bottom:2px solid #6366f1 !important; color:#818cf8 !important; }
 .sub-card { background:var(--surface-card); border:1px solid var(--border-light); border-radius:12px; padding:16px; margin-bottom:12px; transition:all .2s; }
@@ -426,74 +409,9 @@ async function confirmGrade() {
   finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Confirmar Avaliação'; }
 }
 
-// AI Suggest for submission form
-async function subAISuggest(fieldId, fieldName) {
-  const input = document.getElementById(fieldId);
-  const token = localStorage.getItem('inkuai_token');
-  const projectSel = document.getElementById('project-select');
-  const context = `Projecto: ${projectSel.options[projectSel.selectedIndex]?.text}. Tipo: ${document.getElementById('sub-type')?.value}`;
-  const btn = event.target;
-  const orig = btn.innerHTML;
-  btn.innerHTML='⏳'; btn.disabled=true;
-  try {
-    const res = await fetch('/api/v1/ai/form-suggest',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
-      body:JSON.stringify({form_type:'submission',field:fieldName,context,partial_text:input.value})
-    });
-    const data = await res.json();
-    if(data.success) showSubSuggestion(input, data.suggestion);
-    else window.showToast?.('Erro ao gerar sugestão','error');
-  } catch(e){ window.showToast?.(e.message,'error'); }
-  finally { btn.innerHTML=orig; btn.disabled=false; }
-}
-
-function showSubSuggestion(input, suggestion) {
-  const old=document.getElementById('sub-overlay'); if(old) old.remove();
-  const div=document.createElement('div');
-  div.id='sub-overlay';
-  div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;';
-  div.innerHTML=`
-    <div style="background:#1e1e2e;border:1px solid #6366f1;border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-        <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;">✨</div>
-        <h5 style="color:#fff;margin:0;font-weight:700;">Sugestão da IA</h5>
-      </div>
-      <div style="background:#12121f;border-radius:10px;padding:16px;margin-bottom:16px;color:#c4c4e0;font-size:13px;line-height:1.7;max-height:300px;overflow-y:auto;border:1px solid #2d2d4e;white-space:pre-wrap;">${suggestion.replace(/</g,'&lt;')}</div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-        <button onclick="document.getElementById('sub-overlay').remove()" class="btn btn-sm btn-outline-secondary" style="border-color:#444;color:#aaa;">✗ Cancelar</button>
-        <button onclick="const el=document.getElementById('${input.id}');el.value=(el.value?(el.value+'\\n\\n'):'')+'${suggestion.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')}';document.getElementById('sub-overlay').remove();" class="btn btn-sm" style="background:#374151;color:#d1d5db;border:none;">+ Adicionar</button>
-        <button onclick="document.getElementById('${input.id}').value='${suggestion.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')}';document.getElementById('sub-overlay').remove();window.showToast?.('Aplicado!','success');" class="btn btn-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;font-weight:600;">✓ Usar</button>
-      </div>
-    </div>`;
-  document.body.appendChild(div);
-  div.addEventListener('click',e=>{if(e.target===div)div.remove();});
-}
 
 // AI Auto-fill submission
-document.getElementById('ai-fill-sub-btn')?.addEventListener('click', async () => {
-  const btn=document.getElementById('ai-fill-sub-btn');
-  const projectSel=document.getElementById('project-select');
-  const ctx=`Projecto: ${projectSel.options[projectSel.selectedIndex]?.text}. Tipo: ${document.getElementById('sub-type')?.value}`;
-  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>'; btn.disabled=true;
-  const token=localStorage.getItem('inkuai_token');
-  const fields=[
-    {id:'sub-title',name:'título da entrega de projecto académico/startup'},
-    {id:'sub-desc', name:'descrição completa do que foi desenvolvido nesta entrega'}
-  ];
-  for(const f of fields){
-    try{
-      const r=await fetch('/api/v1/ai/form-suggest',{method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
-        body:JSON.stringify({form_type:'submission',field:f.name,context:ctx,partial_text:''})});
-      const d=await r.json();
-      if(d.success) document.getElementById(f.id).value=d.suggestion;
-      await new Promise(r=>setTimeout(r,400));
-    }catch(e){}
-  }
-  window.showToast?.('Formulário preenchido! Reveja antes de submeter.','success');
-  btn.innerHTML='✨ Preencher com IA'; btn.disabled=false;
-});
+
 
 document.addEventListener('DOMContentLoaded', init);
 </script>

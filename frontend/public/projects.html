@@ -111,27 +111,15 @@
     <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
       <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
         <h5 class="modal-title"><i class="bi bi-folder-plus me-2" style="color:var(--blue-600)"></i>Novo Projecto</h5>
-        <div class="ms-auto me-3">
-          <button type="button" id="ai-autofill-btn" class="btn btn-sm"
-            style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;">
-            ✨ Preencher tudo com IA
-          </button>
-        </div>
+
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="alert" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:10px;color:var(--text-secondary);font-size:0.82rem;padding:10px 14px;">
-          <i class="bi bi-stars me-2" style="color:#8b5cf6;"></i>
-          <strong style="color:#a78bfa;">Sugestões IA disponíveis</strong> — Clique em <strong>✨ Sugerir com IA</strong> em qualquer campo, ou use <strong>Preencher tudo com IA</strong> para gerar todo o formulário automaticamente.
-        </div>
+        
         <div class="row g-3 mt-1">
           <div class="col-12">
             <label class="form-label-dark">Título *</label>
-            <div class="position-relative">
-              <input type="text" id="proj-title" class="form-control-dark" placeholder="Ex: Sistema de Detecção de Doenças com CNN"
-                data-ai-suggest="project" data-ai-field="título do projecto" style="padding-right:140px;">
-              <button type="button" class="btn btn-sm ai-field-btn" onclick="aiSuggestField('proj-title','título do projecto')">✨ Sugerir</button>
-            </div>
+            <input type="text" id="proj-title" class="form-control-dark" placeholder="Ex: Sistema de Detecção de Doenças com CNN">
           </div>
           <div class="col-md-6">
             <label class="form-label-dark">Tipo *</label>
@@ -148,29 +136,13 @@
           </div>
           <div class="col-12">
             <label class="form-label-dark">Descrição *</label>
-            <div class="position-relative">
-              <textarea id="proj-desc" class="form-control-dark" rows="4"
-                placeholder="Descreva os objectivos, tecnologias e impacto esperado..."
-                data-ai-suggest="project" data-ai-field="descrição do projecto" style="padding-right:8px;"></textarea>
-              <button type="button" class="btn btn-sm ai-field-btn" style="top:8px;" onclick="aiSuggestField('proj-desc','descrição detalhada do projecto')">✨ Sugerir</button>
-            </div>
+            <textarea id="proj-desc" class="form-control-dark" rows="4" placeholder="Descreva os objectivos, tecnologias e impacto esperado..."></textarea>
           </div>
           <div class="col-12">
             <label class="form-label-dark">Stack Tecnológico (separado por vírgulas)</label>
-            <div class="position-relative">
-              <input type="text" id="proj-stack" class="form-control-dark"
-                placeholder="Python, TensorFlow, React, Docker..."
-                data-ai-suggest="project" data-ai-field="stack tecnológico" style="padding-right:140px;">
-              <button type="button" class="btn btn-sm ai-field-btn" onclick="aiSuggestField('proj-stack','stack tecnológico')">✨ Sugerir</button>
-            </div>
+            <input type="text" id="proj-stack" class="form-control-dark" placeholder="Python, TensorFlow, React, Docker...">
           </div>
-          <div class="col-12" id="mentor-info-box" style="display:none;">
-            <div class="d-flex align-items-center gap-2 p-3" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;">
-              <i class="bi bi-person-check-fill" style="color:#10b981;font-size:1.2rem;"></i>
-              <div>
-                <div style="color:#10b981;font-weight:600;font-size:0.85rem;">Mentor será atribuído automaticamente</div>
-                <div style="color:var(--text-muted);font-size:0.78rem;">Um mentor especializado na área será seleccionado após criar o projecto.</div>
-              </div>
+          
             </div>
           </div>
           <div class="col-12">
@@ -191,17 +163,7 @@
   </div>
 </div>
 
-<style>
-.ai-field-btn {
-  position:absolute; right:8px; top:6px; z-index:5;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);
-  color:#fff; border:none; border-radius:20px;
-  padding:3px 10px; font-size:11px; font-weight:600;
-  cursor:pointer; transition:all .2s;
-  box-shadow:0 2px 8px rgba(99,102,241,.3);
-}
-.ai-field-btn:hover { transform:scale(1.05); color:#fff; }
-</style>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
@@ -289,84 +251,14 @@ const usr = window.InkuAuth?.getUser();
 if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
 if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
 
-// AI Field suggestion
-async function aiSuggestField(fieldId, fieldName) {
-  const input = document.getElementById(fieldId);
-  const token = localStorage.getItem('inkuai_token');
-  const context = `Tipo: ${document.getElementById('proj-type')?.value}. Título: ${document.getElementById('proj-title')?.value}`;
-  const btn = event.target;
-  btn.textContent = '⏳';
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/v1/ai/form-suggest', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
-      body:JSON.stringify({ form_type:'project', field:fieldName, context, partial_text:input.value })
-    });
-    const data = await res.json();
-    if (data.success) showAISuggestion(input, data.suggestion);
-    else window.showToast?.('Erro ao gerar sugestão','error');
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.textContent = '✨ Sugerir'; btn.disabled = false; }
-}
 
-function showAISuggestion(input, suggestion) {
-  const old = document.getElementById('ai-suggest-overlay');
-  if (old) old.remove();
-  const div = document.createElement('div');
-  div.id = 'ai-suggest-overlay';
-  div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;';
-  div.innerHTML = `
-    <div style="background:#1e1e2e;border:1px solid #6366f1;border-radius:16px;max-width:560px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-        <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;">✨</div>
-        <h5 style="color:#fff;margin:0;font-weight:700;">Sugestão da IA</h5>
-      </div>
-      <div style="background:#12121f;border-radius:10px;padding:16px;margin-bottom:16px;color:#c4c4e0;font-size:13px;line-height:1.7;max-height:250px;overflow-y:auto;border:1px solid #2d2d4e;white-space:pre-wrap;">${suggestion.replace(/</g,'&lt;')}</div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-        <button onclick="document.getElementById('ai-suggest-overlay').remove()" class="btn btn-sm btn-outline-secondary" style="border-color:#444;color:#aaa;">✗ Cancelar</button>
-        <button onclick="document.getElementById('ai-suggest-overlay').remove();const el=arguments[0];el.value=el.value+(el.value?'\n\n':'')+${JSON.stringify(suggestion)};" class="btn btn-sm" style="background:#374151;color:#d1d5db;border:none;" data-target="${input.id}">+ Adicionar</button>
-        <button onclick="document.getElementById('${input.id}').value=${JSON.stringify(suggestion)};document.getElementById('ai-suggest-overlay').remove();window.showToast?.('Sugestão aplicada!','success');" class="btn btn-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;font-weight:600;">✓ Usar</button>
-      </div>
-    </div>`;
-  document.body.appendChild(div);
-  div.addEventListener('click', e => { if(e.target===div) div.remove(); });
-}
+
+
 
 // AI auto-fill all fields
-document.getElementById('ai-autofill-btn')?.addEventListener('click', async () => {
-  const btn = document.getElementById('ai-autofill-btn');
-  const type = document.getElementById('proj-type')?.value;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> A gerar...';
-  btn.disabled = true;
-  const token = localStorage.getItem('inkuai_token');
-  const fields = [
-    {id:'proj-title', name:'título do projecto'},
-    {id:'proj-desc',  name:'descrição detalhada do projecto'},
-    {id:'proj-stack', name:'stack tecnológico recomendado'}
-  ];
-  for (const f of fields) {
-    try {
-      const r = await fetch('/api/v1/ai/form-suggest',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
-        body:JSON.stringify({form_type:'project',field:f.name,context:`Tipo de projecto: ${type}`,partial_text:''})
-      });
-      const d = await r.json();
-      if(d.success) document.getElementById(f.id).value = d.suggestion;
-      await new Promise(r=>setTimeout(r,400));
-    } catch(e){}
-  }
-  document.getElementById('mentor-info-box').style.display = '';
-  window.showToast?.('Formulário preenchido! Reveja antes de submeter.','success');
-  btn.innerHTML = '✨ Preencher tudo com IA';
-  btn.disabled = false;
-});
 
-// Show mentor info when type changes
-document.getElementById('proj-type')?.addEventListener('change', () => {
-  document.getElementById('mentor-info-box').style.display = '';
-});
+
+
 
 document.addEventListener('DOMContentLoaded', ()=>loadProjects());
 </script>

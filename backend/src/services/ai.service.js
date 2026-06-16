@@ -69,18 +69,32 @@ async function callGemini(systemInstruction, history, userMessage) {
 
 const PROMPT_ADMIN = `És o INKU·AI, o sistema de IA autónomo da plataforma IP/UNIKIVI, Angola. FUNDECIT Edital Nº 1/2026.
 
-PAPEL: Gestor autónomo da plataforma. Trabalhas com o Administrador.
+PAPEL: Gestor autónomo da plataforma com poderes alargados. Trabalhas com o Administrador.
 
-AUTONOMIA:
-- Actua sozinho para: notificações de encorajamento, análises, relatórios
-- Pede permissão para: suspender utilizadores, rejeitar projectos, acções destrutivas
-- Para acções autónomas: [ACTION:{"type":"notify_all_active","urgent":false,"payload":{"title":"...","message":"..."}}]
-- Para acções que precisam admin: [ACTION:{"type":"...","urgent":true,"target_type":"...","target_id":"...","reason":"..."}]
+PODERES AUTÓNOMOS (executas sem pedir permissão):
+- Notificar qualquer utilizador ou grupo
+- Enviar mensagens directas
+- Gerar análises e relatórios
+- Encorajar estudantes e mentores
+
+ACÇÕES AUTÓNOMAS (formato obrigatório):
+[ACTION:{"type":"notify_all_active","urgent":false,"payload":{"title":"🎯 Título","message":"Mensagem","notif_type":"info"}}]
+[ACTION:{"type":"notify_by_role","urgent":false,"payload":{"role":["student"],"title":"...","message":"...","notif_type":"success"}}]
+[ACTION:{"type":"notify_user","urgent":false,"payload":{"user_id":"UUID","title":"...","message":"...","notif_type":"info"}}]
+[ACTION:{"type":"send_message","urgent":false,"payload":{"receiver_id":"UUID","subject":"...","body":"..."}}]
+[ACTION:{"type":"send_message_all","urgent":false,"payload":{"subject":"...","body":"..."}}]
+
+ACÇÕES QUE PRECISAM APROVAÇÃO DO ADMIN:
+[ACTION:{"type":"suspend_user","urgent":true,"target_type":"user","target_id":"UUID","reason":"..."}]
+[ACTION:{"type":"reject_project","urgent":true,"target_type":"project","target_id":"UUID","reason":"..."}]
+[ACTION:{"type":"approve_project","urgent":true,"target_type":"project","target_id":"UUID","reason":"..."}]
+
+ROLES NA PLATAFORMA: student (estudantes), mentor (orientadores), admin (administradores)
 
 PLATAFORMA: {STATS}
 ADMIN: {ADMIN}
 
-Responde em Português de Angola. Sê directo e usa dados reais.`;
+Responde em Português de Angola. Usa os poderes activamente. Propõe acções relevantes.`;
 
 const PROMPT_USER = `És o INKU·AI Assistant da IP/UNIKIVI, Angola.
 
@@ -132,6 +146,7 @@ function clean(text) {
 
 // ══ ACÇÕES AUTÓNOMAS ═════════════════════════════════════════
 async function execAuto(type, payload, reason) {
+  // ── Notificar utilizador específico
   if (type === 'notify_user' && payload.user_id) {
     return Notification.create({
       user_id: payload.user_id, type: payload.notif_type||'info',
@@ -139,6 +154,7 @@ async function execAuto(type, payload, reason) {
       action_url: payload.url||'/dashboard.html'
     });
   }
+  // ── Notificar todos os utilizadores activos
   if (type === 'notify_all_active') {
     const users = await User.findAll({ where: { is_active:true } });
     await Promise.all(users.map(u => Notification.create({
@@ -147,6 +163,44 @@ async function execAuto(type, payload, reason) {
       action_url: payload.url||'/dashboard.html'
     })));
     return { sent: users.length };
+  }
+  // ── Notificar por role (estudantes, mentores, admins)
+  if (type === 'notify_by_role' && payload.role) {
+    const { Op } = require('sequelize');
+    const roles = Array.isArray(payload.role) ? payload.role : [payload.role];
+    const users = await User.findAll({ where: { role: { [Op.in]: roles }, is_active: true } });
+    await Promise.all(users.map(u => Notification.create({
+      user_id: u.id, type: payload.notif_type||'info',
+      title: payload.title||'🤖 INKU·AI', message: payload.message||reason,
+      action_url: payload.url||'/dashboard.html'
+    })));
+    return { sent: users.length, roles };
+  }
+  // ── Enviar mensagem directa
+  if (type === 'send_message' && payload.receiver_id) {
+    const admins = await User.findAll({ where: { role: 'admin' }, limit: 1 });
+    const senderId = admins[0]?.id;
+    if (senderId) {
+      return Message.create({
+        sender_id: senderId, receiver_id: payload.receiver_id,
+        subject: payload.subject || '🤖 Mensagem do INKU·AI',
+        body: payload.body || reason
+      });
+    }
+  }
+  // ── Enviar mensagem para todos
+  if (type === 'send_message_all') {
+    const admins = await User.findAll({ where: { role: 'admin' }, limit: 1 });
+    const senderId = admins[0]?.id;
+    if (senderId) {
+      const users = await User.findAll({ where: { is_active: true } });
+      await Promise.all(users.map(u => Message.create({
+        sender_id: senderId, receiver_id: u.id,
+        subject: payload.subject || '🤖 INKU·AI',
+        body: payload.body || reason
+      })));
+      return { sent: users.length };
+    }
   }
   return null;
 }
@@ -504,3 +558,4 @@ class AIService {
 }
 
 module.exports = new AIService();
+
