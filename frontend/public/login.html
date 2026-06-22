@@ -11,67 +11,62 @@
 <body>
 <div class="auth-wrapper">
   <div class="auth-card">
-    <!-- Logo -->
-    <div class="text-center mb-4">
+    <div class="text-center mb-5">
       <div class="auth-logo">
-        <i class="bi bi-cpu-fill text-white fs-4"></i>
+        <i class="bi bi-cpu-fill text-white" style="font-size:1.25rem"></i>
       </div>
-      <h4 class="auth-title">INKU<span style="color:var(--blue-600)">·AI</span></h4>
-      <p class="auth-subtitle mt-1">Instituto Politécnico / UNIKIVI</p>
+      <h4 class="auth-title">INKU<span style="color:var(--ink-400)">·AI</span></h4>
+      <p class="auth-subtitle">Instituto Politécnico / UNIKIVI</p>
     </div>
 
-    <h5 style="font-weight:600;color:var(--text-primary);margin-bottom:20px">Entrar na plataforma</h5>
+    <div style="margin-bottom:24px">
+      <h5 style="font-size:1rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.015em;margin-bottom:4px">
+        Entrar na plataforma
+      </h5>
+      <p style="font-size:0.8125rem;color:var(--text-muted);margin:0">
+        Use as suas credenciais institucionais
+      </p>
+    </div>
 
     <form id="login-form">
       <div class="mb-3">
         <label class="form-label-dark">Email institucional</label>
-        <div class="position-relative">
-          <i class="bi bi-envelope position-absolute" style="left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
-          <input type="email" id="email" class="form-control-dark" style="padding-left:38px" placeholder="exemplo@ip.unikivi.ao" required>
+        <div class="input-group">
+          <i class="bi bi-envelope input-icon"></i>
+          <input type="email" id="email" class="form-control-dark"
+                 placeholder="exemplo@ip.unikivi.ao" required autocomplete="email">
         </div>
       </div>
       <div class="mb-4">
-        <label class="form-label-dark">Password</label>
-        <div class="position-relative">
-          <i class="bi bi-lock position-absolute" style="left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
-          <input type="password" id="password" class="form-control-dark" style="padding-left:38px" placeholder="••••••••" required>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <label class="form-label-dark" style="margin-bottom:0">Password</label>
+          <a href="forgot-password.html" style="font-size:0.75rem;color:var(--ink-400);text-decoration:none;font-weight:500">
+            Esqueceu?
+          </a>
+        </div>
+        <div class="input-group">
+          <i class="bi bi-lock input-icon"></i>
+          <input type="password" id="password" class="form-control-dark"
+                 placeholder="••••••••" required autocomplete="current-password">
         </div>
       </div>
 
-      <button type="submit" class="btn-inkuai w-100 justify-content-center" style="height:44px">
-        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+      <button type="submit" class="btn-inkuai w-100 justify-content-center" style="height:42px;font-size:0.9rem">
+        <i class="bi bi-box-arrow-in-right"></i>Entrar
       </button>
     </form>
 
-    <div class="text-center mt-3">
-      <a href="forgot-password.html" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none">
-        Esqueceu a password?
-      </a>
-    </div>
-
-    <hr style="border-color:var(--border-light);margin:20px 0">
-
-    <p class="text-center mb-0" style="font-size:0.875rem;color:var(--text-muted)">
-      Ainda não tem conta?
-      <a href="register.html" style="color:var(--blue-600);font-weight:600;text-decoration:none">Criar conta</a>
-    </p>
-        <p class="text-center mb-0" style="font-size:0.875rem;color:var(--text-muted)">
-      Voltar à página inicial?
-      <a href="index.html" style="color:var(--blue-600);font-weight:600;text-decoration:none">Voltar</a>
-    </p>
-
-    <!-- Contas demo -->
-   <!--<div class="mt-4 p-3 rounded-3" style="background:var(--blue-50);border:1px solid var(--blue-100)">
-      <p class="mb-2" style="font-size:0.75rem;font-weight:700;color:var(--blue-700);text-transform:uppercase;letter-spacing:0.05em">
-        <i class="bi bi-info-circle me-1"></i>Contas de demonstração
+    <div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--border-subtle)">
+      <p style="font-size:0.8125rem;color:var(--text-muted);margin-bottom:8px">
+        Ainda não tem conta?
+        <a href="register.html" style="color:var(--ink-400);font-weight:600;text-decoration:none">Criar conta</a>
       </p>
-      <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.9">
-        <div><strong>Admin:</strong> admin@inkuai.ao / Admin@12345</div>
-        <div><strong>Mentor:</strong> nkanga.pedro@ip.unikivi.ao / Mentor@12345</div>
-        <div><strong>Estudante:</strong> estudante@ip.unikivi.ao / Student@12345</div>
-      </div>
-    </div> 
-  -->
+      <p style="font-size:0.8125rem;color:var(--text-muted);margin:0">
+        <a href="index.html" style="color:var(--text-muted);text-decoration:none">
+          <i class="bi bi-arrow-left me-1"></i>Voltar ao início
+        </a>
+      </p>
+    </div>
   </div>
 </div>
 

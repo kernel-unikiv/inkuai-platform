@@ -9,47 +9,43 @@
 </head>
 <body>
 <div class="dashboard-layout">
-  <aside class="sidebar">
+    <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"   class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"   class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
-      <a href="/classroom.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link "><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
+      <a href="/classroom.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <a href="/sandbox.html"      class="sidebar-link "><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link "><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/ai-models.html"    class="sidebar-link "><i class="bi bi-braces"></i>Modelos IA</a>
       <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/mentorship.html"   class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html"     class="sidebar-link "><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"   class="sidebar-link" id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem">0</span></a>
-      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link " id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span></a>
+      <a href="/profile.html"      class="sidebar-link "><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
-          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
-          <div class="sidebar-user-role" data-user-role>student</div>
-        </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
-
-  <main class="main-content">
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title">Projectos</span>
-      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
-      <div class="ms-auto">
+      <div class="ms-auto d-flex align-items-center gap-3"><div id="notif-mount" class="d-flex align-items-center"></div>
         <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newProjectModal">
           <i class="bi bi-plus-lg me-2"></i>Novo Projecto
         </button>
@@ -110,7 +106,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
       <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title"><i class="bi bi-folder-plus me-2" style="color:var(--blue-600)"></i>Novo Projecto</h5>
+        <h5 class="modal-title"><i class="bi bi-folder-plus me-2" style="color:var(--ink-400)"></i>Novo Projecto</h5>
 
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -172,8 +168,8 @@
 <script>
 const typeIcon  = {software:'bi-code-slash',ai_model:'bi-braces',data_pipeline:'bi-database',research:'bi-journal-text'};
 const typeColor = {software:'primary',ai_model:'success',data_pipeline:'warning',research:'info'};
-const typeBg    = {software:'var(--blue-50)',ai_model:'#f0fdf4',data_pipeline:'#fff7ed',research:'#f0f9ff'};
-const typeClr   = {software:'var(--blue-700)',ai_model:'#16a34a',data_pipeline:'#d97706',research:'#0284c7'};
+const typeBg    = {software:'var(--ink-50)',ai_model:'#f0fdf4',data_pipeline:'#fff7ed',research:'#f0f9ff'};
+const typeClr   = {software:'var(--ink-500)',ai_model:'#16a34a',data_pipeline:'#d97706',research:'#0284c7'};
 
 async function loadProjects(page=1) {
   const search = document.getElementById('search-input').value;
@@ -196,8 +192,8 @@ async function loadProjects(page=1) {
       <div class="col-md-6 col-xl-4">
         <div class="project-card">
           <div class="d-flex align-items-start justify-content-between mb-3">
-            <div class="project-type-icon" style="background:${typeBg[p.type]||'var(--blue-50)'}">
-              <i class="bi ${typeIcon[p.type]||'bi-folder'}" style="color:${typeClr[p.type]||'var(--blue-600)'}"></i>
+            <div class="project-type-icon" style="background:${typeBg[p.type]||'var(--ink-50)'}">
+              <i class="bi ${typeIcon[p.type]||'bi-folder'}" style="color:${typeClr[p.type]||'var(--ink-400)'}"></i>
             </div>
             <span class="status status-${p.status}">${p.status}</span>
           </div>

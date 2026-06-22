@@ -7,11 +7,55 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-600) 100%);
+      border-radius: var(--radius-lg);
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(59,130,246,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      right: 24px; top: 50%; transform: translateY(-50%);
+      width: 80px; height: 80px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .quick-action {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--ease-fast);
+      box-shadow: var(--shadow-xs);
+    }
+    .quick-action:hover {
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-primary);
+    }
+    .quick-action i { font-size: 0.875rem; width: 16px; text-align: center; }
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
 
-  <!-- ══ SIDEBAR AZUL ESCURO ══ -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
@@ -20,7 +64,6 @@
         <div class="brand-sub">IP/UNIKIVI</div>
       </div>
     </a>
-
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
       <a href="/dashboard.html"   class="sidebar-link active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
@@ -29,96 +72,106 @@
       <a href="/articles.html"    class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
       <a href="/classroom.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
       <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
       <a href="/ai-models.html"   class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
-
       <span class="sidebar-section-label">Académico</span>
       <a href="/mentorship.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
       <a href="/datasets.html"    class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
-
       <span class="sidebar-section-label">Conta</span>
+      <a href="/messages.html"    class="sidebar-link" id="msg-nav-link">
+        <i class="bi bi-chat-dots-fill"></i>Mensagens
+        <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span>
+      </a>
       <a href="/profile.html"     class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none">
         <i class="bi bi-shield-fill"></i>Administração
       </a>
     </nav>
-
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
+        <div style="flex:1;overflow:hidden;min-width:0">
           <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
           <div class="sidebar-user-role" data-user-role>student</div>
         </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)" title="Sair">
+        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
     </div>
   </aside>
 
-  <!-- ══ MAIN CONTENT ══ -->
+  <!-- OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
   <main class="main-content">
-    <!-- Topbar branco -->
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)">
-        <i class="bi bi-list fs-4"></i>
+      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()">
+        <i class="bi bi-list" style="font-size:1.25rem"></i>
       </button>
       <span class="topbar-title">Dashboard</span>
       <span class="topbar-badge ms-2 d-none d-md-inline">FUNDECIT 2026</span>
       <div class="ms-auto d-flex align-items-center gap-3">
-        <span class="text-muted small d-none d-md-block" data-user-email></span>
+        <span class="text-muted d-none d-md-block" style="font-size:0.75rem" data-user-email></span>
         <div id="notif-mount" class="d-flex align-items-center"></div>
       </div>
     </div>
 
-    <!-- Conteúdo -->
     <div class="page-content">
 
-      <!-- Boas-vindas -->
-      <div class="mb-4">
-        <h5 style="font-weight:700;color:var(--text-primary)">
-          Bem-vindo de volta, <span data-user-name style="color:var(--blue-600)">Investigador</span> 👋
-        </h5>
-        <p class="mb-0" style="color:var(--text-muted);font-size:0.9rem">
-          Plataforma de Incubação de IA · IP/UNIKIVI · Candidatura FUNDECIT Edital Nº 1/2026
-        </p>
+      <!-- Welcome banner -->
+      <div class="welcome-banner mb-4">
+        <div style="position:relative;z-index:1">
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);font-weight:500;margin-bottom:4px;letter-spacing:0.02em">BEM-VINDO DE VOLTA</div>
+          <h5 style="font-weight:700;color:#fff;margin-bottom:4px;font-size:1.125rem;letter-spacing:-0.02em">
+            <span data-user-name>Investigador</span> 👋
+          </h5>
+          <p style="color:rgba(255,255,255,0.45);font-size:0.8125rem;margin:0">
+            Plataforma de Incubação de IA · IP/UNIKIVI · FUNDECIT 2026
+          </p>
+        </div>
       </div>
 
       <!-- Métricas -->
       <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-          <div class="metric-card">
+          <div class="metric-card blue">
             <div class="metric-icon blue"><i class="bi bi-folder2-open"></i></div>
             <div>
               <div class="metric-value" id="stat-projects">—</div>
               <div class="metric-label">Projectos</div>
+              <div class="metric-trend neutral">—</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-          <div class="metric-card">
+          <div class="metric-card green">
             <div class="metric-icon green"><i class="bi bi-rocket-takeoff"></i></div>
             <div>
               <div class="metric-value" id="stat-startups">—</div>
               <div class="metric-label">Startups</div>
+              <div class="metric-trend neutral">—</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-          <div class="metric-card">
+          <div class="metric-card orange">
             <div class="metric-icon orange"><i class="bi bi-terminal-fill"></i></div>
             <div>
-              <div class="metric-value" style="font-size:1.2rem;color:var(--success)">Activo</div>
+              <div class="metric-value" style="font-size:1.125rem;color:var(--success)">Activo</div>
               <div class="metric-label">Sandbox IA</div>
+              <div class="metric-trend up"><i class="bi bi-circle-fill" style="font-size:0.4rem"></i>Online</div>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-          <div class="metric-card">
+          <div class="metric-card purple">
             <div class="metric-icon purple"><i class="bi bi-github"></i></div>
             <div>
-              <div class="metric-value" style="font-size:1.2rem">GitHub</div>
+              <div class="metric-value" style="font-size:1.125rem">GitHub</div>
               <div class="metric-label">Integração</div>
+              <div class="metric-trend neutral">Sincronizado</div>
             </div>
           </div>
         </div>
@@ -126,24 +179,36 @@
 
       <!-- Grid principal -->
       <div class="row g-4">
-        <!-- Projectos Recentes -->
+
+        <!-- Projectos recentes -->
         <div class="col-lg-8">
           <div class="inkuai-card">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
-                <i class="bi bi-folder2-open me-2" style="color:var(--blue-600)"></i>Projectos Recentes
-              </h6>
-              <a href="/projects.html" class="btn btn-sm btn-outline-primary" style="font-size:0.8rem">Ver todos</a>
+            <div class="card-header">
+              <h6><i class="bi bi-folder2-open"></i>Projectos Recentes</h6>
+              <a href="/projects.html" class="btn-ghost" style="font-size:0.75rem;color:var(--ink-400)">
+                Ver todos <i class="bi bi-arrow-right ms-1"></i>
+              </a>
             </div>
             <div class="table-responsive">
               <table class="inkuai-table">
                 <thead>
-                  <tr><th>Nome</th><th>Tipo</th><th>Estado</th><th>Data</th><th></th></tr>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Data</th>
+                    <th style="width:40px"></th>
+                  </tr>
                 </thead>
                 <tbody id="recent-projects">
-                  <tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted)">
-                    <div class="spinner-border spinner-border-sm me-2"></div>A carregar...
-                  </td></tr>
+                  <tr>
+                    <td colspan="5" class="table-empty">
+                      <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+                        <div class="spinner-border spinner-border-sm" style="width:14px;height:14px;border-width:2px;color:var(--text-muted)"></div>
+                        <span>A carregar projectos...</span>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -151,43 +216,52 @@
         </div>
 
         <!-- Coluna direita -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 d-flex flex-column gap-4">
+
           <!-- Startups -->
-          <div class="inkuai-card mb-4">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
-                <i class="bi bi-rocket-takeoff me-2" style="color:var(--success)"></i>Minhas Startups
-              </h6>
-              <a href="/startups.html" style="font-size:0.8rem;color:var(--blue-600);text-decoration:none">Ver todas</a>
+          <div class="inkuai-card">
+            <div class="card-header">
+              <h6><i class="bi bi-rocket-takeoff" style="color:var(--success)"></i>Minhas Startups</h6>
+              <a href="/startups.html" class="btn-ghost" style="font-size:0.75rem;color:var(--ink-400)">Ver todas</a>
             </div>
             <div id="my-startups">
-              <p style="color:var(--text-muted);font-size:0.875rem">A carregar...</p>
+              <div style="display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:0.8125rem">
+                <div class="spinner-border spinner-border-sm" style="width:14px;height:14px;border-width:2px"></div>
+                A carregar...
+              </div>
             </div>
-            <a href="/startups.html" class="btn-outline-inkuai w-100 justify-content-center mt-2" style="font-size:0.8rem">
-              <i class="bi bi-plus-lg me-1"></i>Nova Startup
-            </a>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-subtle)">
+              <a href="/startups.html" class="btn-outline-inkuai w-100 justify-content-center" style="font-size:0.75rem">
+                <i class="bi bi-plus-lg"></i>Nova Startup
+              </a>
+            </div>
           </div>
 
-          <!-- Acções rápidas -->
+          <!-- Acções Rápidas -->
           <div class="inkuai-card">
-            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px">
-              <i class="bi bi-lightning-fill me-2" style="color:var(--warning)"></i>Acções Rápidas
-            </h6>
-            <div class="d-grid gap-2">
-              <a href="/projects.html" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-2"></i>Novo Projecto
+            <div class="card-header" style="margin-bottom:14px">
+              <h6><i class="bi bi-lightning-fill" style="color:var(--warning)"></i>Acções Rápidas</h6>
+            </div>
+            <div class="d-flex flex-column gap-2">
+              <a href="/projects.html" class="quick-action">
+                <i class="bi bi-plus-circle-fill" style="color:var(--ink-400)"></i>
+                <span>Novo Projecto</span>
               </a>
-              <a href="/classroom.html" class="btn btn-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;">
-                <i class="bi bi-mortarboard-fill me-2"></i>Classroom
+              <a href="/sandbox.html" class="quick-action">
+                <i class="bi bi-play-fill" style="color:var(--success)"></i>
+                <span>Abrir Sandbox IA</span>
               </a>
-              <a href="/articles.html" class="btn btn-warning btn-sm">
-                <i class="bi bi-lightbulb-fill me-2"></i>Artigos & Ideias
+              <a href="/classroom.html" class="quick-action">
+                <i class="bi bi-mortarboard-fill" style="color:#7c3aed"></i>
+                <span>Classroom</span>
               </a>
-              <a href="/sandbox.html" class="btn btn-success btn-sm">
-                <i class="bi bi-play-fill me-2"></i>Abrir Sandbox IA
+              <a href="/articles.html" class="quick-action">
+                <i class="bi bi-lightbulb-fill" style="color:var(--warning)"></i>
+                <span>Artigos & Ideias</span>
               </a>
-              <a href="/datasets.html" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-upload me-2"></i>Carregar Dataset
+              <a href="/datasets.html" class="quick-action">
+                <i class="bi bi-upload" style="color:var(--text-muted)"></i>
+                <span>Carregar Dataset</span>
               </a>
             </div>
           </div>
@@ -200,13 +274,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
-<script src="/assets/js/components/sidebar.js"></script>
-<script src="/assets/js/pages/dashboard.js"></script>
-<script>
-  const user = window.InkuAuth?.getUser();
-  if (user?.role === 'admin') document.getElementById('admin-link').style.display = '';
-  if (user?.name) document.getElementById('user-avatar').textContent = user.name[0].toUpperCase();
-</script>
 <script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/pages/dashboard.js"></script>
 </body>
 </html>

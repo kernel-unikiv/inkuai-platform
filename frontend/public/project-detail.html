@@ -71,11 +71,11 @@ async function loadProject() {
       ab.innerHTML += `<button onclick="approveProject('${p.id}')" class="btn btn-sm btn-success"><i class="bi bi-check-lg me-1"></i>Aprovar</button>`;
     ab.innerHTML += `<a href="/sandbox.html?project=${p.id}" class="btn btn-sm btn-outline-success"><i class="bi bi-terminal me-1"></i>Sandbox</a>`;
 
-    const typeColor = {software:'var(--blue-600)',ai_model:'var(--success)',data_pipeline:'var(--warning)',research:'var(--info)'};
-    const typeBg    = {software:'var(--blue-50)',ai_model:'#f0fdf4',data_pipeline:'#fff7ed',research:'#f0f9ff'};
+    const typeColor = {software:'var(--ink-400)',ai_model:'var(--success)',data_pipeline:'var(--warning)',research:'var(--info)'};
+    const typeBg    = {software:'var(--ink-50)',ai_model:'#f0fdf4',data_pipeline:'#fff7ed',research:'#f0f9ff'};
     const typeIcon  = {software:'bi-code-slash',ai_model:'bi-braces',data_pipeline:'bi-database',research:'bi-journal-text'};
-    const tc = typeColor[p.type]||'var(--blue-600)';
-    const tb = typeBg[p.type]||'var(--blue-50)';
+    const tc = typeColor[p.type]||'var(--ink-400)';
+    const tb = typeBg[p.type]||'var(--ink-50)';
     const ti = typeIcon[p.type]||'bi-folder';
 
     document.getElementById('project-content').innerHTML = `
@@ -109,8 +109,8 @@ async function loadProject() {
 
         ${p.tech_stack?.length?`
         <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px"><i class="bi bi-layers me-2" style="color:var(--blue-600)"></i>Stack Tecnológico</h6>
-          <div class="d-flex flex-wrap gap-2">${p.tech_stack.map(t=>`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.8rem;padding:6px 12px">${t}</span>`).join('')}</div>
+          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px"><i class="bi bi-layers me-2" style="color:var(--ink-400)"></i>Stack Tecnológico</h6>
+          <div class="d-flex flex-wrap gap-2">${p.tech_stack.map(t=>`<span class="badge" style="background:var(--ink-50);color:var(--ink-500);font-size:0.8rem;padding:6px 12px">${t}</span>`).join('')}</div>
         </div>`:''}
 
         <div class="inkuai-card">
@@ -128,7 +128,7 @@ async function loadProject() {
 
       <div class="col-lg-4">
         <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-info-circle me-2" style="color:var(--blue-600)"></i>Informações</h6>
+          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-info-circle me-2" style="color:var(--ink-400)"></i>Informações</h6>
           <div class="d-flex flex-column gap-2" style="font-size:0.875rem">
             <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)">
               <span style="color:var(--text-muted)">Estado</span><span class="status status-${p.status}">${p.status}</span>
@@ -160,8 +160,8 @@ async function loadProject() {
           <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-lightning me-2" style="color:var(--warning)"></i>Acções</h6>
           <div class="d-grid gap-2">
             <a href="/sandbox.html?project=${p.id}" class="btn btn-success btn-sm"><i class="bi bi-terminal me-2"></i>Abrir Sandbox</a>
-            ${p.github_repo_url?`<a href="${p.github_repo_url}" target="_blank" class="btn btn-outline-secondary btn-sm"><i class="bi bi-github me-2"></i>Ver GitHub</a>`:''}
-            ${isOwner&&p.status==='draft'?`<button onclick="submitProject('${p.id}')" class="btn btn-primary btn-sm"><i class="bi bi-send me-2"></i>Submeter para Avaliação</button>`:''}
+            ${p.github_repo_url?`<a href="${p.github_repo_url}" target="_blank" class="btn-outline-inkuai btn-inkuai-sm"><i class="bi bi-github me-2"></i>Ver GitHub</a>`:''}
+            ${isOwner&&p.status==='draft'?`<button onclick="submitProject('${p.id}')" class="btn-inkuai btn-inkuai-sm"><i class="bi bi-send me-2"></i>Submeter para Avaliação</button>`:''}
           </div>
         </div>
       </div>

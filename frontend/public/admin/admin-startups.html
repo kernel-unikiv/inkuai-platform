@@ -9,6 +9,47 @@
 </head>
 <body>
 <div class="dashboard-layout">
+    <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Dashboard</span>
+      <a href="/dashboard.html"              class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Plataforma</a>
+      <a href="/admin/admin-dashboard.html"  class="sidebar-link "><i class="bi bi-shield-fill"></i>Admin Dashboard</a>
+      <span class="sidebar-section-label">Gestão</span>
+      <a href="/admin/admin-users.html"      class="sidebar-link "><i class="bi bi-people-fill"></i>Utilizadores</a>
+      <a href="/admin/admin-projects.html"   class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-startups.html"   class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-mentors.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentores</a>
+      <a href="/admin/admin-approvers.html"  class="sidebar-link "><i class="bi bi-person-check-fill"></i>Aprovadores</a>
+      <span class="sidebar-section-label">Comunicação</span>
+      <a href="/admin/admin-messages.html"   class="sidebar-link "><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <span class="sidebar-section-label">Relatórios</span>
+      <a href="/admin/admin-stats.html"      class="sidebar-link "><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
+      <a href="/admin/admin-log.html"        class="sidebar-link "><i class="bi bi-journal-text"></i>Logs</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Admin</div><div class="sidebar-user-role">administrador</div></div>
+        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+TYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startups — Admin INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
   <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
@@ -40,7 +81,7 @@
   <main class="main-content">
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--blue-600)"></i>Gestão de Startups</span>
+      <span class="topbar-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--ink-400)"></i>Gestão de Startups</span>
     </div>
 
     <div class="page-content">
@@ -64,7 +105,7 @@
       <div class="inkuai-card">
         <div class="d-flex align-items-center justify-content-between mb-3">
           <h6 style="font-weight:700;color:var(--text-primary);margin:0">Todas as Startups</h6>
-          <span class="badge" style="background:var(--blue-50);color:var(--blue-700)" id="total-badge">0 startups</span>
+          <span class="badge" style="background:var(--ink-50);color:var(--ink-500)" id="total-badge">0 startups</span>
         </div>
         <div class="row g-3" id="startups-grid">
           <div class="col-12 text-center py-4"><div class="spinner-border text-primary"></div></div>
@@ -80,7 +121,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-pencil me-2" style="color:var(--blue-600)"></i>Editar Startup</h5>
+        <h5 class="modal-title"><i class="bi bi-pencil me-2" style="color:var(--ink-400)"></i>Editar Startup</h5>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -157,7 +198,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-chat-dots me-2" style="color:var(--blue-600)"></i>Enviar Mensagem ao Fundador</h5>
+        <h5 class="modal-title"><i class="bi bi-chat-dots me-2" style="color:var(--ink-400)"></i>Enviar Mensagem ao Fundador</h5>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -206,7 +247,7 @@ async function loadStartups(page=1) {
           </div>
           <p style="font-size:0.8rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${s.description||''}</p>
           <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">${s.sector||'—'}</span>
+            <span class="badge" style="background:var(--ink-50);color:var(--ink-500);font-size:0.72rem">${s.sector||'—'}</span>
             <small class="text-muted">Por: ${s.owner?.name||'—'}</small>
           </div>
           <div class="d-flex gap-1 flex-wrap pt-2" style="border-top:1px solid var(--border-light)">
@@ -252,8 +293,8 @@ async function viewStats(id){
     document.getElementById('statsModalTitle').textContent=`Estatísticas — ${s.name}`;
     document.getElementById('statsModalBody').innerHTML=`
       <div class="row g-3 mb-4">
-        <div class="col-4"><div class="text-center p-3 rounded-3" style="background:var(--blue-50);border:1px solid var(--blue-100)">
-          <div style="font-size:1.8rem;font-weight:700;color:var(--blue-700)">${res.membersCount||0}</div>
+        <div class="col-4"><div class="text-center p-3 rounded-3" style="background:var(--ink-50);border:1px solid var(--ink-100)">
+          <div style="font-size:1.8rem;font-weight:700;color:var(--ink-500)">${res.membersCount||0}</div>
           <small class="text-muted">Membros</small></div></div>
         <div class="col-4"><div class="text-center p-3 rounded-3" style="background:#f0fdf4;border:1px solid #bbf7d0">
           <div style="font-size:1.8rem;font-weight:700;color:var(--success)">${res.projectsCount||0}</div>
@@ -269,7 +310,7 @@ async function viewStats(id){
       </div>
       <h6 style="font-weight:700;margin-bottom:12px">Projectos</h6>
       ${(s.projects||[]).map(p=>`<div class="d-flex align-items-center gap-2 py-1" style="border-bottom:1px solid var(--border-light)">
-        <i class="bi bi-folder" style="color:var(--blue-600)"></i>
+        <i class="bi bi-folder" style="color:var(--ink-400)"></i>
         <span style="flex:1;font-size:0.85rem">${p.title}</span>
         <span class="status status-${p.status}">${p.status}</span></div>`).join('')||'<p class="text-muted">Sem projectos.</p>'}
       <h6 style="font-weight:700;margin:12px 0 8px">Histórico de Etapas</h6>
