@@ -5,51 +5,43 @@
   <title>datasets — INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard-layout">
-    <aside class="sidebar">
+  <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
-      <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"     class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"     class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"     class="sidebar-link "><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
-      <a href="/classroom.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"      class="sidebar-link "><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-assistant.html" class="sidebar-link "><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"    class="sidebar-link "><i class="bi bi-braces"></i>Modelos IA</a>
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html"   class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"     class="sidebar-link active"><i class="bi bi-database-fill"></i>Datasets</a>
-      <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"     class="sidebar-link " id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span></a>
-      <a href="/profile.html"      class="sidebar-link "><i class="bi bi-person-fill"></i>Perfil</a>
-      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
+      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        <div class="sidebar-user-avatar">U</div>
+        <div style="flex:1"><div class="sidebar-user-name" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<main class="main-content">
+  <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()"><i class="bi bi-list fs-4"></i></button>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title">datasets</span>
     </div>
     <div class="page-content">
       <div class="inkuai-card text-center" style="padding:60px 40px">
-        <div style="width:64px;height:64px;background:var(--ink-50);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
-          <i class="bi bi-hammer fs-3" style="color:var(--ink-400)"></i>
+        <div style="width:64px;height:64px;background:var(--blue-50);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <i class="bi bi-hammer fs-3" style="color:var(--blue-600)"></i>
         </div>
         <h5 style="font-weight:700;color:var(--text-primary);margin-bottom:8px">Módulo em desenvolvimento</h5>
         <p style="color:var(--text-muted);margin-bottom:24px">Este módulo será implementado no próximo Sprint.</p>

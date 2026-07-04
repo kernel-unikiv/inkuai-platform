@@ -14,8 +14,6 @@ const User = sequelize.define('User', {
   github_username:{ type: DataTypes.STRING(100), defaultValue: null },
   orcid_id:     { type: DataTypes.STRING(50), defaultValue: null },
   institution:  { type: DataTypes.STRING(200), defaultValue: 'IP/UNIKIVI' },
-  expertise_areas: { type: DataTypes.TEXT, defaultValue: '[]' }, // JSON array: ['software','ia','dados']
-  mentor_bio:   { type: DataTypes.TEXT, defaultValue: null },  // bio específica como mentor
   is_verified:  { type: DataTypes.BOOLEAN, defaultValue: false },
   is_active:    { type: DataTypes.BOOLEAN, defaultValue: true },
   last_login:   { type: DataTypes.DATE, defaultValue: null },

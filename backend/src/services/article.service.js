@@ -1,74 +1,89 @@
 'use strict';
-const { Article, User, Project } = require('../models/sql/index');
-const { AppError } = require('../utils/apiResponse');
 const { Op } = require('sequelize');
+const { Article, User, Project, Notification, AdminAction } = require('../models/sql/index');
+const { AppError } = require('../utils/apiResponse');
 
 class ArticleService {
-  async create(data, userId) {
-    const article = await Article.create({ ...data, author_id: userId });
-    return this._format(await Article.findByPk(article.id, {
-      include: [{ model: User, as: 'author', attributes: ['id','name','avatar_url','role'] }]
-    }));
+
+  async create(data, authorId) {
+    const article = await Article.create({
+      author_id:  authorId,
+      title:      data.title,
+      summary:    data.summary || '',
+      body:       data.body,
+      type:       data.type || 'article',
+      tags:       JSON.stringify(data.tags || []),
+      project_id: data.project_id || null,
+      status:     data.status || 'draft'
+    });
+    return article;
   }
 
-  async findAll({ page=1, limit=10, category, search, authorId }) {
-    const where = { status: 'published' };
-    if (category) where.category = category;
-    if (authorId) where.author_id = authorId;
-    if (search) where[Op.or] = [
-      { title: { [Op.like]: `%${search}%` } },
-      { summary: { [Op.like]: `%${search}%` } }
-    ];
+  async list({ page=1, limit=20, type, status='published', search }) {
+    const where = { status };
+    if (type) where.type = type;
+    if (search) where.title = { [Op.like]: `%${search}%` };
     const { count, rows } = await Article.findAndCountAll({
-      where, limit, offset: (page-1)*limit,
+      where, limit, offset:(page-1)*limit,
       include: [
-        { model: User, as: 'author', attributes: ['id','name','avatar_url','role'] },
-        { model: Project, as: 'project', attributes: ['id','title','type'], required: false }
+        { model: User, as:'author', attributes:['id','name','role'] },
+        { model: Project, as:'project', attributes:['id','title'] }
       ],
       order: [['created_at','DESC']]
     });
-    return { articles: rows.map(a => this._format(a)), total: count, page, limit };
+    return { articles: rows, total: count };
   }
 
-  async findById(id) {
-    const a = await Article.findByPk(id, {
+  async getById(id) {
+    const article = await Article.findByPk(id, {
       include: [
-        { model: User, as: 'author', attributes: ['id','name','avatar_url','role','institution'] },
-        { model: Project, as: 'project', attributes: ['id','title','type','status'], required: false }
+        { model: User, as:'author', attributes:['id','name','role','bio'] },
+        { model: Project, as:'project', attributes:['id','title'] }
       ]
     });
-    if (!a) throw new AppError('Artigo não encontrado.', 404);
-    await a.increment('views');
-    return this._format(a);
+    if (!article) throw new AppError('Artigo não encontrado.', 404);
+    await article.increment('views');
+    return article;
   }
 
-  async update(id, data, userId, role) {
-    const a = await Article.findByPk(id);
-    if (!a) throw new AppError('Artigo não encontrado.', 404);
-    if (a.author_id !== userId && !['admin'].includes(role)) throw new AppError('Sem permissão.', 403);
-    if (data.tags) { data.tags_json = JSON.stringify(data.tags); delete data.tags; }
-    return a.update(data);
+  async update(id, data, userId) {
+    const article = await Article.findByPk(id);
+    if (!article) throw new AppError('Artigo não encontrado.', 404);
+    if (article.author_id !== userId) throw new AppError('Sem permissão.', 403);
+    const allowed = ['title','summary','body','tags','status'];
+    const filtered = Object.fromEntries(Object.entries(data).filter(([k])=>allowed.includes(k)));
+    if (filtered.tags) filtered.tags = JSON.stringify(filtered.tags);
+    await article.update(filtered);
+    return article;
   }
 
-  async delete(id, userId, role) {
-    const a = await Article.findByPk(id);
-    if (!a) throw new AppError('Artigo não encontrado.', 404);
-    if (a.author_id !== userId && role !== 'admin') throw new AppError('Sem permissão.', 403);
-    await a.update({ status: 'deleted' });
+  async delete(id, userId, isAdmin) {
+    const article = await Article.findByPk(id);
+    if (!article) throw new AppError('Artigo não encontrado.', 404);
+    if (article.author_id !== userId && !isAdmin) throw new AppError('Sem permissão.', 403);
+    await article.destroy();
     return { deleted: true };
   }
 
   async like(id) {
-    const a = await Article.findByPk(id);
-    if (!a) throw new AppError('Artigo não encontrado.', 404);
-    await a.increment('likes');
-    return { likes: a.likes + 1 };
+    const article = await Article.findByPk(id);
+    if (!article) throw new AppError('Artigo não encontrado.', 404);
+    await article.increment('likes');
+    return article;
   }
 
-  _format(a) {
-    const j = a.toJSON();
-    j.tags = (() => { try { return JSON.parse(a.tags_json||'[]'); } catch { return []; } })();
-    return j;
+  async feature(id, adminId) {
+    const article = await Article.findByPk(id);
+    if (!article) throw new AppError('Artigo não encontrado.', 404);
+    await article.update({ status:'featured' });
+    await AdminAction.create({ admin_id:adminId, action:'feature_article', target_type:'article', target_id:id });
+    await Notification.create({
+      user_id: article.author_id, type:'success',
+      title: '⭐ O seu artigo foi destacado!',
+      message: `"${article.title}" foi destacado pela administração.`,
+      action_url: `/articles.html?id=${id}`
+    });
+    return article;
   }
 }
 

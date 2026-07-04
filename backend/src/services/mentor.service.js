@@ -1,193 +1,173 @@
 'use strict';
-const { MentorAssignment, User, Project, Notification } = require('../models/sql/index');
+const { Op } = require('sequelize');
+const {
+  User, Project, ProjectMentor, Notification, AdminAction
+} = require('../models/sql/index');
 const { AppError } = require('../utils/apiResponse');
-const Anthropic = require('@anthropic-ai/sdk');
 
-const ai = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const TYPE_TO_AREA = {
+  software:      'software',
+  ai_model:      'ai_ml',
+  data_pipeline: 'data',
+  research:      'research'
+};
 
-// Mapa tipo projecto -> áreas de expertise relevantes
-const TYPE_EXPERTISE = {
-  software:      ['software','web','mobile','backend','frontend','fullstack','programação','desenvolvimento'],
-  ai_model:      ['ia','inteligência artificial','machine learning','deep learning','nlp','dados','ml','visão'],
-  data_pipeline: ['dados','data science','bigdata','pipeline','analytics','base de dados','estatística'],
-  research:      ['investigação','científica','académica','publicação','doutoramento','phd','metodologia']
+const AREA_LABELS = {
+  software: 'Engenharia de Software',
+  ai_ml:    'Inteligência Artificial / Machine Learning',
+  data:     'Ciência de Dados / Pipelines',
+  research: 'Investigação Científica'
+};
+
+const AREA_KEYWORDS = {
+  software: ['software','engenharia','desenvolvimento','web','backend','frontend','sistemas','arquitectura'],
+  ai_ml:    ['inteligência artificial','ia','machine learning','ml','deep learning','redes neuronais','dados','modelos'],
+  data:     ['dados','data science','pipeline','etl','análise','estatística','bases de dados'],
+  research: ['investigação','científic','pesquisa','publicação','académic','metodologia']
 };
 
 class MentorService {
 
-  // Listar todos os mentores disponíveis
-  async listMentors() {
-    const mentors = await User.findAll({
-      where: { role: ['mentor', 'admin'], is_active: true },
-      attributes: ['id','name','email','bio','mentor_bio','expertise_areas','institution','avatar_url','role','created_at']
-    });
-    return mentors.map(m => ({
-      ...m.toJSON(),
-      expertise_areas: (() => { try { return JSON.parse(m.expertise_areas||'[]'); } catch { return []; } })(),
-      active_mentorings: 0
-    }));
+  _calculateScore(mentor, area) {
+    const bio = (mentor.bio || '').toLowerCase();
+    const keywords = AREA_KEYWORDS[area] || [];
+    let score = 0;
+    keywords.forEach(kw => { if (bio.includes(kw)) score += 15; });
+    if (mentor.role === 'mentor') score += 20;
+    if (mentor.role === 'admin')  score += 10;
+    return Math.min(score, 100);
   }
 
-  // Criar/actualizar mentor (admin only)
-  async upsertMentor({ userId, expertiseAreas, mentorBio }) {
-    const user = await User.findByPk(userId);
-    if (!user) throw new AppError('Utilizador não encontrado.', 404);
-
-    await user.update({
-      role: 'mentor',
-      expertise_areas: JSON.stringify(expertiseAreas || []),
-      mentor_bio: mentorBio || user.bio
-    });
-
-    await Notification.create({
-      user_id: userId, type: 'success',
-      title: '🎓 Conta de Mentor Activada',
-      message: 'A sua conta foi configurada como mentor na plataforma INKU·AI. Projectos relevantes serão atribuídos automaticamente.',
-      action_url: '/dashboard.html'
-    });
-
-    return user;
-  }
-
-  // Auto-assign via IA (usa Claude para escolher o melhor mentor)
-  async autoAssign(projectId) {
+  async autoAssignMentor(projectId) {
     const project = await Project.findByPk(projectId, {
-      include: [{ model: User, as: 'creator', attributes: ['name'] }]
+      include: [{ model: User, as: 'creator', attributes: ['name','id'] }]
     });
     if (!project) throw new AppError('Projecto não encontrado.', 404);
 
-    // Já tem mentor activo?
-    const existing = await MentorAssignment.findOne({
-      where: { project_id: projectId, status: 'active' },
-      include: [{ model: User, as: 'mentor', attributes: ['id','name','role'] }]
+    const area = TYPE_TO_AREA[project.type] || 'software';
+
+    const existing = await ProjectMentor.findOne({
+      where: { project_id: projectId, status: 'active' }
     });
-    if (existing) return existing;
+    if (existing) return { already_assigned: true, mentor_id: existing.mentor_id };
 
-    // Buscar mentores disponíveis
-    const mentors = await User.findAll({
-      where: { role: ['mentor', 'admin'], is_active: true },
-      attributes: ['id','name','bio','mentor_bio','expertise_areas','role']
+    const candidates = await User.findAll({
+      where: { role: { [Op.in]: ['mentor','admin'] }, is_active: true }
     });
-    if (!mentors.length) return null;
 
-    // Usar IA para escolher o melhor mentor
-    let bestMentorId = null;
-    try {
-      const mentorList = mentors.map(m => {
-        const areas = (() => { try { return JSON.parse(m.expertise_areas||'[]'); } catch { return []; } })();
-        return `ID:${m.id} | Nome:${m.name} | Áreas:${areas.join(',')} | Bio:${(m.mentor_bio||m.bio||'').substring(0,100)}`;
-      }).join('\n');
-
-      const prompt = `Tens de escolher o melhor mentor para este projecto.
-
-PROJECTO:
-- Título: ${project.title}
-- Tipo: ${project.type}
-- Descrição: ${(project.description||'').substring(0,300)}
-- Stack: ${JSON.stringify(project.tech_stack||[])}
-
-MENTORES DISPONÍVEIS:
-${mentorList}
-
-Responde APENAS com o UUID do mentor mais adequado (ex: "550e8400-e29b-41d4-a716-446655440000"). Nada mais.`;
-
-      const resp = await ai.messages.create({
-        model: 'claude-sonnet-4-6', max_tokens: 100,
-        messages: [{ role: 'user', content: prompt }]
-      });
-      const chosenId = resp.content[0].text.trim().replace(/[^a-f0-9-]/gi,'');
-      if (mentors.find(m => m.id === chosenId)) bestMentorId = chosenId;
-    } catch(e) {
-      console.warn('[MentorAI] Fallback to scoring:', e.message);
+    if (!candidates.length) {
+      throw new AppError('Não há mentores disponíveis na plataforma.', 404);
     }
 
-    // Fallback: score por keywords
-    if (!bestMentorId) {
-      const keywords = TYPE_EXPERTISE[project.type] || TYPE_EXPERTISE.software;
-      let best = null, bestScore = -1;
-      for (const m of mentors) {
-        const areas = (() => { try { return JSON.parse(m.expertise_areas||'[]'); } catch { return []; } })();
-        const text = (areas.join(' ') + ' ' + (m.mentor_bio||m.bio||'')).toLowerCase();
-        const score = keywords.filter(k => text.includes(k)).length;
-        const load = await MentorAssignment.count({ where: { mentor_id: m.id, status: 'active' } });
-        const final = score * 2 - load;
-        if (final > bestScore) { bestScore = final; best = m; }
-      }
-      bestMentorId = best?.id || mentors[0].id;
-    }
+    const scored = candidates.map(m => ({
+      mentor: m,
+      score: this._calculateScore(m, area)
+    })).sort((a,b) => b.score - a.score);
 
-    const mentor = mentors.find(m => m.id === bestMentorId) || mentors[0];
-    const assignment = await MentorAssignment.create({
-      project_id: projectId, mentor_id: mentor.id,
-      assigned_by: 'ai', expertise: project.type,
-      notes: `Atribuído pela IA com base no tipo: ${project.type}`
+    const workloads = await ProjectMentor.findAll({
+      where: { status: 'active' },
+      attributes: ['mentor_id', [require('sequelize').fn('COUNT','*'),'count']],
+      group: ['mentor_id'], raw: true
+    });
+    const workloadMap = {};
+    workloads.forEach(w => { workloadMap[w.mentor_id] = parseInt(w.count); });
+
+    scored.forEach(s => {
+      const load = workloadMap[s.mentor.id] || 0;
+      s.finalScore = s.score - (load * 5);
+    });
+    scored.sort((a,b) => b.finalScore - a.finalScore);
+
+    const chosen = scored[0];
+
+    const assignment = await ProjectMentor.create({
+      project_id: projectId,
+      mentor_id:  chosen.mentor.id,
+      assigned_by: 'ai',
+      area,
+      ai_score: chosen.score,
+      notes: `Atribuído automaticamente com base na área "${AREA_LABELS[area]}". Pontuação de compatibilidade: ${chosen.score}/100.`
     });
 
-    // Notificar mentor
     await Notification.create({
-      user_id: mentor.id, type: 'info',
-      title: `📋 Novo projecto para mentoria`,
-      message: `A IA atribuiu-lhe o projecto "${project.title}" (${project.type}) para orientação.`,
-      action_url: `/classroom.html?project=${projectId}`
+      user_id: chosen.mentor.id, type: 'info',
+      title: `🎓 Novo projecto atribuído: "${project.title}"`,
+      message: `Foi designado como mentor para este projecto de ${AREA_LABELS[area]}. Criador: ${project.creator?.name}.`,
+      action_url: `/project-detail.html?id=${projectId}`
     });
-    // Notificar dono
+
     await Notification.create({
       user_id: project.created_by, type: 'success',
-      title: `👨‍🏫 Mentor atribuído: ${mentor.name}`,
-      message: `A IA seleccionou "${mentor.name}" como mentor do seu projecto "${project.title}".`,
-      action_url: `/classroom.html?project=${projectId}`
+      title: `🎓 Mentor atribuído ao seu projecto`,
+      message: `${chosen.mentor.name} foi designado como seu mentor para "${project.title}".`,
+      action_url: `/project-detail.html?id=${projectId}`
     });
 
-    return { ...assignment.toJSON(), mentor };
+    return {
+      assignment, mentor: { id:chosen.mentor.id, name:chosen.mentor.name, email:chosen.mentor.email },
+      area, score: chosen.score
+    };
   }
 
   async getProjectMentor(projectId) {
-    return MentorAssignment.findOne({
+    return ProjectMentor.findOne({
       where: { project_id: projectId, status: 'active' },
-      include: [{ model: User, as: 'mentor', attributes: ['id','name','bio','mentor_bio','expertise_areas','avatar_url','role'] }]
+      include: [{ model: User, as: 'mentor', attributes: ['id','name','email','bio','role'] }]
     });
   }
 
   async getMentorProjects(mentorId) {
-    return MentorAssignment.findAll({
+    return ProjectMentor.findAll({
       where: { mentor_id: mentorId, status: 'active' },
-      include: [{
-        model: Project, as: 'project',
-        include: [{ model: User, as: 'creator', attributes: ['id','name'] }]
-      }]
+      include: [{ model: Project, as: 'Project', attributes: ['id','title','type','status','created_by'] }],
+      order: [['created_at','DESC']]
     });
   }
 
-  async manualAssign(projectId, mentorId, adminId) {
-    const [project, mentor] = await Promise.all([
-      Project.findByPk(projectId),
-      User.findByPk(mentorId)
-    ]);
-    if (!project) throw new AppError('Projecto não encontrado.', 404);
-    if (!mentor || !['mentor','admin'].includes(mentor.role)) throw new AppError('Utilizador não é mentor.', 400);
+  async reassignMentor(projectId, newMentorId, adminId) {
+    const existing = await ProjectMentor.findOne({ where:{ project_id:projectId, status:'active' } });
+    if (existing) await existing.update({ status:'reassigned' });
 
-    await MentorAssignment.update({ status: 'completed' }, { where: { project_id: projectId, status: 'active' } });
+    const project = await Project.findByPk(projectId);
+    const newMentor = await User.findByPk(newMentorId);
+    if (!project || !newMentor) throw new AppError('Projecto ou mentor não encontrado.', 404);
 
-    const assignment = await MentorAssignment.create({
-      project_id: projectId, mentor_id: mentorId,
-      assigned_by: 'admin', expertise: project.type
+    const area = TYPE_TO_AREA[project.type] || 'software';
+    const assignment = await ProjectMentor.create({
+      project_id: projectId, mentor_id: newMentorId,
+      assigned_by: 'admin', area,
+      notes: `Reatribuído manualmente pelo administrador.`
     });
 
     await Notification.create({
-      user_id: mentorId, type: 'info',
-      title: `📋 Projecto atribuído pelo Administrador`,
-      message: `Foi-lhe atribuído o projecto "${project.title}" para orientação.`,
-      action_url: `/classroom.html?project=${projectId}`
+      user_id: newMentorId, type:'info',
+      title: `🎓 Foi designado mentor de "${project.title}"`,
+      message: `Um administrador atribuiu-lhe este projecto.`,
+      action_url: `/project-detail.html?id=${projectId}`
     });
 
-    await Notification.create({
-      user_id: project.created_by, type: 'success',
-      title: `👨‍🏫 Mentor atribuído: ${mentor.name}`,
-      message: `O administrador atribuiu "${mentor.name}" como mentor do seu projecto.`,
-      action_url: `/classroom.html?project=${projectId}`
+    await AdminAction.create({
+      admin_id: adminId, action:'reassign_mentor',
+      target_type:'project', target_id:projectId,
+      details: JSON.stringify({ new_mentor: newMentor.name })
     });
 
     return assignment;
+  }
+
+  async listMentorsWithStats() {
+    const mentors = await User.findAll({
+      where: { role: { [Op.in]: ['mentor','admin'] }, is_active: true },
+      attributes: ['id','name','email','bio','role']
+    });
+    const assignments = await ProjectMentor.findAll({ where:{ status:'active' } });
+    return mentors.map(m => ({
+      ...m.toJSON(),
+      active_projects: assignments.filter(a => a.mentor_id === m.id).length,
+      areas: Object.keys(AREA_KEYWORDS).map(area => ({
+        area, label: AREA_LABELS[area], score: this._calculateScore(m, area)
+      })).sort((a,b)=>b.score-a.score)
+    }));
   }
 }
 

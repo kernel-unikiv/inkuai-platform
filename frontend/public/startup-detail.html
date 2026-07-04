@@ -5,6 +5,7 @@
   <title>Startup — INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -59,7 +60,7 @@ async function loadStartup() {
     const res = await window.InkuAPI.get(`/startups/${id}`);
     const s = res.startup;
     document.getElementById('page-title').textContent = s.name;
-    const roleColor = {lead:'var(--ink-400)',developer:'var(--success)',researcher:'var(--info)',designer:'#7c3aed',analyst:'var(--warning)'};
+    const roleColor = {lead:'var(--blue-600)',developer:'var(--success)',researcher:'var(--info)',designer:'#7c3aed',analyst:'var(--warning)'};
     document.getElementById('startup-content').innerHTML = `
     <div class="row g-4">
       <div class="col-lg-8">
@@ -83,16 +84,16 @@ async function loadStartup() {
 
         <div class="inkuai-card">
           <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">
-            <i class="bi bi-people-fill me-2" style="color:var(--ink-400)"></i>Equipa (${s.members?.length||0} membros)
+            <i class="bi bi-people-fill me-2" style="color:var(--blue-600)"></i>Equipa (${s.members?.length||0} membros)
           </h6>
           <div class="row g-3">
             ${(s.members||[]).map(m=>`
             <div class="col-sm-6">
               <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:var(--bg-page);border:1px solid var(--border-light)">
-                <div style="width:40px;height:40px;background:var(--ink-50);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink-400);font-size:0.9rem;flex-shrink:0">${m.user?.name?.[0]||'?'}</div>
+                <div style="width:40px;height:40px;background:var(--blue-50);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);font-size:0.9rem;flex-shrink:0">${m.user?.name?.[0]||'?'}</div>
                 <div>
                   <div style="font-weight:600;color:var(--text-primary);font-size:0.875rem">${m.user?.name||'Membro'}</div>
-                  <span class="badge" style="background:${roleColor[m.role_in_team]||'var(--ink-400)'}15;color:${roleColor[m.role_in_team]||'var(--ink-400)'};font-size:0.7rem">${m.role_in_team}</span>
+                  <span class="badge" style="background:${roleColor[m.role_in_team]||'var(--blue-600)'}15;color:${roleColor[m.role_in_team]||'var(--blue-600)'};font-size:0.7rem">${m.role_in_team}</span>
                 </div>
               </div>
             </div>`).join('')||'<div class="col-12"><p style="color:var(--text-muted);font-size:0.875rem">Sem membros registados.</p></div>'}
@@ -102,7 +103,7 @@ async function loadStartup() {
 
       <div class="col-lg-4">
         <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-info-circle me-2" style="color:var(--ink-400)"></i>Detalhes</h6>
+          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-info-circle me-2" style="color:var(--blue-600)"></i>Detalhes</h6>
           <div class="d-flex flex-column gap-2" style="font-size:0.875rem">
             <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)"><span style="color:var(--text-muted)">Estado</span><span class="status status-${s.status}">${s.status}</span></div>
             <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)"><span style="color:var(--text-muted)">Sector</span><span style="color:var(--text-primary);font-weight:600">${s.sector}</span></div>

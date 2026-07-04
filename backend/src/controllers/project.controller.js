@@ -1,15 +1,12 @@
 'use strict';
 const projectService = require('../services/project.service');
-const mentorService  = require('../services/mentor.service');
 const { ApiResponse } = require('../utils/apiResponse');
 
 class ProjectController {
   async create(req, res, next) {
     try {
       const project = await projectService.create(req.body, req.user.id);
-      // Auto-assign mentor after creation (non-blocking)
-      mentorService.autoAssign(project.id).catch(e => console.warn('[MentorAssign]', e.message));
-      return ApiResponse.success(res, { message: 'Projecto criado! Mentor a ser atribuído automaticamente.', project }, 201);
+      return ApiResponse.success(res, { message: 'Projecto criado!', project }, 201);
     } catch (e) { next(e); }
   }
 
@@ -31,9 +28,7 @@ class ProjectController {
   async findById(req, res, next) {
     try {
       const project = await projectService.findById(req.params.id);
-      // Also include mentor assignment info
-      const mentorAssignment = await mentorService.getProjectMentor(project.id).catch(() => null);
-      return ApiResponse.success(res, { project, mentor_assignment: mentorAssignment });
+      return ApiResponse.success(res, { project });
     } catch (e) { next(e); }
   }
 

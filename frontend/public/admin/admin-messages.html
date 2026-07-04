@@ -5,47 +5,7 @@
   <title>Mensagens — Admin INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/css/main.css" rel="stylesheet">
-</head>
-<body>
-<div class="dashboard-layout">
-    <aside class="sidebar">
-    <a href="/dashboard.html" class="sidebar-brand">
-      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
-    </a>
-    <nav class="sidebar-nav">
-      <span class="sidebar-section-label">Dashboard</span>
-      <a href="/dashboard.html"              class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Plataforma</a>
-      <a href="/admin/admin-dashboard.html"  class="sidebar-link "><i class="bi bi-shield-fill"></i>Admin Dashboard</a>
-      <span class="sidebar-section-label">Gestão</span>
-      <a href="/admin/admin-users.html"      class="sidebar-link "><i class="bi bi-people-fill"></i>Utilizadores</a>
-      <a href="/admin/admin-projects.html"   class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/admin/admin-startups.html"   class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/admin/admin-mentors.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentores</a>
-      <a href="/admin/admin-approvers.html"  class="sidebar-link "><i class="bi bi-person-check-fill"></i>Aprovadores</a>
-      <span class="sidebar-section-label">Comunicação</span>
-      <a href="/admin/admin-messages.html"   class="sidebar-link active"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
-      <span class="sidebar-section-label">Relatórios</span>
-      <a href="/admin/admin-stats.html"      class="sidebar-link "><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
-      <a href="/admin/admin-log.html"        class="sidebar-link "><i class="bi bi-journal-text"></i>Logs</a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-user-avatar" id="user-avatar">A</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Admin</div><div class="sidebar-user-role">administrador</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
-      </div>
-    </div>
-  </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-TYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mensagens — Admin INKU·AI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -61,7 +21,6 @@ TYPE html>
       <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
       <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
       <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/admin/admin-mentors.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentores</a>
       <a href="/admin/admin-messages.html"  class="sidebar-link active"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
       <a href="/admin/admin-approvers.html" class="sidebar-link"><i class="bi bi-shield-check"></i>Aprovadores</a>
       <a href="/admin/admin-stats.html"     class="sidebar-link"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
@@ -82,7 +41,7 @@ TYPE html>
   <main class="main-content">
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title"><i class="bi bi-chat-dots-fill me-2" style="color:var(--ink-400)"></i>Mensagens</span>
+      <span class="topbar-title"><i class="bi bi-chat-dots-fill me-2" style="color:var(--blue-600)"></i>Mensagens</span>
       <div id="notif-mount" class="d-flex align-items-center me-2"></div>
       <div class="ms-auto d-flex gap-2">
         <button class="btn-outline-inkuai btn-sm" data-bs-toggle="modal" data-bs-target="#bulkModal">
@@ -97,10 +56,10 @@ TYPE html>
     <div class="page-content">
       <!-- Abas Caixa de Entrada / Enviadas -->
       <div class="d-flex gap-2 mb-4">
-        <button id="tab-inbox" onclick="setTab('inbox')" class="btn-inkuai btn-inkuai-sm">
+        <button id="tab-inbox" onclick="setTab('inbox')" class="btn btn-primary btn-sm">
           <i class="bi bi-inbox me-1"></i>Caixa de Entrada <span id="inbox-count" class="badge bg-white text-primary ms-1">0</span>
         </button>
-        <button id="tab-sent" onclick="setTab('sent')" class="btn-outline-inkuai btn-inkuai-sm">
+        <button id="tab-sent" onclick="setTab('sent')" class="btn btn-outline-secondary btn-sm">
           <i class="bi bi-send me-1"></i>Enviadas
         </button>
       </div>
@@ -120,7 +79,7 @@ TYPE html>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-envelope me-2" style="color:var(--ink-400)"></i>Nova Mensagem</h5>
+        <h5 class="modal-title"><i class="bi bi-envelope me-2" style="color:var(--blue-600)"></i>Nova Mensagem</h5>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -145,7 +104,7 @@ TYPE html>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-broadcast me-2" style="color:var(--ink-400)"></i>Mensagem em Massa</h5>
+        <h5 class="modal-title"><i class="bi bi-broadcast me-2" style="color:var(--blue-600)"></i>Mensagem em Massa</h5>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -214,8 +173,8 @@ async function loadMessages(page=1) {
       const unread = currentTab==='inbox' && !m.is_read;
       return `<div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-2 cursor-pointer" 
         onclick="viewMessage('${m.id}','${(m.subject||'Sem assunto').replace(/'/g,"\\'")}','${(m.body||'').replace(/'/g,"\\'")}','${other?.name||'—'}','${new Date(m.created_at).toLocaleString('pt-PT')}')"
-        style="background:${unread?'var(--ink-50)':'var(--bg-page)'};border:1px solid ${unread?'var(--ink-100)':'var(--border-light)'};cursor:pointer;transition:background 0.15s">
-        <div style="width:38px;height:38px;border-radius:50%;background:var(--ink-50);border:1px solid var(--ink-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink-400);flex-shrink:0">${(other?.name||'?')[0]}</div>
+        style="background:${unread?'var(--blue-50)':'var(--bg-page)'};border:1px solid ${unread?'var(--blue-100)':'var(--border-light)'};cursor:pointer;transition:background 0.15s">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--blue-50);border:1px solid var(--blue-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-600);flex-shrink:0">${(other?.name||'?')[0]}</div>
         <div style="flex:1;overflow:hidden">
           <div class="d-flex align-items-center gap-2">
             <span style="font-weight:${unread?'700':'600'};color:var(--text-primary)">${other?.name||'—'}</span>
@@ -255,8 +214,8 @@ async function loadRecipients(role) {
     bulkUserIds = users.map(u=>u.id);
     document.getElementById('bk-count').textContent = bulkUserIds.length;
     document.getElementById('recipients-preview').innerHTML =
-      `<span style="color:var(--ink-500);font-weight:600">${bulkUserIds.length} destinatários seleccionados</span>: ` +
-      users.slice(0,8).map(u=>`<span class="badge" style="background:var(--ink-50);color:var(--ink-500);font-size:0.72rem">${u.name}</span>`).join(' ') +
+      `<span style="color:var(--blue-700);font-weight:600">${bulkUserIds.length} destinatários seleccionados</span>: ` +
+      users.slice(0,8).map(u=>`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">${u.name}</span>`).join(' ') +
       (users.length>8?` <em>...e mais ${users.length-8}</em>`:'');
   } catch(err) { window.showToast?.(err.message,'error'); }
 }

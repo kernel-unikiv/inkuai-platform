@@ -3,237 +3,315 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artigos & Ideias — INKU·AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard-layout">
-    <aside class="sidebar">
+  <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:#93b8fb">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
       <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"     class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"     class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"     class="sidebar-link active"><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
-      <a href="/classroom.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"      class="sidebar-link "><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-assistant.html" class="sidebar-link "><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"    class="sidebar-link "><i class="bi bi-braces"></i>Modelos IA</a>
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html"   class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"     class="sidebar-link "><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/classrooms.html"   class="sidebar-link"><i class="bi bi-easel2-fill"></i>Classrooms</a>
+      <a href="/articles.html"     class="sidebar-link active"><i class="bi bi-journal-richtext"></i>Artigos & Ideias</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"     class="sidebar-link " id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span></a>
-      <a href="/profile.html"      class="sidebar-link "><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"  class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"   class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden">
+          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
+        </div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,.4)"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<main class="main-content">
+
+  <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title">Artigos & Ideias</span>
-      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
-      <div class="ms-auto">
-        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal">
-          <i class="bi bi-plus-lg me-2"></i>Publicar Ideia
-        </button>
-      </div>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-1" style="color:var(--text-secondary)" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+      <span class="topbar-title"><i class="bi bi-journal-richtext me-2" style="color:var(--brand-600)"></i>Artigos & Ideias</span>
+      <div id="notif-mount" class="d-flex align-items-center ms-auto me-3"></div>
+      <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal">
+        <i class="bi bi-plus-lg"></i><span class="ms-2 d-none d-sm-inline">Nova Publicação</span>
+      </button>
     </div>
 
     <div class="page-content">
       <!-- Filtros -->
-      <div class="inkuai-card mb-4">
-        <div class="row g-3 align-items-end">
-          <div class="col-md-5">
-            <input type="text" id="search-input" class="form-control-dark" placeholder="🔍 Pesquisar artigos e ideias...">
-          </div>
-          <div class="col-md-4">
-            <select id="cat-filter" class="form-control-dark">
-              <option value="">Todas as categorias</option>
-              <option value="ideia">💡 Ideias</option>
-              <option value="artigo">📄 Artigos</option>
-              <option value="investigacao">🔬 Investigação</option>
-              <option value="inovacao">🚀 Inovação</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <button class="btn-inkuai w-100" onclick="loadArticles()"><i class="bi bi-search me-2"></i>Pesquisar</button>
+      <div class="d-flex gap-2 mb-5 flex-wrap align-items-center">
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-primary rounded-pill px-4" onclick="setFilter('all')" id="f-all">Todos</button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setFilter('article')" id="f-article">📄 Artigos</button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setFilter('idea')" id="f-idea">💡 Ideias</button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="setFilter('paper')" id="f-paper">🔬 Papers</button>
+        </div>
+        <div class="ms-auto" style="min-width:220px">
+          <div style="position:relative">
+            <i class="bi bi-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);font-size:.85rem"></i>
+            <input type="text" id="search" class="form-control-dark" placeholder="Pesquisar..." style="padding-left:32px" onkeyup="if(event.key==='Enter')loadArticles()">
           </div>
         </div>
       </div>
 
-      <!-- Grid de Artigos -->
       <div class="row g-4" id="articles-grid">
-        <div class="col-12 text-center py-5" style="color:var(--text-muted)">
-          <div class="spinner-border text-primary me-2"></div> A carregar...
-        </div>
+        <div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>
       </div>
-      <div class="d-flex justify-content-center mt-4" id="pagination"></div>
+      <div id="pagination" class="d-flex justify-content-center gap-2 mt-6"></div>
     </div>
   </main>
 </div>
 
-<!-- Modal Novo Artigo/Ideia -->
+<!-- Modal Nova Publicação -->
 <div class="modal fade" id="newArticleModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
-      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title"><i class="bi bi-lightbulb-fill me-2" style="color:#f59e0b;"></i>Publicar Ideia / Artigo</h5>
-        
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-journal-plus me-2" style="color:var(--brand-600)"></i>Nova Publicação</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        
-        <div class="row g-3 mt-1">
-          <div class="col-12">
-            <label class="form-label-dark">Título *</label>
-            <input type="text" id="art-title" class="form-control-dark" placeholder="Ex: Uso de IA para Agricultura de Precisão em Angola">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label-dark">Categoria *</label>
-            <select id="art-category" class="form-control-dark">
-              <option value="ideia">💡 Ideia</option>
-              <option value="artigo">📄 Artigo</option>
-              <option value="investigacao">🔬 Investigação</option>
-              <option value="inovacao">🚀 Inovação</option>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label-dark">Tipo *</label>
+            <select id="na-type" class="form-control-dark">
+              <option value="idea">💡 Ideia</option>
+              <option value="article">📄 Artigo</option>
+              <option value="paper">🔬 Paper Científico</option>
             </select>
           </div>
-          <div class="col-md-6">
-            <label class="form-label-dark">Tags (separadas por vírgulas)</label>
-            <input type="text" id="art-tags" class="form-control-dark" placeholder="IA, agricultura, Angola, inovação">
+          <div class="col-md-8">
+            <label class="form-label-dark">Título *</label>
+            <input type="text" id="na-title" class="form-control-dark" data-ai-field="title" placeholder="Título da publicação">
           </div>
           <div class="col-12">
             <label class="form-label-dark">Resumo</label>
-            <textarea id="art-summary" class="form-control-dark" rows="2" placeholder="Resumo breve do conteúdo..."></textarea>
+            <textarea id="na-summary" class="form-control-dark" data-ai-field="summary" rows="2" placeholder="Resumo em 2-3 frases…"></textarea>
           </div>
           <div class="col-12">
-            <label class="form-label-dark">Conteúdo Completo *</label>
-            <textarea id="art-content" class="form-control-dark" rows="8" placeholder="Escreva o conteúdo completo aqui..."></textarea>
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <label class="form-label-dark mb-0">Conteúdo *</label>
+              <button type="button" onclick="aiGenerateArticle()" id="gen-ai-btn"
+                style="font-size:.78rem;padding:4px 12px;background:var(--brand-600);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer">
+                <i class="bi bi-stars me-1"></i>Gerar com IA
+              </button>
+            </div>
+            <textarea id="na-body" class="form-control-dark" data-ai-field="article_body" rows="10" placeholder="Escreve o conteúdo aqui… ou clica em 'Gerar com IA'."></textarea>
+            <small style="color:var(--text-tertiary);font-size:.72rem">Suporta Markdown: **negrito**, *itálico*, # títulos</small>
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Tags <span style="color:var(--text-tertiary)">(separadas por vírgula)</span></label>
+            <input type="text" id="na-tags" class="form-control-dark" data-ai-field="tags" placeholder="ia, machine-learning, angola">
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+      <div class="modal-footer">
         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn-inkuai" id="save-article-btn"><i class="bi bi-send me-2"></i>Publicar</button>
+        <button class="btn-outline-inkuai" id="save-draft-btn"><i class="bi bi-file-earmark me-1"></i>Rascunho</button>
+        <button class="btn-inkuai" id="publish-btn"><i class="bi bi-send me-2"></i>Publicar</button>
       </div>
     </div>
   </div>
 </div>
 
-<style>
-
-
-.art-card { background:var(--surface-card); border:1px solid var(--border-light); border-radius:14px; padding:20px; transition:all .2s; cursor:pointer; height:100%; }
-.art-card:hover { border-color:#6366f1; transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,.15); }
-.cat-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
-.cat-ideia       { background:rgba(245,158,11,.15); color:#f59e0b; }
-.cat-artigo      { background:rgba(99,102,241,.15); color:#818cf8; }
-.cat-investigacao{ background:rgba(16,185,129,.15); color:#10b981; }
-.cat-inovacao    { background:rgba(239,68,68,.15); color:#f87171; }
-</style>
+<!-- Modal Ver Artigo -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="vm-title">Artigo</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="vm-body"></div>
+      <div class="modal-footer">
+        <button onclick="likeArticle()" class="btn btn-sm btn-outline-danger"><i class="bi bi-heart me-1"></i>Gostei <span id="vm-likes">0</span></button>
+        <button class="btn btn-light" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
+<script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/ai-suggest.js"></script>
 <script>
-const catLabel = { ideia:'💡 Ideia', artigo:'📄 Artigo', investigacao:'🔬 Investigação', inovacao:'🚀 Inovação' };
+const typeIcon  = { article:'bi-file-text-fill', idea:'bi-lightbulb-fill', paper:'bi-mortarboard-fill' };
+const typeColor = { article:'var(--brand-600)',  idea:'var(--warning-500)', paper:'var(--violet-500)' };
+const typeBg    = { article:'var(--brand-50)',   idea:'var(--warning-50)',  paper:'var(--violet-50)' };
+const typeLabel = { article:'Artigo', idea:'Ideia', paper:'Paper' };
+let currentFilter = 'all';
+let viewId = null;
 
-async function loadArticles(page=1) {
-  const search   = document.getElementById('search-input').value;
-  const category = document.getElementById('cat-filter').value;
-  const grid = document.getElementById('articles-grid');
-  grid.innerHTML = '<div class="col-12 text-center py-5" style="color:var(--text-muted)"><div class="spinner-border text-primary me-2"></div> A carregar...</div>';
-  try {
-    let ep = `/articles?page=${page}&limit=9`;
-    if (search)   ep += `&search=${encodeURIComponent(search)}`;
-    if (category) ep += `&category=${category}`;
-    const res = await window.InkuAPI.get(ep);
-    const articles = res.data || [];
-    if (!articles.length) {
-      grid.innerHTML = `<div class="col-12 text-center py-5">
-        <i class="bi bi-lightbulb fs-1 d-block mb-3" style="color:var(--text-muted)"></i>
-        <p style="color:var(--text-muted)">Nenhum artigo ou ideia publicado ainda.</p>
-        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal">Publicar primeira ideia</button>
-      </div>`;
-      return;
-    }
-    grid.innerHTML = articles.map(a => `
-      <div class="col-md-6 col-xl-4">
-        <div class="art-card" onclick="window.location.href='/article-detail.html?id=${a.id}'">
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <span class="cat-badge cat-${a.category}">${catLabel[a.category]||a.category}</span>
-            <span style="font-size:0.75rem;color:var(--text-muted)">${new Date(a.created_at).toLocaleDateString('pt-PT')}</span>
-          </div>
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:8px;line-height:1.4">${a.title}</h6>
-          <p style="font-size:0.82rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${a.summary||a.content?.substring(0,150)||''}</p>
-          ${a.tags?.length ? `<div class="d-flex flex-wrap gap-1 mb-3">${a.tags.slice(0,3).map(t=>`<span style="background:rgba(99,102,241,.1);color:#818cf8;padding:2px 8px;border-radius:20px;font-size:10px;">${t}</span>`).join('')}</div>` : ''}
-          <div class="d-flex align-items-center justify-content-between pt-2" style="border-top:1px solid var(--border-light)">
-            <div class="d-flex align-items-center gap-2">
-              <div style="width:26px;height:26px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${(a.author?.name||'?')[0].toUpperCase()}</div>
-              <span style="font-size:0.78rem;color:var(--text-muted)">${a.author?.name||'Anónimo'}</span>
-            </div>
-            <div class="d-flex align-items-center gap-3" style="font-size:0.75rem;color:var(--text-muted);">
-              <span><i class="bi bi-eye me-1"></i>${a.views||0}</span>
-              <span><i class="bi bi-heart me-1"></i>${a.likes||0}</span>
-            </div>
-          </div>
-        </div>
-      </div>`).join('');
-    const pag = res.pagination;
-    if (pag?.pages > 1) {
-      document.getElementById('pagination').innerHTML = Array.from({length:pag.pages},(_,i)=>`
-        <button class="btn btn-sm mx-1 ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadArticles(${i+1})">${i+1}</button>`).join('');
-    }
-  } catch(e) {
-    grid.innerHTML = `<div class="col-12 text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${e.message}</div>`;
-  }
+function setFilter(f) {
+  currentFilter = f;
+  ['all','article','idea','paper'].forEach(t => {
+    const btn = document.getElementById(`f-${t}`);
+    if (!btn) return;
+    btn.className = t === f
+      ? 'btn btn-sm btn-primary rounded-pill px-4'
+      : 'btn btn-sm btn-outline-secondary rounded-pill px-3';
+  });
+  loadArticles();
 }
 
-// Save article
-document.getElementById('save-article-btn')?.addEventListener('click', async () => {
-  const btn = document.getElementById('save-article-btn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A publicar...';
+async function loadArticles(page = 1) {
+  const grid = document.getElementById('articles-grid');
+  grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>';
   try {
-    const tags = document.getElementById('art-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-    await window.InkuAPI.post('/articles', {
-      title:    document.getElementById('art-title').value,
-      content:  document.getElementById('art-content').value,
-      summary:  document.getElementById('art-summary').value,
-      category: document.getElementById('art-category').value,
-      tags_json: JSON.stringify(tags)
+    let ep = `/articles?page=${page}&limit=12&status=published`;
+    if (currentFilter !== 'all') ep += `&type=${currentFilter}`;
+    const q = document.getElementById('search').value;
+    if (q) ep += `&search=${encodeURIComponent(q)}`;
+    const res = await window.InkuAPI.get(ep);
+    const arts = res.articles || [];
+    if (!arts.length) {
+      grid.innerHTML = `
+        <div class="col-12">
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="bi bi-journal"></i></div>
+            <div class="empty-state-title">Nenhuma publicação ainda</div>
+            <div class="empty-state-text">Sê o primeiro a partilhar uma ideia ou artigo na plataforma.</div>
+            <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#newArticleModal"><i class="bi bi-plus-lg me-2"></i>Criar publicação</button>
+          </div>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = arts.map(a => {
+      let tags = []; try { tags = JSON.parse(a.tags || '[]'); } catch {}
+      return `
+        <div class="col-md-6 col-xl-4">
+          <div class="project-card" style="cursor:pointer" onclick="viewArticle('${a.id}')">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div class="project-type-icon" style="background:${typeBg[a.type]||typeBg.article}">
+                <i class="bi ${typeIcon[a.type]||typeIcon.article}" style="color:${typeColor[a.type]||typeColor.article}"></i>
+              </div>
+              <span class="status" style="background:${typeBg[a.type]||typeBg.article};color:${typeColor[a.type]||typeColor.article}">${typeLabel[a.type]||'Artigo'}</span>
+            </div>
+            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${a.title}</h6>
+            <p style="font-size:.82rem;color:var(--text-secondary);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${a.summary || (a.body||'').substring(0,120)}</p>
+            <div class="d-flex flex-wrap gap-1 mb-3">
+              ${tags.slice(0,3).map(t=>`<span class="status status-draft">#${t}</span>`).join('')}
+            </div>
+            <div class="d-flex align-items-center justify-content-between pt-2" style="border-top:1px solid var(--border-subtle)">
+              <small style="color:var(--text-tertiary)">${a.author?.name||'—'}</small>
+              <div class="d-flex gap-3" style="font-size:.75rem;color:var(--text-tertiary)">
+                <span><i class="bi bi-eye me-1"></i>${a.views||0}</span>
+                <span><i class="bi bi-heart me-1"></i>${a.likes||0}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    if (res.total > 12) {
+      const pages = Math.ceil(res.total / 12);
+      document.getElementById('pagination').innerHTML = Array.from({length:pages},(_,i)=>`
+        <button class="btn btn-sm ${i+1===page?'btn-primary':'btn-outline-secondary'}" onclick="loadArticles(${i+1})">${i+1}</button>`).join('');
+    }
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function viewArticle(id) {
+  viewId = id;
+  try {
+    const res = await window.InkuAPI.get(`/articles/${id}`);
+    const a = res.article;
+    document.getElementById('vm-title').textContent = a.title;
+    document.getElementById('vm-likes').textContent = a.likes || 0;
+    let tags = []; try { tags = JSON.parse(a.tags||'[]'); } catch {}
+    document.getElementById('vm-body').innerHTML = `
+      <div class="d-flex align-items-center gap-2 mb-4 flex-wrap">
+        <span class="status" style="background:${typeBg[a.type]||typeBg.article};color:${typeColor[a.type]||typeColor.article}">${typeLabel[a.type]||'Artigo'}</span>
+        <small style="color:var(--text-tertiary)">Por <strong style="color:var(--text-primary)">${a.author?.name||'—'}</strong></small>
+        <small style="color:var(--text-tertiary)">· ${new Date(a.created_at).toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'})}</small>
+        <small style="color:var(--text-tertiary);ms-auto"><i class="bi bi-eye me-1"></i>${a.views||0}</small>
+      </div>
+      ${a.summary ? `<p style="font-size:.9375rem;color:var(--text-secondary);font-style:italic;margin-bottom:24px;padding:12px 16px;background:var(--gray-50);border-radius:var(--radius-sm);border-left:3px solid var(--brand-300)">${a.summary}</p>` : ''}
+      <div style="line-height:1.8;color:var(--text-primary);font-size:.9375rem">${fmtMd(a.body||'')}</div>
+      ${tags.length ? `<div class="d-flex flex-wrap gap-2 mt-4 pt-3" style="border-top:1px solid var(--border-subtle)">${tags.map(t=>`<span class="status status-draft">#${t}</span>`).join('')}</div>` : ''}`;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('viewModal')).show();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function likeArticle() {
+  if (!viewId) return;
+  try {
+    const res = await window.InkuAPI.post(`/articles/${viewId}/like`);
+    document.getElementById('vm-likes').textContent = res.article?.likes || '—';
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function aiGenerateArticle() {
+  const title = document.getElementById('na-title').value.trim();
+  const btn = document.getElementById('gen-ai-btn');
+  if (!title) { window.showToast?.('Escreve primeiro um título ou ideia.','warning'); return; }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>A gerar…';
+  try {
+    const res = await window.InkuAPI.post('/ai-suggest/fill-form', {
+      formType:'article', seedText: title,
+      projectType: document.getElementById('na-type').value
     });
+    if (res.title)   document.getElementById('na-title').value   = res.title;
+    if (res.summary) document.getElementById('na-summary').value = res.summary;
+    if (res.body)    document.getElementById('na-body').value    = res.body;
+    if (res.tags)    document.getElementById('na-tags').value    = Array.isArray(res.tags) ? res.tags.join(', ') : res.tags;
+    window.showToast?.('Artigo gerado com IA!','success');
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-stars me-1"></i>Gerar com IA'; }
+}
+
+async function saveArticle(status) {
+  const tags = (document.getElementById('na-tags').value||'').split(',').map(t=>t.trim()).filter(Boolean);
+  const body = { title:document.getElementById('na-title').value, summary:document.getElementById('na-summary').value,
+    body:document.getElementById('na-body').value, type:document.getElementById('na-type').value, tags, status };
+  if (!body.title || !body.body) { window.showToast?.('Título e conteúdo são obrigatórios.','warning'); return; }
+  const btn = status==='published' ? document.getElementById('publish-btn') : document.getElementById('save-draft-btn');
+  btn.disabled=true;
+  try {
+    await window.InkuAPI.post('/articles', body);
     bootstrap.Modal.getInstance(document.getElementById('newArticleModal')).hide();
-    window.showToast?.('Artigo publicado!','success');
+    window.showToast?.(status==='published'?'Publicado!':'Rascunho guardado!','success');
     loadArticles();
-    ['art-title','art-content','art-summary','art-tags'].forEach(id => document.getElementById(id).value='');
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-send me-2"></i>Publicar'; }
-});
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { btn.disabled=false; }
+}
 
+function fmtMd(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h6 style="font-weight:700;margin:18px 0 6px">$1</h6>')
+    .replace(/^## (.+)$/gm,'<h5 style="font-weight:700;margin:22px 0 8px">$1</h5>')
+    .replace(/^# (.+)$/gm,'<h4 style="font-weight:800;margin:24px 0 10px">$1</h4>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\n\n/g,'</p><p style="margin-bottom:12px">')
+    .replace(/\n/g,'<br>');
+}
 
-// AI auto-fill article form
+document.getElementById('publish-btn')?.addEventListener('click', () => saveArticle('published'));
+document.getElementById('save-draft-btn')?.addEventListener('click', () => saveArticle('draft'));
 
-
-document.getElementById('search-input')?.addEventListener('keyup', e=>{if(e.key==='Enter')loadArticles();});
 const usr = window.InkuAuth?.getUser();
-if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
-if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
-document.addEventListener('DOMContentLoaded', ()=>loadArticles());
+if (usr?.name) document.getElementById('user-avatar').textContent = usr.name[0].toUpperCase();
+if (['admin','mentor'].includes(usr?.role)) document.getElementById('admin-link').style.display='';
+document.addEventListener('DOMContentLoaded', loadArticles);
 </script>
-<script src="/assets/js/components/notifications.js"></script>
 </body>
 </html>

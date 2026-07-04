@@ -5,45 +5,44 @@
   <title>Startups — INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard-layout">
-    <aside class="sidebar">
+  <aside class="sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"     class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"     class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"     class="sidebar-link "><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
-      <a href="/classroom.html"    class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"      class="sidebar-link "><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-assistant.html" class="sidebar-link "><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"    class="sidebar-link "><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"   class="sidebar-link active"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
       <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html"   class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"     class="sidebar-link "><i class="bi bi-database-fill"></i>Datasets</a>
+      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
+      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"     class="sidebar-link " id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span></a>
-      <a href="/profile.html"      class="sidebar-link "><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"   class="sidebar-link" id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem">0</span></a>
+      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<main class="main-content">
+
+  <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()"><i class="bi bi-list fs-4"></i></button>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
       <span class="topbar-title">Startups</span>
       <div id="notif-mount" class="d-flex align-items-center me-2"></div>
       <div class="ms-auto">
@@ -92,7 +91,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--ink-400)"></i>Nova Startup</h5>
+        <h5 class="modal-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--blue-600)"></i>Nova Startup</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -123,7 +122,7 @@
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-const PALETTE = ['var(--ink-400)','#16a34a','#7c3aed','#d97706','#dc2626','#0284c7'];
+const PALETTE = ['var(--blue-600)','#16a34a','#7c3aed','#d97706','#dc2626','#0284c7'];
 
 async function loadStartups() {
   const search = document.getElementById('search-startup').value;
@@ -152,7 +151,7 @@ async function loadStartups() {
           </div>
           <p style="font-size:0.82rem;color:var(--text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px">${s.description||''}</p>
           <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="badge" style="background:var(--ink-50);color:var(--ink-500);font-size:0.72rem">${s.sector||'IA/Software'}</span>
+            <span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.72rem">${s.sector||'IA/Software'}</span>
             ${s.github_url?`<a href="${s.github_url}" target="_blank" style="color:var(--text-muted);font-size:0.78rem;text-decoration:none"><i class="bi bi-github me-1"></i>GitHub</a>`:''}
           </div>
           <div class="d-flex gap-2 pt-2" style="border-top:1px solid var(--border-light)">

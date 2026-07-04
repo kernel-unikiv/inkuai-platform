@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom — INKU·AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .code-area {
+      font-family: var(--font-mono,'JetBrains Mono',monospace);
+      font-size:.85rem; background:var(--gray-900); color:var(--gray-200);
+      border:1.5px solid var(--border-subtle); border-radius:var(--radius-md);
+      width:100%; min-height:180px; padding:var(--space-4); resize:vertical; outline:none;
+    }
+    .code-area:focus { border-color:var(--brand-500); box-shadow:var(--shadow-focus); }
+    .exec-output {
+      background:var(--gray-900); color:var(--gray-200);
+      font-family:var(--font-mono,'JetBrains Mono',monospace); font-size:.8rem;
+      border-radius:var(--radius-md); padding:var(--space-4); max-height:240px;
+      overflow-y:auto; white-space:pre-wrap; line-height:1.7;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .sub-card {
+      background:var(--white); border:1px solid var(--border-subtle);
+      border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-3);
+      cursor:pointer; transition:all var(--duration-base);
+    }
+    .sub-card:hover { box-shadow:var(--shadow-sm); border-color:var(--border-brand); }
+    .grade-pill {
+      font-size:.72rem; font-weight:700; padding:3px 10px;
+      border-radius:var(--radius-full);
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#93b8fb">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/classrooms.html"   class="sidebar-link active"><i class="bi bi-easel2-fill"></i>Classrooms</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-journal-richtext"></i>Artigos & Ideias</a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden">
+          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
+        </div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,.4)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button class="btn btn-link d-lg-none p-0 me-1" style="color:var(--text-secondary)" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+      <a href="/classrooms.html" class="btn btn-link p-0 me-2" style="color:var(--text-tertiary)" title="Voltar"><i class="bi bi-arrow-left"></i></a>
+      <span class="topbar-title" id="cl-title">Classroom</span>
+      <div id="notif-mount" class="d-flex align-items-center ms-auto"></div>
+    </div>
+
+    <div class="page-content">
+      <!-- Info classroom -->
+      <div class="inkuai-card mb-4" id="cl-info">
+        <div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Painel de submissão -->
+        <div class="col-lg-7">
+          <div class="inkuai-card">
+            <h6 style="font-weight:700;margin-bottom:var(--space-4)">
+              <i class="bi bi-upload me-2" style="color:var(--brand-600)"></i>Submeter Trabalho
+            </h6>
+            <div class="mb-3">
+              <input type="text" id="sub-title" class="form-control-dark" placeholder="Título da submissão">
+            </div>
+            <div class="d-flex gap-2 mb-3">
+              <select id="sub-lang" class="form-control-dark" style="width:auto">
+                <option value="python">🐍 Python</option>
+                <option value="javascript">📦 JavaScript</option>
+              </select>
+            </div>
+            <textarea id="sub-code" class="code-area mb-3" placeholder="# Escreve o teu código aqui…"></textarea>
+            <textarea id="sub-desc" class="form-control-dark mb-3" rows="2" placeholder="Notas sobre a submissão (opcional)"></textarea>
+            <button id="submit-btn" class="btn-inkuai">
+              <i class="bi bi-send me-2"></i>Submeter
+            </button>
+          </div>
+        </div>
+
+        <!-- Painel de submissões -->
+        <div class="col-lg-5">
+          <div class="inkuai-card" style="max-height:600px;overflow-y:auto">
+            <h6 style="font-weight:700;margin-bottom:var(--space-3)">
+              <i class="bi bi-list-check me-2" style="color:var(--success-500)"></i>Submissões
+            </h6>
+            <div id="subs-list">
+              <div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal detalhe de submissão -->
+<div class="modal fade" id="subModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sm-title">Submissão</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="sm-body"></div>
+      <div class="modal-footer" id="sm-footer"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script src="/assets/js/components/notifications.js"></script>
+<script>
+const clId = new URLSearchParams(location.search).get('id');
+const usr   = window.InkuAuth?.getUser();
+let isMentorOrAdmin = false;
+let classroom = null;
+
+async function loadClassroom() {
+  if (!clId) { window.location.href='/classrooms.html'; return; }
+  try {
+    const res = await window.InkuAPI.get(`/classrooms/${clId}`);
+    classroom = res.classroom;
+    document.getElementById('cl-title').textContent = classroom.name;
+    isMentorOrAdmin = classroom.mentor_id === usr?.id || usr?.role === 'admin';
+
+    let settings = {}; try { settings = JSON.parse(classroom.settings||'{}'); } catch {}
+    document.getElementById('cl-info').innerHTML = `
+      <div class="d-flex align-items-start gap-4 flex-wrap">
+        <div style="flex:1;min-width:200px">
+          <h5 style="font-weight:700;color:var(--text-primary);margin-bottom:6px">${classroom.name}</h5>
+          <p style="color:var(--text-secondary);font-size:.875rem;margin-bottom:12px">${classroom.description||'Sem descrição.'}</p>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="status status-active"><i class="bi bi-folder me-1"></i>${classroom.project?.title||'—'}</span>
+            <span class="status status-draft"><i class="bi bi-person-badge me-1"></i>${classroom.mentor?.name||'Sem mentor'}</span>
+            <span class="status status-submitted"><i class="bi bi-code-slash me-1"></i>${settings.language||'python'}</span>
+            ${settings.deadline_days ? `<span class="status status-draft"><i class="bi bi-calendar me-1"></i>${settings.deadline_days} dias</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+
+    renderSubmissions(classroom.submissions || []);
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+function renderSubmissions(subs) {
+  const list = document.getElementById('subs-list');
+  if (!subs.length) {
+    list.innerHTML = `<div class="empty-state" style="padding:var(--space-10) var(--space-4)">
+      <div class="empty-state-icon"><i class="bi bi-inbox"></i></div>
+      <div class="empty-state-title" style="font-size:var(--text-base)">Sem submissões</div>
+      <div class="empty-state-text">Sê o primeiro a submeter.</div>
+    </div>`;
+    return;
+  }
+  const statusColors = {
+    submitted:'var(--brand-600)', running:'var(--warning-500)',
+    executed:'var(--info-500)',   graded:'var(--success-500)', returned:'var(--success-500)'
+  };
+  list.innerHTML = subs.map(s => `
+    <div class="sub-card" onclick='openSub(${JSON.stringify(s).replace(/'/g,"&#39;")})'>
+      <div class="d-flex align-items-center justify-content-between mb-1">
+        <strong style="font-size:.85rem;color:var(--text-primary)">${s.title||'Submissão'}</strong>
+        <span class="grade-pill" style="background:${statusColors[s.status]||'var(--gray-300)'}20;color:${statusColors[s.status]||'var(--gray-600)'}">${s.status}</span>
+      </div>
+      <small style="color:var(--text-tertiary)">${s.author?.name||'—'} · ${new Date(s.created_at).toLocaleDateString('pt-PT')}</small>
+      <div class="d-flex gap-3 mt-2">
+        ${s.ai_grade!=null?`<span class="grade-pill" style="background:var(--brand-50);color:var(--brand-600)">🤖 ${s.ai_grade}/100</span>`:''}
+        ${s.mentor_grade!=null?`<span class="grade-pill" style="background:var(--success-50);color:var(--success-600)">🎓 ${s.mentor_grade}/100</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function openSub(s) {
+  document.getElementById('sm-title').textContent = s.title||'Submissão';
+  document.getElementById('sm-body').innerHTML = `
+    <div class="mb-3">
+      <strong>Linguagem:</strong> ${s.language}
+      &nbsp;&nbsp;<strong>Estado:</strong> <span class="status status-active">${s.status}</span>
+    </div>
+    ${s.description ? `<p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:12px">${esc(s.description)}</p>` : ''}
+    <div class="mb-1"><strong style="font-size:.82rem">Código:</strong></div>
+    <div class="exec-output mb-3">${esc(s.code||'(sem código)')}</div>
+    ${s.execution_result ? `<div class="mb-1"><strong style="font-size:.82rem">Resultado de execução:</strong></div><div class="exec-output mb-3">${esc(s.execution_result)}</div>` : ''}
+    ${s.ai_feedback ? `
+      <div class="inkuai-card mb-3" style="background:var(--brand-50);border-color:var(--brand-100)">
+        <strong style="color:var(--brand-700)">🤖 Avaliação IA — ${s.ai_grade}/100</strong>
+        <p style="font-size:.85rem;margin-top:8px;color:var(--brand-800)">${esc(s.ai_feedback)}</p>
+      </div>` : ''}
+    ${s.mentor_feedback ? `
+      <div class="inkuai-card mb-3" style="background:var(--success-50);border-color:var(--success-100)">
+        <strong style="color:var(--success-600)">🎓 Avaliação Mentor — ${s.mentor_grade}/100</strong>
+        <p style="font-size:.85rem;margin-top:8px;color:var(--success-600)">${esc(s.mentor_feedback)}</p>
+      </div>` : ''}
+    ${isMentorOrAdmin ? `
+      <div class="pt-3" style="border-top:1px solid var(--border-subtle)">
+        <label class="form-label-dark">Avaliação do Mentor</label>
+        <div class="d-flex gap-2 mb-2">
+          <input type="number" id="mg-grade" class="form-control-dark" min="0" max="100" placeholder="0-100" style="width:100px">
+          <input type="text" id="mg-fb" class="form-control-dark flex-1" placeholder="Feedback…">
+        </div>
+        <button onclick="gradeSubmission('${s.id}')" class="btn btn-success btn-sm">
+          <i class="bi bi-check-lg me-1"></i>Avaliar
+        </button>
+      </div>` : ''}`;
+
+  document.getElementById('sm-footer').innerHTML = `
+    <button onclick="execSub('${s.id}')" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-play-fill me-1"></i>Executar
+    </button>
+    <button onclick="aiGradeSub('${s.id}')" class="btn btn-outline-success btn-sm">
+      <i class="bi bi-robot me-1"></i>Avaliar com IA
+    </button>
+    <button class="btn btn-light ms-auto" data-bs-dismiss="modal">Fechar</button>`;
+
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('subModal')).show();
+}
+
+async function execSub(id) {
+  window.showToast?.('A executar o código…','info');
+  try {
+    await window.InkuAPI.post(`/classrooms/submissions/${id}/execute`);
+    window.showToast?.('Executado!','success');
+    bootstrap.Modal.getInstance(document.getElementById('subModal')).hide();
+    loadClassroom();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function aiGradeSub(id) {
+  window.showToast?.('A IA está a avaliar…','info');
+  try {
+    await window.InkuAPI.post(`/classrooms/submissions/${id}/ai-grade`);
+    window.showToast?.('Avaliação da IA concluída!','success');
+    bootstrap.Modal.getInstance(document.getElementById('subModal')).hide();
+    loadClassroom();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+async function gradeSubmission(id) {
+  const grade = +document.getElementById('mg-grade').value;
+  const feedback = document.getElementById('mg-fb').value;
+  if (!grade || !feedback) { window.showToast?.('Preenche a nota e o feedback.','warning'); return; }
+  try {
+    await window.InkuAPI.post(`/classrooms/submissions/${id}/grade`, { grade, feedback });
+    window.showToast?.('Avaliação guardada!','success');
+    bootstrap.Modal.getInstance(document.getElementById('subModal')).hide();
+    loadClassroom();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+}
+
+document.getElementById('submit-btn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('submit-btn');
+  const code = document.getElementById('sub-code').value;
+  if (!code.trim()) { window.showToast?.('Escreve o código antes de submeter.','warning'); return; }
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A submeter…';
+  try {
+    await window.InkuAPI.post(`/classrooms/${clId}/submit`, {
+      title:       document.getElementById('sub-title').value || 'Submissão',
+      code,
+      description: document.getElementById('sub-desc').value,
+      language:    document.getElementById('sub-lang').value
+    });
+    window.showToast?.('Submetido com sucesso!','success');
+    ['sub-title','sub-code','sub-desc'].forEach(id => document.getElementById(id).value='');
+    loadClassroom();
+  } catch(err) { window.showToast?.(err.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-send me-2"></i>Submeter'; }
+});
+
+function esc(t) { return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+if (usr?.name) document.getElementById('user-avatar').textContent = usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded', loadClassroom);
+</script>
+</body>
+</html>

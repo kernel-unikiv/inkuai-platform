@@ -1,381 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="INKU·AI — Incubadora de Inteligência Artificial do IP/UNIKIVI. Plataforma académica para desenvolvimento e publicação de projectos de IA.">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="INKU·AI — Incubadora de IA do IP/UNIKIVI. Candidatura FUNDECIT Edital Nº 1/2026.">
   <title>INKU·AI — Incubadora de IA | IP/UNIKIVI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
-  <style>
-    /* Landing-only styles */
-    .landing-tag {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 5px 12px;
-      background: rgba(37,99,235,0.12);
-      border: 1px solid rgba(37,99,235,0.2);
-      border-radius: 999px;
-      color: #93c5fd;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    .hero-headline {
-      font-size: clamp(2.25rem, 5.5vw, 3.75rem);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      color: #fff;
-    }
-    .hero-headline .accent {
-      background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.5);
-      line-height: 1.7;
-      max-width: 480px;
-    }
-    .btn-hero-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 24px;
-      background: #fff;
-      color: #0f172a;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.9375rem;
-      text-decoration: none;
-      transition: all 0.15s;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .btn-hero-primary:hover {
-      color: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    }
-    .btn-hero-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 22px;
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.9375rem;
-      text-decoration: none;
-      transition: all 0.15s;
-    }
-    .btn-hero-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.18);
-      color: #fff;
-    }
-
-    /* Section labels */
-    .section-label {
-      display: inline-block;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--ink-400);
-      background: var(--ink-50);
-      border: 1px solid var(--ink-100);
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-    }
-    .section-label-dark {
-      display: inline-block;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #93c5fd;
-      background: rgba(37,99,235,0.12);
-      border: 1px solid rgba(37,99,235,0.2);
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-    }
-
-    /* Section headings */
-    .section-heading {
-      font-size: clamp(1.625rem, 3vw, 2.125rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      color: var(--text-primary);
-    }
-    .section-heading-dark {
-      font-size: clamp(1.625rem, 3vw, 2.125rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      color: #fff;
-    }
-    .section-sub {
-      font-size: 0.9375rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-    .section-sub-dark {
-      font-size: 0.9375rem;
-      color: rgba(255,255,255,0.4);
-      line-height: 1.65;
-    }
-
-    /* Features section */
-    .features-section {
-      padding: 88px 0;
-      background: #fff;
-    }
-
-    /* FUNDECIT section */
-    .fundecit-section {
-      padding: 88px 0;
-      background: var(--n-50);
-      border-top: 1px solid var(--border-light);
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    /* Metric check item */
-    .check-item {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .check-item:last-child { border-bottom: none; }
-    .check-dot {
-      width: 22px; height: 22px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px;
-    }
-
-    /* CTA section */
-    .cta-section {
-      padding: 88px 0;
-      background: #050a1a;
-      position: relative; overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      width: 500px; height: 500px;
-      background: radial-gradient(ellipse, rgba(37,99,235,0.15) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      pointer-events: none;
-    }
-
-    /* Social proof strip */
-    .proof-strip {
-      padding: 20px 0;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-    }
-    .proof-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 999px;
-      color: rgba(255,255,255,0.55);
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-    .proof-badge i { color: rgba(255,255,255,0.4); }
-
-    /* Progress bars in FUNDECIT */
-    .metric-progress-item { padding: 10px 0; }
-    .metric-progress-label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 2px;
-    }
-    .metric-progress-meta {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-    .metric-progress-bar {
-      height: 4px;
-      background: var(--n-200);
-      border-radius: 999px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-    .metric-progress-fill {
-      height: 100%;
-      border-radius: 999px;
-    }
-  </style>
 </head>
-<body style="background:#050a1a">
+<body style="background:#fff">
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg fixed-top landing-nav" style="padding:10px 0">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top landing-nav">
   <div class="container-xl">
     <a class="navbar-brand d-flex align-items-center gap-2" href="/index.html">
-      <div style="width:32px;height:32px;background:var(--ink-400);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(37,99,235,0.4)">
-        <i class="bi bi-cpu-fill text-white" style="font-size:0.875rem"></i>
+      <div style="width:36px;height:36px;background:var(--blue-600);border-radius:8px;display:flex;align-items:center;justify-content:center">
+        <i class="bi bi-cpu-fill text-white"></i>
       </div>
       <div>
-        <span style="font-size:0.9375rem;font-weight:700;color:#fff;letter-spacing:-0.02em">INKU<span style="color:#60a5fa">·AI</span></span>
-        <span style="display:block;font-size:0.56rem;color:rgba(255,255,255,0.3);line-height:1;margin-top:1px">IP/UNIKIVI</span>
+        <span class="fw-bold text-white">INKU<span style="color:#60a5fa">·AI</span></span>
+        <small class="d-block" style="font-size:0.6rem;color:rgba(255,255,255,0.4);line-height:1">IP/UNIKIVI</small>
       </div>
     </a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
-            style="color:rgba(255,255,255,0.6);padding:4px 8px">
-      <i class="bi bi-list" style="font-size:1.25rem"></i>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav mx-auto gap-1">
+      <ul class="navbar-nav ms-auto me-4 gap-1">
+        <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
         <li class="nav-item"><a class="nav-link" href="#funcionalidades">Plataforma</a></li>
         <li class="nav-item"><a class="nav-link" href="#fundecit">FUNDECIT</a></li>
-        <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
       </ul>
-      <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-        <a href="/login.html" class="btn-ghost" style="color:rgba(255,255,255,0.6);font-size:0.875rem;padding:7px 14px">
-          Entrar
-        </a>
-        <a href="/register.html" class="btn-inkuai btn-inkuai-sm" style="font-size:0.875rem;padding:8px 16px">
-          <i class="bi bi-arrow-right me-1"></i>Criar Conta
-        </a>
+      <div class="d-flex gap-2">
+        <a href="/login.html"    class="btn btn-outline-light btn-sm">Entrar</a>
+        <a href="/register.html" class="btn btn-primary btn-sm">Criar Conta</a>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO — fundo azul escuro -->
 <section class="hero-section" id="sobre">
-  <div class="container-xl position-relative" style="z-index:1">
+  <div class="container-xl position-relative">
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
-
-        <span class="landing-tag mb-4 d-inline-flex">
+        <div class="d-inline-flex align-items-center gap-2 mb-4 px-3 py-2 rounded-pill"
+             style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)">
           <i class="bi bi-award-fill" style="color:#fbbf24"></i>
-          Candidatura FUNDECIT · Edital Nº 1/2026
-        </span>
+          <small class="text-white fw-semibold">Candidatura FUNDECIT · Edital Nº 1/2026</small>
+        </div>
 
-        <h1 class="hero-headline mb-4">
+        <h1 class="display-5 fw-bold text-white mb-4" style="line-height:1.15">
           Incubadora de<br>
-          <span class="accent">Inteligência<br>Artificial</span>
+          <span style="color:#60a5fa">Inteligência Artificial</span><br>
+          <span style="font-size:0.65em;color:rgba(255,255,255,0.6)">Instituto Politécnico / UNIKIVI</span>
         </h1>
 
-        <p class="hero-sub mb-5">
-          Plataforma académica onde estudantes e investigadores do IP/UNIKIVI desenvolvem,
-          treinam e publicam projectos de IA com sandbox seguro e ambiente 100% cloud.
+        <p class="mb-5 text-white" style="opacity:0.75;font-size:1rem;max-width:480px">
+          Plataforma web académica onde estudantes e investigadores desenvolvem, treinam e publicam
+          projectos de IA com sandbox Docker seguro e ambiente 100% cloud.
         </p>
 
-        <!-- Stats row -->
+        <!-- Stats -->
         <div class="row g-3 mb-5">
           <div class="col-4">
-            <div class="hero-stat">
-              <div class="hero-stat-value" data-count="100">0</div>
-              <div class="hero-stat-label">Utilizadores alvo</div>
+            <div class="text-center p-3 rounded-3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1)">
+              <div class="fs-4 fw-bold text-white" data-count="100">0</div>
+              <small style="color:rgba(255,255,255,0.5)">Utilizadores alvo</small>
             </div>
           </div>
           <div class="col-4">
-            <div class="hero-stat">
-              <div class="hero-stat-value" data-count="10">0</div>
-              <div class="hero-stat-label">Projectos IA</div>
+            <div class="text-center p-3 rounded-3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1)">
+              <div class="fs-4 fw-bold text-white" data-count="10">0</div>
+              <small style="color:rgba(255,255,255,0.5)">Projectos IA</small>
             </div>
           </div>
           <div class="col-4">
-            <div class="hero-stat">
-              <div class="hero-stat-value" data-count="24">0</div>
-              <div class="hero-stat-label">Meses projecto</div>
+            <div class="text-center p-3 rounded-3" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1)">
+              <div class="fs-4 fw-bold text-white" data-count="24">0</div>
+              <small style="color:rgba(255,255,255,0.5)">Meses projecto</small>
             </div>
           </div>
         </div>
 
         <div class="d-flex gap-3 flex-wrap">
-          <a href="/register.html" class="btn-hero-primary">
-            <i class="bi bi-rocket-takeoff-fill"></i>Começar Agora
+          <a href="/register.html" class="btn btn-white btn-lg px-4 fw-semibold"
+             style="background:#fff;color:var(--blue-700);border:none">
+            <i class="bi bi-rocket-takeoff me-2"></i>Começar Agora
           </a>
-          <a href="/login.html" class="btn-hero-secondary">
-            <i class="bi bi-box-arrow-in-right"></i>Já tenho conta
+          <a href="/login.html" class="btn btn-outline-light btn-lg px-4">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
           </a>
         </div>
       </div>
 
-      <!-- Dashboard preview -->
+      <!-- Dashboard preview branco -->
       <div class="col-lg-6">
-        <div class="dashboard-preview" style="max-width:520px;margin:0 auto">
+        <div class="dashboard-preview">
           <div class="preview-header">
             <div class="d-flex gap-1">
-              <span class="dot" style="background:#ef4444"></span>
-              <span class="dot" style="background:#f59e0b"></span>
-              <span class="dot" style="background:#22c55e"></span>
+              <span class="dot bg-danger"></span>
+              <span class="dot bg-warning"></span>
+              <span class="dot bg-success"></span>
             </div>
-            <small style="font-size:0.68rem;color:var(--text-muted);margin-left:8px;font-family:'JetBrains Mono',monospace">inkuai.ip-unikivi.ao</small>
+            <small class="text-muted ms-2" style="font-size:0.72rem">inkuai-platform.onrender.com</small>
           </div>
-          <div style="display:flex;gap:0">
-            <!-- Mini sidebar -->
-            <div style="width:56px;background:#09090b;padding:10px 6px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;align-items:center">
-              <div style="width:28px;height:28px;background:var(--ink-400);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
-                <i class="bi bi-cpu-fill" style="font-size:0.75rem;color:#fff"></i>
+          <div class="p-3">
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <div class="preview-mini-card">
+                  <i class="bi bi-folder2-open" style="color:var(--blue-600)"></i>
+                  <div style="font-weight:700;font-size:0.85rem;color:var(--text-primary);margin-top:4px">12 Projectos</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted)">Em progresso</div>
+                </div>
               </div>
-              <div style="width:34px;height:28px;background:rgba(37,99,235,0.25);border-radius:5px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-grid-1x2-fill" style="font-size:0.625rem;color:#60a5fa"></i>
+              <div class="col-6">
+                <div class="preview-mini-card">
+                  <i class="bi bi-terminal-fill" style="color:var(--success)"></i>
+                  <div style="font-weight:700;font-size:0.85rem;color:var(--text-primary);margin-top:4px">Sandbox IA</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted)">3 execuções activas</div>
+                </div>
               </div>
-              <div style="width:34px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-folder2-open" style="font-size:0.625rem;color:rgba(255,255,255,0.4)"></i>
+              <div class="col-6">
+                <div class="preview-mini-card">
+                  <i class="bi bi-graph-up-arrow" style="color:var(--warning)"></i>
+                  <div style="font-weight:700;font-size:0.85rem;color:var(--text-primary);margin-top:4px">Acc: 94.2%</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted)">Modelo CNN</div>
+                </div>
               </div>
-              <div style="width:34px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-terminal-fill" style="font-size:0.625rem;color:rgba(255,255,255,0.4)"></i>
-              </div>
-              <div style="width:34px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center">
-                <i class="bi bi-braces" style="font-size:0.625rem;color:rgba(255,255,255,0.4)"></i>
+              <div class="col-6">
+                <div class="preview-mini-card">
+                  <i class="bi bi-github" style="color:var(--text-primary)"></i>
+                  <div style="font-weight:700;font-size:0.85rem;color:var(--text-primary);margin-top:4px">GitHub Sync</div>
+                  <div style="font-size:0.72rem;color:var(--text-muted)">8 repos ligados</div>
+                </div>
               </div>
             </div>
-            <!-- Mini content -->
-            <div style="flex:1;padding:14px;background:#f8fafc">
-              <!-- Mini metrics -->
-              <div class="row g-2 mb-3">
-                <div class="col-6">
-                  <div class="preview-mini-card">
-                    <i class="bi bi-folder2-open" style="color:var(--ink-400);font-size:0.75rem"></i>
-                    <div style="font-weight:700;font-size:0.78rem;color:var(--text-primary);margin-top:4px;letter-spacing:-0.02em">12 Projectos</div>
-                    <div style="font-size:0.65rem;color:var(--text-muted)">Em progresso</div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="preview-mini-card">
-                    <i class="bi bi-terminal-fill" style="color:var(--success);font-size:0.75rem"></i>
-                    <div style="font-weight:700;font-size:0.78rem;color:var(--text-primary);margin-top:4px;letter-spacing:-0.02em">Sandbox IA</div>
-                    <div style="font-size:0.65rem;color:var(--success)">● 3 activas</div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="preview-mini-card">
-                    <i class="bi bi-graph-up-arrow" style="color:var(--warning);font-size:0.75rem"></i>
-                    <div style="font-weight:700;font-size:0.78rem;color:var(--text-primary);margin-top:4px;letter-spacing:-0.02em">Acc: 94.2%</div>
-                    <div style="font-size:0.65rem;color:var(--text-muted)">Modelo CNN</div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="preview-mini-card">
-                    <i class="bi bi-github" style="color:var(--text-primary);font-size:0.75rem"></i>
-                    <div style="font-weight:700;font-size:0.78rem;color:var(--text-primary);margin-top:4px;letter-spacing:-0.02em">GitHub</div>
-                    <div style="font-size:0.65rem;color:var(--text-muted)">8 repos</div>
-                  </div>
-                </div>
-              </div>
-              <!-- Mini terminal -->
-              <div class="preview-terminal">
-                <div style="color:#6b7280">$ python train_model.py</div>
-                <div style="color:#9ca3af">Epoch 5/10 | loss: 0.187</div>
-                <div style="color:#3fb950">✓ model_v2.pkl guardado</div>
-                <div style="color:#60a5fa">█<span style="opacity:0"> </span></div>
-              </div>
+            <!-- Mini terminal -->
+            <div class="preview-terminal">
+              <div style="color:#6b7280">$ python train_model.py</div>
+              <div style="color:#9ca3af">Epoch 5/10 | loss: 0.187 | acc: 0.932</div>
+              <div style="color:#4ade80">✓ Modelo guardado: model_v2.pkl</div>
+              <div style="color:#60a5fa">█</div>
             </div>
           </div>
         </div>
@@ -384,173 +151,117 @@
   </div>
 </section>
 
-<!-- Proof strip -->
-<div class="proof-strip">
-  <div class="container-xl">
-    <div class="d-flex flex-wrap gap-3 justify-content-center">
-      <span class="proof-badge"><i class="bi bi-shield-check-fill"></i>Sandbox Docker isolado</span>
-      <span class="proof-badge"><i class="bi bi-github"></i>GitHub integrado</span>
-      <span class="proof-badge"><i class="bi bi-cloud-check-fill"></i>Deploy automático</span>
-      <span class="proof-badge"><i class="bi bi-lock-fill"></i>Código seguro</span>
-      <span class="proof-badge"><i class="bi bi-mortarboard-fill"></i>Académico & científico</span>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ FUNCIONALIDADES ═══ -->
-<section class="features-section" id="funcionalidades">
+<!-- FUNCIONALIDADES — fundo branco -->
+<section id="funcionalidades" style="padding:80px 0;background:#fff">
   <div class="container-xl">
     <div class="text-center mb-5">
-      <span class="section-label">Plataforma Completa</span>
-      <h2 class="section-heading mb-3">Tudo que uma incubadora<br>de IA precisa</h2>
-      <p class="section-sub mx-auto" style="max-width:460px">Do registo ao deploy, sem necessidade de infraestrutura física.</p>
+      <span class="badge mb-3 px-3 py-2" style="background:var(--blue-50);color:var(--blue-700);font-size:0.8rem">Plataforma Completa</span>
+      <h2 class="display-6 fw-bold mb-3" style="color:var(--text-primary)">Tudo que uma incubadora de IA precisa</h2>
+      <p style="color:var(--text-muted)">Do registo ao deploy, sem infraestrutura física</p>
     </div>
-
-    <div class="row g-3">
+    <div class="row g-4">
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:var(--ink-50);color:var(--ink-400)">
-            <i class="bi bi-people-fill"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:var(--blue-50);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-people-fill fs-4" style="color:var(--blue-600)"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">Gestão de Equipas</div>
-          <p class="feature-desc" style="color:var(--text-muted)">Crie startups, adicione membros, defina roles e acompanhe o progresso de cada equipa de investigação.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">Gestão de Equipas</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">Crie startups, adicione membros, defina roles e acompanhe o progresso da sua equipa de investigação.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:var(--success-bg);color:var(--success)">
-            <i class="bi bi-terminal-fill"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-terminal-fill fs-4" style="color:var(--success)"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">Sandbox Seguro de IA</div>
-          <p class="feature-desc" style="color:var(--text-muted)">Execute Python em container Docker isolado, sem acesso à rede, com limites de CPU e memória controlados.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">Sandbox Seguro de IA</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">Execute código Python num container Docker isolado, sem acesso à rede, com limites de CPU e memória.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:var(--warning-bg);color:var(--warning)">
-            <i class="bi bi-github"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:#fff7ed;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-github fs-4" style="color:#d97706"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">GitHub Integration</div>
-          <p class="feature-desc" style="color:var(--text-muted)">Ligue repositórios GitHub, sincronize código e acompanhe commits directamente na plataforma.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">GitHub Integration</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">Ligue repositórios GitHub, sincronize código e acompanhe commits directamente na plataforma.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:var(--info-bg);color:var(--info)">
-            <i class="bi bi-graph-up-arrow"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:#f0f9ff;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-graph-up-arrow fs-4" style="color:var(--info)"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">Métricas de IA</div>
-          <p class="feature-desc" style="color:var(--text-muted)">Visualize accuracy, loss, F1-score e outros indicadores dos seus modelos em tempo real.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">Métricas de IA</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">Visualize accuracy, loss, F1-score e outros indicadores dos seus modelos em tempo real.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:#f5f3ff;color:#7c3aed">
-            <i class="bi bi-mortarboard-fill"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-mortarboard-fill fs-4" style="color:#7c3aed"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">Mentoria Académica</div>
-          <p class="feature-desc" style="color:var(--text-muted)">Sistema de avaliação por docentes, sessões de mentoria e relatórios automáticos para FUNDECIT.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">Mentoria Académica</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">Sistema de avaliação por docentes, sessões de mentoria e relatórios automáticos para FUNDECIT.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-4">
-        <div class="feature-card-light">
-          <div class="feature-icon" style="background:var(--danger-bg);color:var(--danger)">
-            <i class="bi bi-cloud-upload-fill"></i>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:28px;height:100%;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='var(--shadow-md)'" onmouseleave="this.style.boxShadow='var(--shadow-sm)'">
+          <div style="width:48px;height:48px;background:#fef2f2;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <i class="bi bi-cloud-upload-fill fs-4" style="color:#dc2626"></i>
           </div>
-          <div class="feature-title" style="color:var(--text-primary)">Deploy Automático</div>
-          <p class="feature-desc" style="color:var(--text-muted)">CI/CD com GitHub Actions. Deploy no Render.com gratuito. Do commit ao ar em minutos.</p>
+          <h5 class="fw-bold mb-2" style="color:var(--text-primary)">Deploy Automático</h5>
+          <p style="color:var(--text-muted);font-size:0.875rem">CI/CD com GitHub Actions. Deploy no Render.com gratuito. Do commit ao ar em minutos.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FUNDECIT ═══ -->
-<section class="fundecit-section" id="fundecit">
+<!-- FUNDECIT — fundo azul claro -->
+<section id="fundecit" style="padding:80px 0;background:var(--blue-50)">
   <div class="container-xl">
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
-        <span class="section-label">FUNDECIT · Edital Nº 1/2026 · Tipo 1</span>
-        <h2 class="section-heading mb-3">Projecto de Investigação<br>Científica</h2>
-        <p class="section-sub mb-5">
-          Candidatura alinhada com as áreas prioritárias da Política Nacional de Ciência,
-          Tecnologia e Inovação (PNCTI) de Angola.
-        </p>
-
-        <div class="d-flex flex-column gap-0">
-          <div class="check-item">
-            <div class="check-dot" style="background:var(--ink-50)">
-              <i class="bi bi-check-lg" style="color:var(--ink-400);font-size:0.875rem"></i>
-            </div>
-            <div>
-              <div style="font-weight:600;color:var(--text-primary);font-size:0.875rem">TIC — Tecnologias de Informação</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px">Área prioritária FUNDECIT / PNCTI</div>
-            </div>
+        <span class="badge mb-3 px-3 py-2" style="background:var(--blue-100);color:var(--blue-800);font-size:0.8rem">
+          FUNDECIT · Edital Nº 1/2026 · Tipo 1
+        </span>
+        <h2 class="display-6 fw-bold mb-4" style="color:var(--text-primary)">Projecto de Investigação Científica</h2>
+        <p style="color:var(--text-muted);margin-bottom:24px">Candidatura alinhada com as áreas prioritárias da Política Nacional de Ciência, Tecnologia e Inovação (PNCTI) de Angola.</p>
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:40px;height:40px;background:var(--blue-50);border:1px solid var(--blue-200);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="bi bi-check2-circle" style="color:var(--blue-600)"></i></div>
+            <div><div style="font-weight:600;color:var(--text-primary);font-size:0.9rem">TIC — Tecnologias de Informação</div><div style="font-size:0.8rem;color:var(--text-muted)">Área prioritária FUNDECIT / PNCTI</div></div>
           </div>
-          <div class="check-item">
-            <div class="check-dot" style="background:var(--success-bg)">
-              <i class="bi bi-check-lg" style="color:var(--success);font-size:0.875rem"></i>
-            </div>
-            <div>
-              <div style="font-weight:600;color:var(--text-primary);font-size:0.875rem">Ensino Superior & Investigação</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px">Integração bolseiros e publicações indexadas</div>
-            </div>
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="bi bi-check2-circle" style="color:var(--success)"></i></div>
+            <div><div style="font-weight:600;color:var(--text-primary);font-size:0.9rem">Ensino Superior & Investigação</div><div style="font-size:0.8rem;color:var(--text-muted)">Integração bolseiros e publicações indexadas</div></div>
           </div>
-          <div class="check-item">
-            <div class="check-dot" style="background:var(--warning-bg)">
-              <i class="bi bi-check-lg" style="color:var(--warning);font-size:0.875rem"></i>
-            </div>
-            <div>
-              <div style="font-weight:600;color:var(--text-primary);font-size:0.875rem">Orçamento: Kz 25.898.600</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px">Dentro do tecto de Kz 29.744.077,41</div>
-            </div>
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:40px;height:40px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="bi bi-check2-circle" style="color:var(--warning)"></i></div>
+            <div><div style="font-weight:600;color:var(--text-primary);font-size:0.9rem">Orçamento: Kz 25.898.600</div><div style="font-size:0.8rem;color:var(--text-muted)">Dentro do tecto de Kz 29.744.077,41</div></div>
           </div>
         </div>
       </div>
-
       <div class="col-lg-6">
-        <div class="inkuai-card" style="box-shadow:var(--shadow-md)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-            <h6 style="font-weight:700;color:var(--text-primary);font-size:0.875rem;margin:0;letter-spacing:-0.01em">Indicadores de Sucesso FUNDECIT</h6>
-            <span class="status status-active">Em curso</span>
-          </div>
-
-          <div class="d-flex flex-column">
-            <div class="metric-progress-item">
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="metric-progress-label">≥ 100 utilizadores registados</div>
-                <div class="metric-progress-meta" style="color:var(--ink-400);font-weight:600">Mês 12</div>
-              </div>
-              <div class="metric-progress-bar">
-                <div class="metric-progress-fill" style="width:5%;background:var(--ink-400)"></div>
-              </div>
+        <div class="inkuai-card">
+          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px">Indicadores de Sucesso FUNDECIT</h6>
+          <div class="d-flex flex-column gap-4">
+            <div>
+              <div class="d-flex justify-content-between mb-1"><small style="color:var(--text-primary);font-weight:600">≥ 100 utilizadores registados</small><small style="color:var(--blue-600);font-weight:600">Mês 12</small></div>
+              <div class="progress" style="height:6px;background:var(--blue-50)"><div class="progress-bar" style="width:0%;background:var(--blue-600)"></div></div>
             </div>
-            <div class="metric-progress-item">
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="metric-progress-label">≥ 10 projectos incubados activos</div>
-                <div class="metric-progress-meta" style="color:var(--success);font-weight:600">Mês 18</div>
-              </div>
-              <div class="metric-progress-bar">
-                <div class="metric-progress-fill" style="width:3%;background:var(--success)"></div>
-              </div>
+            <div>
+              <div class="d-flex justify-content-between mb-1"><small style="color:var(--text-primary);font-weight:600">≥ 10 projectos incubados activos</small><small style="color:var(--success);font-weight:600">Mês 18</small></div>
+              <div class="progress" style="height:6px;background:#f0fdf4"><div class="progress-bar" style="width:0%;background:var(--success)"></div></div>
             </div>
-            <div class="metric-progress-item">
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="metric-progress-label">1 artigo indexado (SCOPUS/WoS)</div>
-                <div class="metric-progress-meta" style="color:var(--warning);font-weight:600">Mês 20</div>
-              </div>
-              <div class="metric-progress-bar">
-                <div class="metric-progress-fill" style="width:0%;background:var(--warning)"></div>
-              </div>
+            <div>
+              <div class="d-flex justify-content-between mb-1"><small style="color:var(--text-primary);font-weight:600">1 artigo científico indexado (SCOPUS/WoS)</small><small style="color:var(--warning);font-weight:600">Mês 20</small></div>
+              <div class="progress" style="height:6px;background:#fff7ed"><div class="progress-bar" style="width:0%;background:var(--warning)"></div></div>
             </div>
-            <div class="metric-progress-item" style="border-bottom:none">
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="metric-progress-label">≥ 3 protótipos transferíveis</div>
-                <div class="metric-progress-meta" style="color:var(--info);font-weight:600">Mês 22</div>
-              </div>
-              <div class="metric-progress-bar">
-                <div class="metric-progress-fill" style="width:0%;background:var(--info)"></div>
-              </div>
+            <div>
+              <div class="d-flex justify-content-between mb-1"><small style="color:var(--text-primary);font-weight:600">≥ 3 protótipos transferíveis</small><small style="color:var(--info);font-weight:600">Mês 22</small></div>
+              <div class="progress" style="height:6px;background:#f0f9ff"><div class="progress-bar" style="width:0%;background:var(--info)"></div></div>
             </div>
           </div>
         </div>
@@ -559,22 +270,17 @@
   </div>
 </section>
 
-<!-- ═══ CTA ═══ -->
-<section class="cta-section">
-  <div class="container-xl position-relative" style="z-index:1;text-align:center">
-    <span class="section-label-dark">Pronto para começar?</span>
-    <h2 class="section-heading-dark mb-3 mt-1">
-      Incube o seu projecto<br>de IA hoje
-    </h2>
-    <p class="section-sub-dark mx-auto mb-5" style="max-width:420px">
-      Junte-se à incubadora do IP/UNIKIVI e contribua para a inovação tecnológica angolana.
-    </p>
+<!-- CTA — fundo azul escuro -->
+<section style="background:var(--blue-900);padding:60px 0;text-align:center">
+  <div class="container-xl">
+    <h3 class="fw-bold text-white mb-3">Pronto para incubar o seu projecto de IA?</h3>
+    <p style="color:rgba(255,255,255,0.6);margin-bottom:32px">Junte-se à incubadora do IP/UNIKIVI e contribua para a inovação tecnológica angolana.</p>
     <div class="d-flex gap-3 justify-content-center flex-wrap">
-      <a href="/register.html" class="btn-hero-primary">
-        <i class="bi bi-person-plus-fill"></i>Criar Conta Gratuita
+      <a href="/register.html" class="btn btn-white btn-lg px-5 fw-semibold" style="background:#fff;color:var(--blue-700);border:none">
+        <i class="bi bi-person-plus me-2"></i>Criar Conta Gratuita
       </a>
-      <a href="/login.html" class="btn-hero-secondary">
-        <i class="bi bi-box-arrow-in-right"></i>Já tenho conta
+      <a href="/login.html" class="btn btn-outline-light btn-lg px-5">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Já tenho conta
       </a>
     </div>
   </div>
@@ -585,22 +291,14 @@
   <div class="container-xl">
     <div class="row align-items-center">
       <div class="col-md-6 mb-3 mb-md-0">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <div style="width:26px;height:26px;background:var(--ink-400);border-radius:5px;display:flex;align-items:center;justify-content:center">
-            <i class="bi bi-cpu-fill text-white" style="font-size:0.75rem"></i>
-          </div>
-          <span style="font-weight:700;color:rgba(255,255,255,0.8);font-size:0.875rem;letter-spacing:-0.01em">INKU<span style="color:#60a5fa">·AI</span></span>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <div style="width:28px;height:28px;background:var(--blue-600);border-radius:6px;display:flex;align-items:center;justify-content:center"><i class="bi bi-cpu-fill text-white" style="font-size:0.8rem"></i></div>
+          <span class="fw-bold text-white">INKU<span style="color:#60a5fa">·AI</span></span>
         </div>
-        <p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin:0;line-height:1.6">
-          © 2026 Instituto Politécnico da Universidade Kimpa Vita<br>
-          FUNDECIT · Edital Nº 1/2026
-        </p>
+        <small style="color:rgba(255,255,255,0.4)">© 2026 Instituto Politécnico da Universidade Kimpa Vita · FUNDECIT Edital Nº 1/2026</small>
       </div>
       <div class="col-md-6 text-md-end">
-        <p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin:0;line-height:1.6">
-          Mestre Nkanga Pedro<br>
-          Data Science & AI-Based Decision Making · IP/UNIKIVI
-        </p>
+        <small style="color:rgba(255,255,255,0.4)">Mestre Nkanga Pedro · Data Science & AI-Based Decision Making · IP/UNIKIVI</small>
       </div>
     </div>
   </div>
@@ -609,28 +307,5 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/main.js"></script>
-<script>
-/* Counter animation */
-document.addEventListener('DOMContentLoaded', () => {
-  const counters = document.querySelectorAll('[data-count]');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const target = +el.dataset.count;
-      const duration = 1200;
-      const step = target / (duration / 16);
-      let current = 0;
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = Math.round(current);
-        if (current >= target) clearInterval(timer);
-      }, 16);
-      obs.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  counters.forEach(c => obs.observe(c));
-});
-</script>
 </body>
 </html>

@@ -1,0 +1,178 @@
+/* ═══════════════════════════════════════════════════════════
+   INKU·AI — Design Tokens v3.0
+   Inspiração: Linear · Stripe · Notion · Vercel
+   IP/UNIKIVI · FUNDECIT 2026
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── BRAND — Azul INKU·AI ──────────────────────────────── */
+  --brand-900: #0b1d3a;
+  --brand-800: #122c54;
+  --brand-700: #1a3f78;
+  --brand-600: #2354a8;
+  --brand-500: #2563eb;
+  --brand-400: #4f86f7;
+  --brand-300: #93b8fb;
+  --brand-200: #c2d9fd;
+  --brand-100: #e2ecfe;
+  --brand-50:  #f3f7ff;
+
+  /* ── NEUTRAL ────────────────────────────────────────────── */
+  --gray-900: #0d1117;
+  --gray-800: #161b22;
+  --gray-700: #30363d;
+  --gray-600: #484f58;
+  --gray-500: #6e7681;
+  --gray-400: #8b949e;
+  --gray-300: #c9d1d9;
+  --gray-200: #e2e8f0;
+  --gray-100: #eef1f5;
+  --gray-50:  #f7f9fc;
+  --white:    #ffffff;
+
+  /* ── SEMÂNTICAS ─────────────────────────────────────────── */
+  --success-600: #15803d;
+  --success-500: #16a34a;
+  --success-100: #dcfce7;
+  --success-50:  #f0fdf4;
+
+  --warning-600: #b45309;
+  --warning-500: #d97706;
+  --warning-100: #fef3c7;
+  --warning-50:  #fffbeb;
+
+  --danger-600: #b91c1c;
+  --danger-500: #dc2626;
+  --danger-100: #fee2e2;
+  --danger-50:  #fef2f2;
+
+  --info-600: #0369a1;
+  --info-500: #0284c7;
+  --info-100: #e0f2fe;
+  --info-50:  #f0f9ff;
+
+  --violet-500: #7c3aed;
+  --violet-100: #ede9fe;
+  --violet-50:  #f5f3ff;
+
+  /* ── SUPERFÍCIES ────────────────────────────────────────── */
+  --surface-page:    var(--gray-50);
+  --surface-card:    var(--white);
+  --surface-sidebar: var(--brand-900);
+  --surface-overlay: rgba(13, 17, 23, 0.5);
+  --surface-hover:   var(--gray-50);
+  --surface-pressed: var(--gray-100);
+
+  /* ── TEXTO ──────────────────────────────────────────────── */
+  --text-primary:   var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-tertiary:  var(--gray-400);
+  --text-disabled:  var(--gray-300);
+  --text-inverse:   var(--white);
+  --text-brand:     var(--brand-600);
+  --text-link:      var(--brand-500);
+
+  /* ── BORDAS ─────────────────────────────────────────────── */
+  --border-subtle:  var(--gray-200);
+  --border-default: var(--gray-300);
+  --border-strong:  var(--gray-400);
+  --border-brand:   var(--brand-300);
+  --border-focus:   var(--brand-500);
+
+  /* ── ESCALA TIPOGRÁFICA ─────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md:   1.0625rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  1.875rem;
+  --text-3xl:  2.375rem;
+  --text-4xl:  3rem;
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.7;
+
+  --font-regular:  400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+
+  /* ── ESPAÇAMENTO ────────────────────────────────────────── */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ── RAIO DE BORDA ──────────────────────────────────────── */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* ── SOMBRAS (neutras) ──────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(13,17,23,0.05);
+  --shadow-sm: 0 1px 3px rgba(13,17,23,0.06), 0 1px 2px rgba(13,17,23,0.04);
+  --shadow-md: 0 4px 8px rgba(13,17,23,0.06), 0 2px 4px rgba(13,17,23,0.04);
+  --shadow-lg: 0 12px 24px rgba(13,17,23,0.08), 0 4px 8px rgba(13,17,23,0.04);
+  --shadow-xl: 0 24px 48px rgba(13,17,23,0.12);
+  --shadow-focus: 0 0 0 3px var(--brand-100);
+  --shadow-focus-danger: 0 0 0 3px var(--danger-100);
+
+  /* ── LAYOUT ─────────────────────────────────────────────── */
+  --sidebar-w: 264px;
+  --sidebar-w-collapsed: 76px;
+  --topbar-h: 60px;
+  --content-max-w: 1440px;
+
+  /* ── TRANSIÇÕES ─────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+
+  /* ── Z-INDEX ────────────────────────────────────────────── */
+  --z-sidebar: 1000;
+  --z-overlay: 1040;
+  --z-dropdown: 1050;
+  --z-modal: 1060;
+  --z-toast: 1080;
+  --z-tooltip: 1090;
+}
+
+/* ── Aliases retro-compatíveis (manter páginas antigas a funcionar) ── */
+:root {
+  --blue-900: var(--brand-900);
+  --blue-800: var(--brand-800);
+  --blue-700: var(--brand-700);
+  --blue-600: var(--brand-600);
+  --blue-500: var(--brand-500);
+  --blue-400: var(--brand-400);
+  --blue-100: var(--brand-100);
+  --blue-50:  var(--brand-50);
+  --bg-page:    var(--surface-page);
+  --bg-white:   var(--white);
+  --bg-sidebar: var(--surface-sidebar);
+  --bg-topbar:  var(--white);
+  --bg-card:    var(--surface-card);
+  --border-light: var(--border-subtle);
+  --border-blue:  var(--border-brand);
+  --success: var(--success-500);
+  --warning: var(--warning-500);
+  --danger:  var(--danger-500);
+  --info:    var(--info-500);
+}
