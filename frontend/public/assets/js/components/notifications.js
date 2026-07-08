@@ -1,135 +1,61 @@
+
+// Z-index fix — notification dropdown must appear above sidebar (z-index:1000)
+(function() {
+  const style = document.createElement('style');
+  style.id = 'global-notif-zfix';
+  style.textContent = '#global-notif-dropdown, .notif-dropdown { z-index: 1060 !important; position: absolute !important; } .modal { z-index: 1065 !important; } .modal-backdrop { z-index: 1055 !important; }';
+  document.head.appendChild(style);
+})();
 'use strict';
-// ── Componente de Notificações Global ────────────────────────────────────
-// Injecta sino + dropdown em qualquer topbar com id="notif-mount"
-// CORRIGIDO: dropdown controlado manualmente (não depende de data-bs-toggle
-// do Bootstrap, que falha em HTML injectado dinamicamente via innerHTML).
+// ── Componente de Notificações Global ───────────────────────────────────────
+// Injeta sino + dropdown em qualquer topbar que tenha id="notif-mount"
+// e actualiza badges de mensagens não lidas
 
 (function() {
-  const POLL_INTERVAL = 60000;
-  let isOpen = false;
+  const POLL_INTERVAL = 60000; // 60 segundos
 
+  // ── Injectar HTML do sino no topbar ──────────────────────
   function injectBell() {
     const mount = document.getElementById('notif-mount');
-    if (!mount || mount.dataset.injected) return;
-    mount.dataset.injected = 'true';
-
+    if (!mount) return;
     mount.innerHTML = `
-      <div class="notif-wrap" style="position:relative">
-        <button type="button" class="notif-bell-btn" id="global-notif-btn" aria-label="Notificações" aria-haspopup="true" aria-expanded="false">
-          <i class="bi bi-bell" style="font-size:1.05rem"></i>
-          <span id="global-notif-badge" class="notif-badge-dot" style="display:none">0</span>
+      <div class="dropdown me-2">
+        <button class="btn btn-link p-1 position-relative" data-bs-toggle="dropdown"
+          id="global-notif-btn" onclick="window.NotifComponent.load()" style="color:var(--text-muted)">
+          <i class="bi bi-bell-fill fs-5"></i>
+          <span id="global-notif-badge"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            style="display:none;font-size:0.6rem;min-width:18px">0</span>
         </button>
-        <div class="notif-panel" id="global-notif-dropdown" role="menu">
-          <div class="notif-panel-head">
-            <strong>Notificações</strong>
-            <div class="notif-panel-actions">
-              <a href="/messages.html"><i class="bi bi-chat-dots"></i> Mensagens</a>
-              <button type="button" id="notif-mark-all">Limpar tudo</button>
+        <div class="dropdown-menu dropdown-menu-end p-0 shadow" style="width:340px;max-height:420px;overflow-y:auto" id="global-notif-dropdown">
+          <div class="d-flex align-items-center justify-content-between px-3 py-2"
+            style="border-bottom:1px solid var(--border-light);position:sticky;top:0;background:#fff;z-index:1">
+            <strong style="font-size:0.875rem;color:var(--text-primary)">Notificações</strong>
+            <div class="d-flex gap-2">
+              <a href="/messages.html" style="font-size:0.78rem;color:var(--blue-600);text-decoration:none">
+                <i class="bi bi-chat-dots me-1"></i>Mensagens
+              </a>
+              <button onclick="window.NotifComponent.readAll()" class="btn btn-link p-0"
+                style="font-size:0.75rem;color:var(--text-muted);text-decoration:none">
+                Limpar tudo
+              </button>
             </div>
           </div>
-          <div id="global-notif-list" class="notif-panel-list">
-            <div class="notif-panel-loading"><div class="spinner-border spinner-border-sm"></div></div>
+          <div id="global-notif-list">
+            <div class="text-center py-3 text-muted" style="font-size:0.82rem">
+              <div class="spinner-border spinner-border-sm"></div>
+            </div>
           </div>
-          <div class="notif-panel-foot">
-            <a href="/messages.html">Ver todas as mensagens →</a>
+          <div class="text-center py-2" style="border-top:1px solid var(--border-light)">
+            <a href="/messages.html" style="font-size:0.78rem;color:var(--blue-600);text-decoration:none">
+              Ver todas as mensagens →
+            </a>
           </div>
         </div>
       </div>`;
-
-    injectStylesOnce();
-
-    const btn = document.getElementById('global-notif-btn');
-    const panel = document.getElementById('global-notif-dropdown');
-
-    // Controlo manual de abrir/fechar — fiável em qualquer página, mesmo
-    // quando o componente é injectado depois do bootstrap.bundle.js correr.
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      isOpen ? closePanel() : openPanel();
-    });
-    document.getElementById('notif-mark-all')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      readAll();
-    });
-    document.addEventListener('click', (e) => {
-      if (isOpen && !panel.contains(e.target) && !btn.contains(e.target)) closePanel();
-    });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
   }
 
-  function openPanel() {
-    const panel = document.getElementById('global-notif-dropdown');
-    const btn = document.getElementById('global-notif-btn');
-    if (!panel) return;
-    panel.classList.add('show');
-    btn?.setAttribute('aria-expanded', 'true');
-    isOpen = true;
-    loadList();
-  }
-  function closePanel() {
-    document.getElementById('global-notif-dropdown')?.classList.remove('show');
-    document.getElementById('global-notif-btn')?.setAttribute('aria-expanded', 'false');
-    isOpen = false;
-  }
-
-  function injectStylesOnce() {
-    if (document.getElementById('notif-component-styles')) return;
-    const style = document.createElement('style');
-    style.id = 'notif-component-styles';
-    style.textContent = `
-      .notif-bell-btn {
-        position: relative; width: 36px; height: 36px; border-radius: var(--radius-sm,8px);
-        background: transparent; border: none; color: var(--text-secondary,#6e7681);
-        display: flex; align-items: center; justify-content: center; cursor: pointer;
-        transition: background .15s, color .15s;
-      }
-      .notif-bell-btn:hover { background: var(--gray-50,#f7f9fc); color: var(--text-primary,#0d1117); }
-      .notif-bell-btn[aria-expanded="true"] { background: var(--brand-50,#f3f7ff); color: var(--brand-600,#2354a8); }
-      .notif-badge-dot {
-        position: absolute; top: 3px; right: 3px; min-width: 16px; height: 16px;
-        background: var(--danger-500,#dc2626); color: #fff; border-radius: 999px;
-        font-size: .625rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
-        padding: 0 4px; border: 2px solid #fff;
-      }
-      .notif-panel {
-        position: absolute; top: calc(100% + 8px); right: 0; width: 360px; max-width: calc(100vw - 32px);
-        background: #fff; border: 1px solid var(--border-subtle,#e2e8f0); border-radius: var(--radius-md,10px);
-        box-shadow: var(--shadow-lg, 0 12px 24px rgba(13,17,23,.12)); z-index: 1050;
-        opacity: 0; visibility: hidden; transform: translateY(-6px);
-        transition: opacity .15s ease, transform .15s ease, visibility .15s;
-        max-height: 460px; display: flex; flex-direction: column; overflow: hidden;
-      }
-      .notif-panel.show { opacity: 1; visibility: visible; transform: translateY(0); }
-      .notif-panel-head {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 14px; border-bottom: 1px solid var(--border-subtle,#e2e8f0); flex-shrink: 0;
-      }
-      .notif-panel-head strong { font-size: .875rem; color: var(--text-primary,#0d1117); }
-      .notif-panel-actions { display: flex; align-items: center; gap: 12px; }
-      .notif-panel-actions a { font-size: .75rem; color: var(--brand-600,#2354a8); text-decoration: none; }
-      .notif-panel-actions button {
-        font-size: .75rem; color: var(--text-tertiary,#8b949e); background: none; border: none; cursor: pointer;
-      }
-      .notif-panel-actions button:hover { color: var(--text-primary,#0d1117); }
-      .notif-panel-list { flex: 1; overflow-y: auto; }
-      .notif-panel-loading { text-align: center; padding: 24px 0; color: var(--text-tertiary,#8b949e); }
-      .notif-panel-foot { padding: 8px; text-align: center; border-top: 1px solid var(--border-subtle,#e2e8f0); flex-shrink: 0; }
-      .notif-panel-foot a { font-size: .75rem; color: var(--brand-600,#2354a8); text-decoration: none; }
-      .notif-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background .12s; border-bottom: 1px solid var(--border-subtle,#f1f5f9); }
-      .notif-item:hover { background: var(--gray-50,#f7f9fc); }
-      .notif-item.unread { background: var(--brand-50,#f3f7ff); }
-      .notif-item-icon { flex-shrink: 0; margin-top: 2px; }
-      .notif-item-title { font-size: .8125rem; color: var(--text-primary,#0d1117); }
-      .notif-item-msg { font-size: .75rem; color: var(--text-secondary,#6e7681); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .notif-item-time { font-size: .6875rem; color: var(--text-tertiary,#8b949e); margin-top: 3px; }
-      .notif-item-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-500,#2563eb); flex-shrink: 0; margin-top: 5px; }
-      @media (max-width: 480px) {
-        .notif-panel { position: fixed; top: 60px; right: 8px; left: 8px; width: auto; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
+  // ── Actualizar badge de não lidas ─────────────────────────
   async function refreshBadge() {
     try {
       const res = await window.InkuAPI.get('/notifications?unread_only=true&limit=1');
@@ -137,8 +63,9 @@
       const badge = document.getElementById('global-notif-badge');
       if (badge) {
         badge.textContent = count > 9 ? '9+' : count;
-        badge.style.display = count > 0 ? 'flex' : 'none';
+        badge.style.display = count > 0 ? '' : 'none';
       }
+      // Badge de mensagens não lidas na sidebar
       const msgRes = await window.InkuAPI.get('/messages?type=inbox&limit=50');
       const unread = (msgRes.data || []).filter(m => !m.is_read).length;
       document.querySelectorAll('.msg-unread-badge').forEach(el => {
@@ -148,37 +75,41 @@
     } catch {}
   }
 
+  // ── Carregar lista de notificações ────────────────────────
   async function loadList() {
     const list = document.getElementById('global-notif-list');
     if (!list) return;
-    list.innerHTML = '<div class="notif-panel-loading"><div class="spinner-border spinner-border-sm"></div></div>';
     try {
-      const res = await window.InkuAPI.get('/notifications?limit=15');
+      const res    = await window.InkuAPI.get('/notifications?limit=15');
       const notifs = res.data || [];
       const typeIcon  = { success:'bi-check-circle-fill', error:'bi-x-circle-fill', warning:'bi-exclamation-triangle-fill', info:'bi-info-circle-fill' };
       const typeColor = { success:'#16a34a', error:'#dc2626', warning:'#d97706', info:'#2563eb' };
       if (!notifs.length) {
-        list.innerHTML = '<div class="notif-panel-loading"><i class="bi bi-bell-slash" style="font-size:1.6rem;display:block;margin-bottom:8px"></i>Sem notificações.</div>';
+        list.innerHTML = '<div class="text-center py-4 text-muted" style="font-size:0.82rem"><i class="bi bi-bell-slash d-block mb-2 fs-3"></i>Sem notificações.</div>';
         return;
       }
       list.innerHTML = notifs.map(n => `
-        <div class="notif-item ${n.is_read ? '' : 'unread'}" data-id="${n.id}" data-url="${(n.action_url||'').replace(/"/g,'')}">
-          <i class="bi ${typeIcon[n.type]||'bi-info-circle-fill'} notif-item-icon" style="color:${typeColor[n.type]||'#2563eb'}"></i>
-          <div style="flex:1;min-width:0">
-            <div class="notif-item-title">${n.title}</div>
-            <div class="notif-item-msg">${n.message||''}</div>
-            <div class="notif-item-time">${new Date(n.created_at).toLocaleString('pt-PT')}</div>
+        <div onclick="window.NotifComponent.click('${n.id}','${(n.action_url||'').replace(/'/g,'')}')"
+          class="d-flex align-items-start gap-2 px-3 py-2"
+          style="cursor:pointer;background:${n.is_read?'transparent':'var(--blue-50)'};border-bottom:1px solid var(--border-light);transition:background .15s"
+          onmouseenter="this.style.background='var(--bg-page)'"
+          onmouseleave="this.style.background='${n.is_read?'transparent':'var(--blue-50)'}'">
+          <i class="bi ${typeIcon[n.type]||'bi-info-circle-fill'} flex-shrink-0 mt-1"
+            style="color:${typeColor[n.type]||'#2563eb'}"></i>
+          <div style="flex:1;overflow:hidden">
+            <div style="font-weight:${n.is_read?'400':'600'};font-size:0.82rem;color:var(--text-primary)">${n.title}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px;
+              white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n.message||''}</div>
+            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px">${new Date(n.created_at).toLocaleString('pt-PT')}</div>
           </div>
-          ${!n.is_read ? '<div class="notif-item-dot"></div>' : ''}
+          ${!n.is_read ? '<div style="width:7px;height:7px;border-radius:50%;background:#2563eb;flex-shrink:0;margin-top:5px"></div>' : ''}
         </div>`).join('');
-      list.querySelectorAll('.notif-item').forEach(el => {
-        el.addEventListener('click', () => clickNotif(el.dataset.id, el.dataset.url));
-      });
-    } catch (err) {
-      list.innerHTML = `<div class="notif-panel-loading" style="color:var(--danger-500,#dc2626)">${err.message}</div>`;
+    } catch(err) {
+      list.innerHTML = `<div class="text-center py-3 text-danger" style="font-size:0.82rem">${err.message}</div>`;
     }
   }
 
+  // ── Clicar em notificação ─────────────────────────────────
   async function clickNotif(id, url) {
     try { await window.InkuAPI.patch(`/notifications/${id}/read`); } catch {}
     refreshBadge();
@@ -186,12 +117,19 @@
     else loadList();
   }
 
+  // ── Marcar todas como lidas ───────────────────────────────
   async function readAll() {
-    try { await window.InkuAPI.patch('/notifications/read-all'); refreshBadge(); loadList(); } catch {}
+    try {
+      await window.InkuAPI.patch('/notifications/read-all');
+      refreshBadge();
+      loadList();
+    } catch {}
   }
 
+  // ── API pública ───────────────────────────────────────────
   window.NotifComponent = { load: loadList, refresh: refreshBadge, click: clickNotif, readAll };
 
+  // ── Auto-init ao carregar ─────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     if (!window.InkuAuth?.getToken()) return;
     injectBell();

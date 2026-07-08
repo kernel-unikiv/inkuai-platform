@@ -51,12 +51,33 @@ router.patch('/notifications/:id/read', authenticate, async (req, res, next) => 
 });
 
 // ── Admin (só admin e mentor)
-router.use('/ai',          authenticate, require('./ai.routes'));
-router.use('/ai-suggest',  authenticate, require('./aisuggest.routes'));
-router.use('/mentors',     authenticate, require('./mentor.routes'));
-router.use('/classrooms',  authenticate, require('./classroom.routes'));
-router.use('/articles',   authenticate, require('./article.routes'));
+router.use('/ai', authenticate, require('./ai.routes'));
 router.use('/admin', authenticate, authorize('admin','mentor'), require('./admin.routes'));
+
+// ── Mentor IA (cofundador de cada projecto)
+router.post('/mentor-ai/:projectId/chat',    authenticate, async (req, res, next) => {
+  try {
+    const mentorAI = require('../services/mentor_ai.service');
+    const { message, history } = req.body;
+    if (!message) return res.status(400).json({ success:false, message:'Mensagem obrigatória.' });
+    const result = await mentorAI.chat(req.params.projectId, message, req.user.id, history||[]);
+    return res.json({ success:true, ...result });
+  } catch(e) { next(e); }
+});
+router.post('/mentor-ai/:projectId/analyse', authenticate, async (req, res, next) => {
+  try {
+    const mentorAI = require('../services/mentor_ai.service');
+    const result = await mentorAI.analyseProject(req.params.projectId);
+    return res.json({ success:true, ...result });
+  } catch(e) { next(e); }
+});
+router.post('/mentor-ai/submission/:id/evaluate', authenticate, async (req, res, next) => {
+  try {
+    const mentorAI = require('../services/mentor_ai.service');
+    const result = await mentorAI.evaluateSubmission(req.params.id);
+    return res.json({ success:true, ...result });
+  } catch(e) { next(e); }
+});
 
 // ── API info
 router.get('/', (req, res) => res.json({

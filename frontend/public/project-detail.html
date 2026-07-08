@@ -5,7 +5,6 @@
   <title>Projecto — INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -47,7 +46,25 @@
     <div class="page-content" id="project-content">
       <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
     </div>
-  </main>
+  
+    <!-- Comments Section -->
+    <div class="inkuai-card mt-4" id="comments-section">
+      <div class="inkuai-section-title"><i class="bi bi-chat-dots-fill" style="color:var(--blue-600);"></i> Comentários</div>
+      <form id="comment-form-comments-container" class="mb-4">
+        <div class="d-flex gap-3">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:0.85rem;" id="comment-user-avatar">U</div>
+          <div style="flex:1;">
+            <textarea id="comment-input" class="form-control-dark" rows="2" placeholder="Escreve um comentário..."></textarea>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <button type="button" id="cancel-reply" onclick="cancelReply()" style="display:none;font-size:0.78rem;color:var(--text-muted);background:none;border:none;cursor:pointer;">✕ Cancelar resposta</button>
+              <button type="submit" class="btn-inkuai btn-inkuai-sm ms-auto"><i class="bi bi-send me-1"></i>Publicar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div id="comments-container"></div>
+    </div>
+    </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -189,5 +206,25 @@ if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toU
 document.addEventListener('DOMContentLoaded', loadProject);
 </script>
 <script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/mentor-ai.js"></script>
+<script src="/assets/js/components/comments.js"></script>
+
+<script>
+// Init comments for this project
+document.addEventListener('DOMContentLoaded', function() {
+  const urlP = new URLSearchParams(window.location.search);
+  const projId = urlP.get('id');
+  if (projId && window.InkuComments) {
+    InkuComments.mount('project', projId, '#comments-container');
+    const usr = window.InkuAuth?.getUser?.();
+    if (usr?.name) document.getElementById('comment-user-avatar').textContent = usr.name[0].toUpperCase();
+  }
+  document.getElementById('cancel-reply')?.addEventListener('click', () => {
+    const inp = document.getElementById('comment-input');
+    if(inp){ delete inp.dataset.parentId; inp.placeholder='Escreve um comentário...'; }
+    document.getElementById('cancel-reply').style.display='none';
+  });
+});
+</script>
 </body>
 </html>

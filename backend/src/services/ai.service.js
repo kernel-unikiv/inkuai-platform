@@ -11,10 +11,7 @@ const {
 const { AppError } = require('../utils/apiResponse');
 
 // ── Cliente Gemini lazy ───────────────────────────────────────
-let _model = null;
-
 function getModel() {
-  if (_model) return _model;
   const key = (
     process.env.GEMINI_API_KEY ||
     process.env.GOOGLE_AI_API_KEY ||
@@ -30,23 +27,40 @@ function getModel() {
   }
   const { GoogleGenerativeAI } = require('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(key);
-  _model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+  
+  // Inicializar modelo sem systemInstruction
+  return genAI.getGenerativeModel({
+    model: 'gemini-2.5-flash',
     generationConfig: { maxOutputTokens: 1500, temperature: 0.7 }
   });
-  return _model;
 }
 
 // ── Chamar Gemini com histórico ───────────────────────────────
 async function callGemini(systemInstruction, history, userMessage) {
   const model = getModel();
-  const chat  = model.startChat({
-    systemInstruction,
-    history: history.slice(-18).map(m => ({
-      role:  m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
+  
+  // Construir histórico: injetar systemInstruction como primeira mensagem do "sistema"
+  const historyForChat = [
+    // Primeira volta: simulamos o "sistema" enviando as instruções
+    {
+      role: 'user',
+      parts: [{ text: '[SYSTEM_PROMPT]\n' + systemInstruction }]
+    },
+    {
+      role: 'model',
+      parts: [{ text: 'Entendido. Estou pronto para ajudar com as instruções fornecidas.' }]
+    },
+    // Depois adicionar histórico real
+    ...history.slice(-18).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content || '' }]
     }))
+  ];
+
+  const chat = model.startChat({
+    history: historyForChat
   });
+
   const result = await chat.sendMessage(userMessage);
   return result.response.text();
 }

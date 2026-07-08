@@ -5,36 +5,37 @@
   <title>Perfil — INKU·AI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/css/tokens.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/dashboard.html"   class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"    class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/classroom.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
       <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/profile.html"    class="sidebar-link active"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"    class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"     class="sidebar-link active"><i class="bi bi-person-fill"></i>Perfil</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+        <div class="sidebar-user-avatar avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden">
+          <div class="sidebar-user-name truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
+        </div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3)"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
@@ -42,137 +43,426 @@
   <main class="main-content">
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title">Perfil</span>
+      <span class="topbar-title">Perfil Profissional</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+      </div>
     </div>
-    <div class="page-content">
-      <div class="row g-4">
-        <!-- Card perfil -->
-        <div class="col-lg-4">
-          <div class="inkuai-card text-center">
-            <div id="avatar-circle" style="width:80px;height:80px;background:var(--blue-600);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;margin:0 auto 16px">U</div>
-            <h5 style="font-weight:700;color:var(--text-primary);margin-bottom:4px" id="profile-name">—</h5>
-            <span class="badge mb-2" style="background:var(--blue-50);color:var(--blue-700)" id="profile-role">—</span>
-            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px" id="profile-institution">—</p>
-            <div class="d-flex justify-content-center gap-3 mb-3">
-              <a href="#" id="profile-github" class="text-decoration-none" style="font-size:0.82rem;color:var(--text-muted);display:none"><i class="bi bi-github me-1"></i>GitHub</a>
-              <a href="#" id="profile-orcid"  class="text-decoration-none" style="font-size:0.82rem;color:var(--text-muted);display:none"><i class="bi bi-person-badge me-1"></i>ORCID</a>
+
+    <div class="page-content p-0">
+      <!-- Banner -->
+      <div class="profile-banner" id="profile-banner"></div>
+
+      <!-- Info principal -->
+      <div style="padding:0 28px 28px;">
+        <div class="d-flex align-items-flex-end flex-wrap gap-3 mb-4" style="margin-top:-10px;">
+          <div class="profile-avatar-wrapper">
+            <div class="avatar avatar-xl" id="profile-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:2.2rem;font-weight:800;color:#fff;">?</div>
+          </div>
+          <div style="flex:1;min-width:200px;padding-top:54px;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <h2 id="profile-name" style="font-size:1.4rem;font-weight:800;margin:0;"></h2>
+              <span id="profile-verified" style="display:none;color:#3b82f6;font-size:1.1rem;" title="Verificado">✓</span>
+              <span id="profile-role-badge" class="status"></span>
             </div>
-            <p style="font-size:0.875rem;color:var(--text-secondary)" id="profile-bio">Sem biografia.</p>
+            <div id="profile-institution" style="color:var(--text-muted);font-size:0.85rem;margin-top:3px;"></div>
+            <div id="profile-bio" style="color:var(--text-secondary);font-size:0.88rem;margin-top:8px;max-width:600px;line-height:1.6;"></div>
+            <!-- Links -->
+            <div class="d-flex gap-3 flex-wrap mt-2" id="profile-links"></div>
+          </div>
+          <div class="d-flex flex-column gap-2 align-items-end">
+            <button id="follow-btn" class="btn-follow" onclick="toggleFollow()" style="display:none;"></button>
+            <button id="edit-profile-btn" class="btn-inkuai btn-inkuai-sm" onclick="openEditModal()" style="display:none;">
+              <i class="bi bi-pencil me-1"></i>Editar Perfil
+            </button>
+            <a id="message-btn" href="#" class="btn-inkuai-ghost" style="display:none;font-size:0.8rem;padding:7px 14px;">
+              <i class="bi bi-chat me-1"></i>Mensagem
+            </a>
           </div>
         </div>
 
-        <!-- Editar perfil -->
-        <div class="col-lg-8">
-          <div class="inkuai-card">
-            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:24px">
-              <i class="bi bi-pencil-square me-2" style="color:var(--blue-600)"></i>Editar Perfil
-            </h6>
-            <form id="profile-form">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label-dark">Nome completo</label>
-                  <input type="text" id="f-name" class="form-control-dark" placeholder="Nome completo">
+        <!-- Stats + Reputação -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-8">
+            <div class="inkuai-card">
+              <div class="d-flex flex-wrap gap-4 mb-4">
+                <div class="profile-stat" onclick="loadTab('projects')">
+                  <div class="profile-stat-num" id="stat-projects">0</div>
+                  <div class="profile-stat-label">Projectos</div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label-dark">Instituição</label>
-                  <input type="text" id="f-institution" class="form-control-dark" placeholder="IP/UNIKIVI">
+                <div class="profile-stat" onclick="loadTab('articles')">
+                  <div class="profile-stat-num" id="stat-articles">0</div>
+                  <div class="profile-stat-label">Artigos</div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label-dark">Username GitHub</label>
-                  <div class="position-relative">
-                    <span class="position-absolute" style="left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem">@</span>
-                    <input type="text" id="f-github" class="form-control-dark" style="padding-left:28px" placeholder="nome-usuario">
-                  </div>
+                <div class="profile-stat" onclick="showFollowers()">
+                  <div class="profile-stat-num" id="stat-followers">0</div>
+                  <div class="profile-stat-label">Seguidores</div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label-dark">ORCID ID</label>
-                  <input type="text" id="f-orcid" class="form-control-dark" placeholder="0000-0000-0000-0000">
-                </div>
-                <div class="col-12">
-                  <label class="form-label-dark">Biografia</label>
-                  <textarea id="f-bio" class="form-control-dark" rows="4" placeholder="Investigo em IA aplicada ao contexto angolano..."></textarea>
+                <div class="profile-stat" onclick="loadTab('following')">
+                  <div class="profile-stat-num" id="stat-following">0</div>
+                  <div class="profile-stat-label">A seguir</div>
                 </div>
               </div>
-              <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn-inkuai"><i class="bi bi-save me-2"></i>Guardar Alterações</button>
-                <button type="button" onclick="loadProfile()" class="btn-outline-inkuai">Cancelar</button>
-              </div>
-            </form>
+              <!-- Expertise Tags -->
+              <div id="expertise-tags" class="d-flex flex-wrap gap-2"></div>
+            </div>
           </div>
-
-          <!-- Segurança -->
-          <div class="inkuai-card mt-4">
-            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px">
-              <i class="bi bi-shield-lock me-2" style="color:var(--success)"></i>Segurança
-            </h6>
-            <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background:var(--bg-page);border:1px solid var(--border-light)">
-              <div>
-                <div style="font-weight:600;color:var(--text-primary);font-size:0.875rem">Password</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Última alteração: desconhecido</div>
+          <div class="col-lg-4">
+            <!-- Reputação / XP -->
+            <div class="inkuai-card h-100">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;
+                            display:flex;align-items:center;justify-content:center;font-size:1.4rem;">⭐</div>
+                <div>
+                  <div class="reputation-badge mb-1" id="rep-badge">🌱 Iniciante</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Nível <span id="rep-level">1</span></div>
+                </div>
               </div>
-              <a href="/forgot-password.html" class="btn btn-sm btn-outline-primary">Alterar Password</a>
+              <div class="xp-bar-wrapper mb-2">
+                <div class="xp-bar" id="xp-bar" style="width:0%"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);">
+                <span><span id="rep-xp">0</span> XP</span>
+                <span><span id="rep-next">100</span> XP próximo nível</span>
+              </div>
+              <div class="divider"></div>
+              <div class="row g-2 text-center" style="font-size:0.78rem;">
+                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-projects">0</div><div style="color:var(--text-muted);">Projectos</div></div>
+                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-comments">0</div><div style="color:var(--text-muted);">Comentários</div></div>
+                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-streak">0</div><div style="color:var(--text-muted);">Streak 🔥</div></div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Tabs -->
+        <div class="d-flex gap-1 mb-4" style="border-bottom:1px solid var(--border-light);overflow-x:auto;">
+          <button class="tab-btn active" data-tab="projects" onclick="loadTab('projects')"><i class="bi bi-folder2 me-2"></i>Projectos</button>
+          <button class="tab-btn" data-tab="articles"  onclick="loadTab('articles')"><i class="bi bi-lightbulb me-2"></i>Artigos</button>
+          <button class="tab-btn" data-tab="timeline"  onclick="loadTab('timeline')"><i class="bi bi-clock-history me-2"></i>Timeline</button>
+          <button class="tab-btn" data-tab="following" onclick="loadTab('following')" id="tab-following" style="display:none;"><i class="bi bi-people me-2"></i>A Seguir</button>
+        </div>
+
+        <!-- Tab panels -->
+        <div id="tab-panel"></div>
       </div>
     </div>
   </main>
 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius:var(--radius-lg);border:1px solid var(--border-light);">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
+        <h5 class="modal-title fw-bold"><i class="bi bi-person-gear me-2" style="color:var(--blue-600);"></i>Editar Perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label-dark">Nome *</label>
+            <input type="text" id="edit-name" class="form-control-dark">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Instituição</label>
+            <input type="text" id="edit-institution" class="form-control-dark">
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Bio</label>
+            <textarea id="edit-bio" class="form-control-dark" rows="3" placeholder="Apresenta-te brevemente..."></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">GitHub</label>
+            <input type="text" id="edit-github" class="form-control-dark" placeholder="username">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">ORCID</label>
+            <input type="text" id="edit-orcid" class="form-control-dark" placeholder="0000-0000-0000-0000">
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">URL do Avatar</label>
+            <input type="url" id="edit-avatar" class="form-control-dark" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="save-profile-btn" onclick="saveProfile()"><i class="bi bi-check2 me-2"></i>Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.tab-btn {
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--text-muted);font-size:0.855rem;font-weight:600;
+  padding:10px 16px;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.tab-btn:hover { color:var(--text-primary); }
+.tab-btn.active { color:var(--blue-600);border-bottom-color:var(--blue-600); }
+.proj-card {
+  border:1px solid var(--border-light);border-radius:var(--radius-md);
+  padding:16px;transition:all .2s;cursor:pointer;background:var(--bg-card);
+}
+.proj-card:hover { border-color:var(--blue-400);transform:translateY(-2px);box-shadow:var(--shadow-md); }
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-let userId;
-async function loadProfile() {
-  if (!window.InkuAuth?.getToken()) { window.location.href='/login.html'; return; }
-  try {
-    const res = await window.InkuAPI.get('/auth/me');
-    const u = res.user; userId = u.id;
-    document.getElementById('profile-name').textContent        = u.name;
-    document.getElementById('profile-role').textContent        = u.role;
-    document.getElementById('profile-institution').textContent = u.institution||'IP/UNIKIVI';
-    document.getElementById('profile-bio').textContent         = u.bio||'Sem biografia.';
-    document.getElementById('avatar-circle').textContent       = u.name[0].toUpperCase();
-    document.getElementById('user-avatar').textContent         = u.name[0].toUpperCase();
-    if (u.github_username) {
-      const el = document.getElementById('profile-github');
-      el.style.display=''; el.href=`https://github.com/${u.github_username}`;
-    }
-    if (u.orcid_id) {
-      const el = document.getElementById('profile-orcid');
-      el.style.display=''; el.href=`https://orcid.org/${u.orcid_id}`;
-    }
-    document.getElementById('f-name').value        = u.name||'';
-    document.getElementById('f-institution').value = u.institution||'';
-    document.getElementById('f-github').value      = u.github_username||'';
-    document.getElementById('f-orcid').value       = u.orcid_id||'';
-    document.getElementById('f-bio').value         = u.bio||'';
-    if(u.role==='admin') document.getElementById('admin-link').style.display='';
-  } catch(err) { window.showToast?.(err.message,'error'); }
+const urlParams = new URLSearchParams(window.location.search);
+let profileUserId = urlParams.get('id');
+let currentUser = null;
+let profileData = null;
+let isOwnProfile = false;
+
+async function init() {
+  currentUser = window.InkuAuth?.getUser?.();
+  if (!profileUserId) profileUserId = currentUser?.id;
+  isOwnProfile = profileUserId === currentUser?.id;
+
+  if (currentUser?.role === 'admin') document.getElementById('admin-link').style.display = '';
+  if (currentUser?.name) document.getElementById('user-avatar').textContent = currentUser.name[0].toUpperCase();
+
+  await loadProfile();
+  await loadReputation();
+  loadTab('projects');
 }
 
-document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.target.querySelector('[type=submit]');
+async function loadProfile() {
+  try {
+    const res = await window.InkuAPI.get(`/users/${profileUserId}`);
+    profileData = res.user || res.data;
+    renderProfile(profileData);
+  } catch(e) {
+    window.showToast?.('Erro ao carregar perfil.', 'error');
+  }
+}
+
+function renderProfile(u) {
+  document.title = `${u.name} — INKU·AI`;
+  document.getElementById('profile-name').textContent = u.name;
+  document.getElementById('profile-institution').textContent = u.institution || 'IP/UNIKIVI';
+  document.getElementById('profile-bio').textContent = u.bio || (isOwnProfile ? 'Adicione uma bio no seu perfil.' : '');
+
+  const roleBadge = document.getElementById('profile-role-badge');
+  roleBadge.textContent = u.role;
+  roleBadge.className = `status status-${u.role === 'mentor' ? 'active' : u.role === 'admin' ? 'approved' : 'draft'}`;
+
+  if (u.is_verified) document.getElementById('profile-verified').style.display = '';
+
+  // Avatar
+  const av = document.getElementById('profile-avatar');
+  if (u.avatar_url) {
+    av.innerHTML = `<img src="${u.avatar_url}" alt="${u.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  } else {
+    av.textContent = u.name[0].toUpperCase();
+  }
+
+  // Banner gradient baseado no nome
+  const colors = ['#6366f1,#8b5cf6','#2563eb,#7c3aed','#0d9488,#2563eb','#db2777,#7c3aed','#ea580c,#d97706'];
+  const idx = u.name.charCodeAt(0) % colors.length;
+  document.getElementById('profile-banner').style.background = `linear-gradient(135deg,${colors[idx]})`;
+
+  // Links
+  const linksEl = document.getElementById('profile-links');
+  const links = [];
+  if (u.github_username) links.push(`<a href="https://github.com/${u.github_username}" target="_blank" class="d-flex align-items-center gap-1" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none;"><i class="bi bi-github"></i>${u.github_username}</a>`);
+  if (u.orcid_id) links.push(`<a href="https://orcid.org/${u.orcid_id}" target="_blank" class="d-flex align-items-center gap-1" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none;"><i class="bi bi-link-45deg"></i>ORCID</a>`);
+  linksEl.innerHTML = links.join('');
+
+  // Expertise tags
+  const tagsEl = document.getElementById('expertise-tags');
+  try {
+    const areas = JSON.parse(u.expertise_areas || '[]');
+    tagsEl.innerHTML = areas.map(a => `<span class="tag tag-blue">${a}</span>`).join('');
+  } catch(e) { tagsEl.innerHTML = ''; }
+
+  // Botões acção
+  if (isOwnProfile) {
+    document.getElementById('edit-profile-btn').style.display = '';
+  } else {
+    document.getElementById('follow-btn').style.display = '';
+    document.getElementById('message-btn').style.display = '';
+    document.getElementById('message-btn').href = `/messages.html?to=${u.id}`;
+    checkFollowing();
+  }
+  document.getElementById('tab-following').style.display = isOwnProfile ? '' : 'none';
+}
+
+async function loadReputation() {
+  try {
+    const res = await window.InkuAPI.get(`/social/reputation/${profileUserId}`);
+    const r = res.reputation;
+    document.getElementById('rep-badge').textContent = r.badge || '🌱 Iniciante';
+    document.getElementById('rep-level').textContent = r.level || 1;
+    document.getElementById('rep-xp').textContent = r.xp || 0;
+    document.getElementById('rep-next').textContent = r.next_level_xp || 100;
+    document.getElementById('xp-bar').style.width = (r.progress_pct || 0) + '%';
+    document.getElementById('rep-projects').textContent = r.projects_count || 0;
+    document.getElementById('rep-comments').textContent = r.comments_count || 0;
+    document.getElementById('rep-streak').textContent = r.streak_days || 0;
+    document.getElementById('stat-followers').textContent = r.followers_count || 0;
+    document.getElementById('stat-following').textContent = r.following_count || 0;
+    document.getElementById('stat-articles').textContent = r.articles_count || 0;
+    document.getElementById('stat-projects').textContent = r.projects_count || 0;
+  } catch(e) {}
+}
+
+async function checkFollowing() {
+  try {
+    const res = await window.InkuAPI.get(`/social/follow/check?targetType=user&targetId=${profileUserId}`);
+    const btn = document.getElementById('follow-btn');
+    if (res.following) {
+      btn.textContent = 'A Seguir'; btn.classList.add('following');
+    } else {
+      btn.textContent = 'Seguir'; btn.classList.remove('following');
+    }
+  } catch(e) {}
+}
+
+async function toggleFollow() {
+  try {
+    const res = await window.InkuAPI.post('/social/follow', { targetType:'user', targetId: profileUserId });
+    const btn = document.getElementById('follow-btn');
+    if (res.following) {
+      btn.textContent = 'A Seguir'; btn.classList.add('following');
+      window.showToast?.('A seguir!', 'success');
+    } else {
+      btn.textContent = 'Seguir'; btn.classList.remove('following');
+      window.showToast?.('Deixou de seguir.', 'info');
+    }
+    await loadReputation();
+  } catch(e) { window.showToast?.(e.message,'error'); }
+}
+
+async function loadTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const panel = document.getElementById('tab-panel');
+  panel.innerHTML = '<div class="text-center py-5" style="color:var(--text-muted);"><div class="spinner-border text-primary"></div></div>';
+  try {
+    if (tab === 'projects') {
+      const res = await window.InkuAPI.get(`/projects?createdBy=${profileUserId}&limit=12`);
+      const projects = res.data || [];
+      if (!projects.length) { panel.innerHTML = emptyState('bi-folder2','Sem projectos publicados.'); return; }
+      panel.innerHTML = `<div class="row g-3">${projects.map(p => `
+        <div class="col-md-6 col-xl-4">
+          <div class="proj-card" onclick="location.href='/project-detail.html?id=${p.id}'">
+            <div class="d-flex align-items-start justify-content-between mb-2">
+              <span class="status status-${p.status}">${p.status}</span>
+              <span style="font-size:0.72rem;color:var(--text-muted);">${new Date(p.created_at).toLocaleDateString('pt-PT')}</span>
+            </div>
+            <h6 style="font-weight:700;margin-bottom:6px;">${p.title}</h6>
+            <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;">${p.description||''}</p>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              ${(()=>{try{return JSON.parse(p.tech_stack_json||'[]').slice(0,3).map(t=>`<span class="tag tag-gray">${t}</span>`).join('')}catch{return ''}})()}
+            </div>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+    if (tab === 'articles') {
+      const res = await window.InkuAPI.get(`/articles?authorId=${profileUserId}&limit=9`);
+      const articles = res.data || [];
+      if (!articles.length) { panel.innerHTML = emptyState('bi-lightbulb','Sem artigos publicados.'); return; }
+      panel.innerHTML = `<div class="row g-3">${articles.map(a => `
+        <div class="col-md-6 col-xl-4">
+          <div class="proj-card" onclick="location.href='/article-detail.html?id=${a.id}'">
+            <span style="font-size:0.7rem;background:rgba(99,102,241,.1);color:#6366f1;padding:2px 8px;border-radius:20px;font-weight:600;">${a.category}</span>
+            <h6 style="font-weight:700;margin:8px 0 6px;">${a.title}</h6>
+            <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);">${a.summary||''}</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:8px;"><i class="bi bi-eye me-1"></i>${a.views||0} <i class="bi bi-heart ms-2 me-1"></i>${a.likes||0}</div>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+    if (tab === 'timeline') {
+      // Actividade recente como timeline
+      panel.innerHTML = `
+        <div class="inkuai-card">
+          <div class="inkuai-section-title"><i class="bi bi-clock-history" style="color:var(--blue-600);"></i> Actividade Recente</div>
+          <div class="timeline" id="timeline-content">
+            <div class="text-center py-3" style="color:var(--text-muted);font-size:0.85rem;">A construir timeline...</div>
+          </div>
+        </div>`;
+      try {
+        const [pRes, aRes] = await Promise.all([
+          window.InkuAPI.get(`/projects?createdBy=${profileUserId}&limit=5`),
+          window.InkuAPI.get(`/articles?authorId=${profileUserId}&limit=5`)
+        ]);
+        const items = [
+          ...(pRes.data||[]).map(p=>({type:'project',title:p.title,date:p.created_at,status:p.status,id:p.id})),
+          ...(aRes.data||[]).map(a=>({type:'article',title:a.title,date:a.created_at,cat:a.category,id:a.id}))
+        ].sort((a,b)=>new Date(b.date)-new Date(a.date));
+        const timelineEl = document.getElementById('timeline-content');
+        if (!items.length) { timelineEl.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:0.85rem;">Sem actividade recente.</p>'; return; }
+        timelineEl.innerHTML = items.map(item => `
+          <div class="timeline-item">
+            <div class="timeline-dot ${item.type==='article'?'orange':item.status==='approved'?'green':''}"></div>
+            <div style="font-size:0.85rem;">
+              <span style="font-weight:600;color:var(--text-primary);">${item.type==='project'?'🗂️ Projecto':'💡 Artigo'}</span>
+              <a href="/${item.type==='project'?'project-detail':'article-detail'}.html?id=${item.id}" style="color:var(--text-secondary);text-decoration:none;margin-left:6px;">${item.title}</a>
+              <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${new Date(item.date).toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'})}</div>
+            </div>
+          </div>`).join('');
+      } catch(e) {}
+    }
+    if (tab === 'following') {
+      const res = await window.InkuAPI.get('/social/following');
+      const following = res.following || [];
+      if (!following.length) { panel.innerHTML = emptyState('bi-people','Não está a seguir ninguém ainda.'); return; }
+      panel.innerHTML = `<div class="row g-3">${following.map(f=>`
+        <div class="col-md-4">
+          <a href="/profile.html?id=${f.target_id}" class="d-flex align-items-center gap-3 p-3" style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-md);text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue-400)'" onmouseout="this.style.borderColor='var(--border-light)'">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:0.85rem;font-weight:700;color:#fff;">${f.target_id.substring(0,1).toUpperCase()}</div>
+            <div style="font-size:0.85rem;color:var(--text-primary);font-weight:600;">${f.target_id.substring(0,8)}...</div>
+          </a>
+        </div>`).join('')}</div>`;
+    }
+  } catch(e) {
+    panel.innerHTML = `<p style="color:var(--danger);text-align:center;">Erro ao carregar: ${e.message}</p>`;
+  }
+}
+
+function emptyState(icon, msg) {
+  return `<div class="inkuai-empty"><div class="inkuai-empty-icon"><i class="bi ${icon}"></i></div><p>${msg}</p></div>`;
+}
+
+function openEditModal() {
+  if (!profileData) return;
+  document.getElementById('edit-name').value = profileData.name || '';
+  document.getElementById('edit-institution').value = profileData.institution || '';
+  document.getElementById('edit-bio').value = profileData.bio || '';
+  document.getElementById('edit-github').value = profileData.github_username || '';
+  document.getElementById('edit-orcid').value = profileData.orcid_id || '';
+  document.getElementById('edit-avatar').value = profileData.avatar_url || '';
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('editProfileModal')).show();
+}
+
+async function saveProfile() {
+  const btn = document.getElementById('save-profile-btn');
   btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
   try {
-    await window.InkuAPI.put(`/users/${userId}`, {
-      name: document.getElementById('f-name').value,
-      institution: document.getElementById('f-institution').value,
-      github_username: document.getElementById('f-github').value,
-      orcid_id: document.getElementById('f-orcid').value,
-      bio: document.getElementById('f-bio').value,
+    await window.InkuAPI.put(`/users/${profileUserId}`, {
+      name:            document.getElementById('edit-name').value,
+      institution:     document.getElementById('edit-institution').value,
+      bio:             document.getElementById('edit-bio').value,
+      github_username: document.getElementById('edit-github').value,
+      orcid_id:        document.getElementById('edit-orcid').value,
+      avatar_url:      document.getElementById('edit-avatar').value
     });
-    window.showToast?.('Perfil actualizado com sucesso!','success');
-    loadProfile();
-  } catch(err) { window.showToast?.(err.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-save me-2"></i>Guardar Alterações'; }
-});
+    bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+    window.showToast?.('Perfil actualizado!','success');
+    await loadProfile();
+  } catch(e) { window.showToast?.(e.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Guardar'; }
+}
 
-document.addEventListener('DOMContentLoaded', loadProfile);
+document.addEventListener('DOMContentLoaded', init);
 </script>
 <script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/mentor-ai.js"></script>
 </body>
 </html>

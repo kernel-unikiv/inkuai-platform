@@ -9,16 +9,6 @@ class ProjectService {
     if (data.tech_stack) { payload.tech_stack_json = JSON.stringify(data.tech_stack); delete payload.tech_stack; }
     if (data.tags)       { payload.tags_json = JSON.stringify(data.tags); delete payload.tags; }
     const project = await Project.create(payload);
-
-    // ── Atribuição automática de mentor por área (não bloqueia a criação) ──
-    try {
-      const mentorService = require('./mentor.service');
-      await mentorService.autoAssignMentor(project.id);
-    } catch (err) {
-      // Não falhar a criação do projecto se não houver mentores disponíveis
-      console.warn('⚠️  Não foi possível atribuir mentor automaticamente:', err.message);
-    }
-
     return { ...project.toJSON(), tech_stack: data.tech_stack||[], tags: data.tags||[] };
   }
 

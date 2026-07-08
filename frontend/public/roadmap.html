@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap do Projecto — INKU·AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar" id="main-sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
+      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section-label">Principal</span>
+      <a href="/dashboard.html"   class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"    class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/classroom.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <span class="sidebar-section-label">Conta</span>
+      <a href="/messages.html"    class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"     class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden">
+          <div class="sidebar-user-name truncate" data-user-name>Utilizador</div>
+          <div class="sidebar-user-role" data-user-role>student</div>
+        </div>
+        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3)"><i class="bi bi-box-arrow-right"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="topbar">
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <a href="/projects.html" class="btn-inkuai-ghost btn-inkuai-sm me-2" style="font-size:0.8rem;"><i class="bi bi-arrow-left me-1"></i>Projectos</a>
+      <span class="topbar-title" id="project-title-topbar">Roadmap</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+        <button class="btn-inkuai btn-inkuai-sm" id="ai-generate-btn" onclick="generateAIRoadmap()">
+          <i class="bi bi-stars me-2"></i>Gerar com IA
+        </button>
+        <button class="btn-inkuai-ghost btn-inkuai-sm" onclick="openAddPhaseModal()">
+          <i class="bi bi-plus me-1"></i>Fase
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Project header -->
+      <div class="inkuai-card mb-4" id="project-header" style="display:none;">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+          <div>
+            <h4 id="project-title" style="font-weight:800;margin-bottom:4px;"></h4>
+            <div style="font-size:0.82rem;color:var(--text-muted);" id="project-type-phase"></div>
+          </div>
+          <div class="ms-auto d-flex flex-wrap gap-3" id="phase-stats"></div>
+        </div>
+      </div>
+
+      <!-- Roadmap kanban-style -->
+      <div id="roadmap-loading" class="text-center py-5" style="color:var(--text-muted);">
+        <div class="spinner-border text-primary mb-3"></div>
+        <div>A carregar roadmap...</div>
+      </div>
+
+      <div id="roadmap-empty" style="display:none;" class="text-center py-5">
+        <div style="font-size:3rem;margin-bottom:16px;">🗺️</div>
+        <h5 style="font-weight:700;margin-bottom:8px;">Sem roadmap ainda</h5>
+        <p style="color:var(--text-muted);margin-bottom:20px;">Crie as fases manualmente ou deixe a IA gerar um roadmap completo automaticamente.</p>
+        <button class="btn-inkuai" onclick="generateAIRoadmap()"><i class="bi bi-stars me-2"></i>Gerar Roadmap com IA</button>
+      </div>
+
+      <div id="roadmap-board" style="display:none;">
+        <!-- Fases serão injectadas aqui -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal: Adicionar/Editar Fase -->
+<div class="modal fade" id="phaseModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius:var(--radius-lg);border:1px solid var(--border-light);">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
+        <h5 class="modal-title fw-bold" id="phase-modal-title"><i class="bi bi-map me-2" style="color:var(--blue-600);"></i>Fase do Roadmap</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="phase-id">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label-dark">Fase *</label>
+            <select id="phase-type" class="form-control-dark">
+              <option value="ideacao">💡 Ideação</option>
+              <option value="validacao">🔍 Validação</option>
+              <option value="prototipo">🛠️ Protótipo</option>
+              <option value="mvp">🚀 MVP</option>
+              <option value="lancamento">📣 Lançamento</option>
+              <option value="crescimento">📈 Crescimento</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Estado</label>
+            <select id="phase-status" class="form-control-dark">
+              <option value="pending">⏳ Pendente</option>
+              <option value="active">🔵 Activo</option>
+              <option value="completed">✅ Completo</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Título *</label>
+            <input type="text" id="phase-title" class="form-control-dark" placeholder="Ex: Definir proposta de valor e MVP">
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Descrição</label>
+            <textarea id="phase-desc" class="form-control-dark" rows="2" placeholder="Objectivos desta fase..."></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Data limite</label>
+            <input type="date" id="phase-due" class="form-control-dark">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-dark">Progresso (%)</label>
+            <input type="number" id="phase-progress" class="form-control-dark" min="0" max="100" value="0">
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Tarefas (uma por linha)</label>
+            <textarea id="phase-tasks" class="form-control-dark" rows="4" placeholder="Validar hipóteses com 10 utilizadores&#10;Criar protótipo Figma&#10;Apresentar à comissão"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Recursos / Ferramentas</label>
+            <textarea id="phase-resources" class="form-control-dark" rows="2" placeholder="Figma, Google Forms, Canvas..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+        <button class="btn-inkuai-danger btn-inkuai-sm" id="delete-phase-btn" onclick="deletePhase()" style="display:none;margin-right:auto;">
+          <i class="bi bi-trash3 me-1"></i>Eliminar
+        </button>
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-inkuai" id="save-phase-btn" onclick="savePhase()"><i class="bi bi-check2 me-2"></i>Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.phase-column {
+  flex: 0 0 260px; border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md); background: var(--bg-card);
+  overflow: hidden; transition: all .2s;
+}
+.phase-column:hover { border-color: var(--blue-300); }
+.phase-column.status-active { border-color: #93c5fd; background: #eff6ff; }
+.phase-column.status-completed { border-color: #86efac; background: #f0fdf4; }
+.phase-column.status-pending { opacity: 0.75; }
+.phase-header {
+  padding: 14px 16px; border-bottom: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.phase-body { padding: 14px 16px; }
+.task-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--border-light);
+  font-size: 0.82rem; color: var(--text-secondary);
+}
+.task-item:last-child { border-bottom: none; }
+.task-check {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid var(--border-medium); background: #fff;
+  flex-shrink: 0; cursor: pointer; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+}
+.task-check.done { background: var(--success); border-color: var(--success); color: #fff; font-size: 10px; }
+.progress-bar-sm { height: 4px; background: var(--border-light); border-radius: 99px; overflow: hidden; margin: 8px 0 4px; }
+.progress-bar-sm-fill { height: 100%; border-radius: 99px; transition: width .5s ease; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/api/apiClient.js"></script>
+<script src="/assets/js/components/toast.js"></script>
+<script src="/assets/js/components/sidebar.js"></script>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const projectId = urlParams.get('id');
+let currentUser = null;
+let roadmapData = [];
+
+const PHASE_ICONS = { ideacao:'💡', validacao:'🔍', prototipo:'🛠️', mvp:'🚀', lancamento:'📣', crescimento:'📈' };
+const PHASE_COLORS = {
+  ideacao:['#ede9fe','#7c3aed'], validacao:['#dbeafe','#1d4ed8'],
+  prototipo:['#d1fae5','#065f46'], mvp:['#fef9c3','#854d0e'],
+  lancamento:['#fee2e2','#991b1b'], crescimento:['#ccfbf1','#134e4a']
+};
+const STATUS_COLORS = { pending:'#94a3b8', active:'#3b82f6', completed:'#16a34a' };
+
+async function init() {
+  currentUser = window.InkuAuth?.getUser?.();
+  if (!projectId) { location.href='/projects.html'; return; }
+  if (currentUser?.role==='admin') document.getElementById('admin-link').style.display='';
+  if (currentUser?.name) document.getElementById('user-avatar').textContent=currentUser.name[0].toUpperCase();
+  await loadProject();
+  await loadRoadmap();
+}
+
+async function loadProject() {
+  try {
+    const res = await window.InkuAPI.get(`/projects/${projectId}`);
+    const p = res.project || res.data;
+    document.getElementById('project-title').textContent = p.title;
+    document.getElementById('project-title-topbar').textContent = p.title;
+    document.getElementById('project-type-phase').textContent = `${p.type} · Fase: ${p.current_phase||'ideacao'}`;
+    document.getElementById('project-header').style.display='';
+  } catch(e) {}
+}
+
+async function loadRoadmap() {
+  document.getElementById('roadmap-loading').style.display='';
+  document.getElementById('roadmap-board').style.display='none';
+  document.getElementById('roadmap-empty').style.display='none';
+  try {
+    const res = await window.InkuAPI.get(`/social/roadmap/${projectId}`);
+    roadmapData = res.roadmap || [];
+    if (!roadmapData.length) {
+      document.getElementById('roadmap-loading').style.display='none';
+      document.getElementById('roadmap-empty').style.display='';
+      return;
+    }
+    renderRoadmap(roadmapData);
+  } catch(e) {
+    document.getElementById('roadmap-loading').style.display='none';
+    window.showToast?.('Erro ao carregar roadmap.','error');
+  }
+}
+
+function renderRoadmap(phases) {
+  document.getElementById('roadmap-loading').style.display='none';
+  const board = document.getElementById('roadmap-board');
+  board.style.display='';
+
+  const total = phases.length;
+  const done = phases.filter(p=>p.status==='completed').length;
+  const pct = total ? Math.round(done/total*100) : 0;
+
+  // Stats header
+  document.getElementById('phase-stats').innerHTML = `
+    <div style="text-align:center;">
+      <div style="font-size:1.5rem;font-weight:800;color:var(--blue-600);">${pct}%</div>
+      <div style="font-size:0.72rem;color:var(--text-muted);">Completo</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:1.5rem;font-weight:800;color:var(--success);">${done}</div>
+      <div style="font-size:0.72rem;color:var(--text-muted);">Fases concluídas</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:1.5rem;font-weight:800;color:var(--text-primary);">${total}</div>
+      <div style="font-size:0.72rem;color:var(--text-muted);">Total de fases</div>
+    </div>`;
+
+  board.innerHTML = `
+    <div style="display:flex;gap:14px;overflow-x:auto;padding-bottom:16px;">
+      ${phases.map(phase => {
+        const [bg, color] = PHASE_COLORS[phase.phase] || ['#f1f5f9','#475569'];
+        const tasks = (() => { try { return JSON.parse(phase.tasks_json||'[]'); } catch { return []; } })();
+        const resources = (() => { try { return JSON.parse(phase.resources_json||'[]'); } catch { return []; } })();
+        const progress = phase.progress || 0;
+        const progressColor = progress >= 100 ? '#16a34a' : progress > 50 ? '#3b82f6' : '#f59e0b';
+
+        return `<div class="phase-column status-${phase.status}">
+          <div class="phase-header">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="background:${bg};color:${color};border-radius:8px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;">${PHASE_ICONS[phase.phase]||'📌'}</span>
+                <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${color};">${phase.phase}</span>
+              </div>
+              <div style="font-weight:700;font-size:0.875rem;color:var(--text-primary);">${phase.title}</div>
+            </div>
+            <button onclick="openEditPhaseModal('${phase.id}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;border-radius:6px;" title="Editar">
+              <i class="bi bi-pencil" style="font-size:0.85rem;"></i>
+            </button>
+          </div>
+          <div class="phase-body">
+            ${phase.description ? `<p style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;margin-bottom:10px;">${phase.description}</p>` : ''}
+            <!-- Progress -->
+            <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-bottom:3px;">
+              <span>Progresso</span><span style="color:${progressColor};font-weight:700;">${progress}%</span>
+            </div>
+            <div class="progress-bar-sm"><div class="progress-bar-sm-fill" style="width:${progress}%;background:${progressColor};"></div></div>
+            <!-- Status badge -->
+            <div style="margin-bottom:10px;">
+              <span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:${STATUS_COLORS[phase.status]}22;color:${STATUS_COLORS[phase.status]};">
+                ${phase.status==='completed'?'✅ Completo':phase.status==='active'?'🔵 Activo':'⏳ Pendente'}
+              </span>
+            </div>
+            <!-- Tarefas -->
+            ${tasks.length ? `<div style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">TAREFAS</div>
+            <div>${tasks.map(t=>`<div class="task-item"><div class="task-check ${phase.status==='completed'?'done':''}">${phase.status==='completed'?'✓':''}</div><span>${t}</span></div>`).join('')}</div>` : ''}
+            <!-- Recursos -->
+            ${resources.length ? `<div style="margin-top:10px;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">RECURSOS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${resources.map(r=>`<span class="tag tag-gray">${r}</span>`).join('')}</div>` : ''}
+            <!-- Due date -->
+            ${phase.due_date ? `<div style="margin-top:10px;font-size:0.72rem;color:var(--text-muted);"><i class="bi bi-calendar3 me-1"></i>${new Date(phase.due_date).toLocaleDateString('pt-PT')}</div>` : ''}
+            ${phase.ai_notes ? `<div style="margin-top:10px;padding:8px;background:rgba(99,102,241,.06);border-left:3px solid #6366f1;border-radius:4px;font-size:0.72rem;color:#6366f1;"><i class="bi bi-robot me-1"></i>${phase.ai_notes}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function openAddPhaseModal() {
+  document.getElementById('phase-id').value = '';
+  document.getElementById('phase-modal-title').textContent = '➕ Adicionar Fase';
+  ['phase-title','phase-desc','phase-tasks','phase-resources'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('phase-type').value = 'ideacao';
+  document.getElementById('phase-status').value = 'pending';
+  document.getElementById('phase-progress').value = '0';
+  document.getElementById('phase-due').value = '';
+  document.getElementById('delete-phase-btn').style.display='none';
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('phaseModal')).show();
+}
+
+function openEditPhaseModal(phaseId) {
+  const phase = roadmapData.find(p=>p.id===phaseId);
+  if (!phase) return;
+  document.getElementById('phase-id').value = phase.id;
+  document.getElementById('phase-modal-title').textContent = '✏️ Editar Fase';
+  document.getElementById('phase-type').value = phase.phase;
+  document.getElementById('phase-title').value = phase.title;
+  document.getElementById('phase-desc').value = phase.description || '';
+  document.getElementById('phase-status').value = phase.status || 'pending';
+  document.getElementById('phase-progress').value = phase.progress || 0;
+  document.getElementById('phase-due').value = phase.due_date ? phase.due_date.substring(0,10) : '';
+  try { document.getElementById('phase-tasks').value = JSON.parse(phase.tasks_json||'[]').join('\n'); } catch { document.getElementById('phase-tasks').value=''; }
+  try { document.getElementById('phase-resources').value = JSON.parse(phase.resources_json||'[]').join('\n'); } catch { document.getElementById('phase-resources').value=''; }
+  document.getElementById('delete-phase-btn').style.display='';
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('phaseModal')).show();
+}
+
+async function savePhase() {
+  const phaseId = document.getElementById('phase-id').value;
+  const tasks = document.getElementById('phase-tasks').value.split('\n').map(t=>t.trim()).filter(Boolean);
+  const resources = document.getElementById('phase-resources').value.split('\n').map(r=>r.trim()).filter(Boolean);
+  const data = {
+    phase:       document.getElementById('phase-type').value,
+    title:       document.getElementById('phase-title').value,
+    description: document.getElementById('phase-desc').value,
+    status:      document.getElementById('phase-status').value,
+    progress:    parseInt(document.getElementById('phase-progress').value)||0,
+    due_date:    document.getElementById('phase-due').value||null,
+    tasks, resources
+  };
+  if (!data.title) { window.showToast?.('Título obrigatório.','warning'); return; }
+  const btn = document.getElementById('save-phase-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>';
+  try {
+    if (phaseId) {
+      await window.InkuAPI.put(`/social/roadmap/phase/${phaseId}`, data);
+      window.showToast?.('Fase actualizada!','success');
+    } else {
+      await window.InkuAPI.post(`/social/roadmap/${projectId}`, data);
+      window.showToast?.('Fase criada!','success');
+    }
+    bootstrap.Modal.getInstance(document.getElementById('phaseModal')).hide();
+    await loadRoadmap();
+  } catch(e) { window.showToast?.(e.message,'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Guardar'; }
+}
+
+async function deletePhase() {
+  const phaseId = document.getElementById('phase-id').value;
+  if (!phaseId || !confirm('Eliminar esta fase?')) return;
+  try {
+    await window.InkuAPI.delete(`/social/roadmap/phase/${phaseId}`);
+    bootstrap.Modal.getInstance(document.getElementById('phaseModal')).hide();
+    window.showToast?.('Fase eliminada.','success');
+    await loadRoadmap();
+  } catch(e) { window.showToast?.(e.message,'error'); }
+}
+
+async function generateAIRoadmap() {
+  if (!confirm('Gerar roadmap completo com IA? O roadmap actual será substituído.')) return;
+  const btn = document.getElementById('ai-generate-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A gerar...';
+  try {
+    const res = await window.InkuAPI.post(`/social/roadmap/${projectId}/generate`, {});
+    window.showToast?.(`Roadmap de ${res.roadmap?.length||6} fases gerado pela IA!`,'success');
+    await loadRoadmap();
+  } catch(e) { window.showToast?.(e.message||'Erro ao gerar roadmap.','error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-stars me-2"></i>Gerar com IA'; }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/mentor-ai.js"></script>
+</body>
+</html>
