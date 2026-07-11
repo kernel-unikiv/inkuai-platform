@@ -1,58 +1,76 @@
 'use strict';
-const API_BASE = '/api/v1';
+/* ── INKU·AI API Client ─────────────────────────────────────────
+   Base URL auto-detects dev vs prod.
+   Exposes: InkuAPI.get/post/put/patch/delete
+   Exposes: InkuAuth.getUser/getToken/isLoggedIn/logout
+─────────────────────────────────────────────────────────────── */
 
-const getToken = () => localStorage.getItem('inkuai_token');
-const getUser  = () => JSON.parse(localStorage.getItem('inkuai_user') || 'null');
+const BASE_URL = '/api/v1';
+const TOKEN_KEY = 'inkuai_token';
+const USER_KEY  = 'inkuai_user';
 
-const setAuth = (token, user) => {
-  localStorage.setItem('inkuai_token', token);
-  localStorage.setItem('inkuai_user', JSON.stringify(user));
+/* ── Auth helper ─────────────────────────────────────────────── */
+window.InkuAuth = {
+  getToken:  ()   => localStorage.getItem(TOKEN_KEY),
+  getUser:   ()   => { try { const u = localStorage.getItem(USER_KEY); return u ? JSON.parse(u) : null; } catch { return null; } },
+  setUser:   (u)  => localStorage.setItem(USER_KEY, JSON.stringify(u)),
+  setToken:  (t)  => localStorage.setItem(TOKEN_KEY, t),
+  isLoggedIn:()   => !!localStorage.getItem(TOKEN_KEY),
+  logout:    ()   => { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); window.location.href = '/login.html'; }
 };
 
-const clearAuth = () => {
-  localStorage.removeItem('inkuai_token');
-  localStorage.removeItem('inkuai_user');
-};
+/* ── Core fetch wrapper ──────────────────────────────────────── */
+async function apiFetch(method, path, body) {
+  const token = InkuAuth.getToken();
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-async function request(method, endpoint, body = null, isFormData = false) {
-  const token = getToken();
-  const headers = { 'Authorization': token ? `Bearer ${token}` : '' };
-  if (!isFormData) headers['Content-Type'] = 'application/json';
+  const res = await fetch(BASE_URL + path, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined
+  });
 
-  const config = { method, headers };
-  if (body) config.body = isFormData ? body : JSON.stringify(body);
-
-  try {
-    const res = await fetch(`${API_BASE}${endpoint}`, config);
-    const data = await res.json();
-
-    if (res.status === 401) {
-      clearAuth();
-      window.location.href = '/login.html';
-      return;
-    }
-    if (!res.ok) throw { status: res.status, message: data.message || 'Erro na requisição', errors: data.errors };
-    return data;
-  } catch (err) {
-    if (err.message === 'Failed to fetch') throw { message: 'Sem ligação ao servidor. Verifique a sua conexão.' };
-    throw err;
+  let data;
+  const ct = res.headers.get('content-type') || '';
+  if (ct.includes('application/json')) {
+    data = await res.json();
+  } else {
+    throw new Error(`Resposta inesperada do servidor (${res.status})`);
   }
+
+  if (res.status === 401) {
+    // Token expirado ou inválido
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    if (!window.location.pathname.includes('/login')) {
+      window.location.href = '/login.html';
+    }
+    throw new Error('Sessão expirada. Faça login novamente.');
+  }
+
+  if (!res.ok) {
+    const msg = data?.message || data?.error || `Erro ${res.status}`;
+    throw new Error(msg);
+  }
+
+  return data;
 }
 
-const api = {
-  get:    (ep)          => request('GET', ep),
-  post:   (ep, body)    => request('POST', ep, body),
-  put:    (ep, body)    => request('PUT', ep, body),
-  patch:  (ep, body)    => request('PATCH', ep, body),
-  delete: (ep)          => request('DELETE', ep),
-  upload: (ep, formData) => request('POST', ep, formData, true)
+/* ── Public API ──────────────────────────────────────────────── */
+window.InkuAPI = {
+  get:    (path)         => apiFetch('GET',    path),
+  post:   (path, body)   => apiFetch('POST',   path, body),
+  put:    (path, body)   => apiFetch('PUT',    path, body),
+  patch:  (path, body)   => apiFetch('PATCH',  path, body ?? {}),
+  delete: (path)         => apiFetch('DELETE', path),
 };
 
-window.InkuAPI = api;
-window.InkuAuth = { getToken, getUser, setAuth, clearAuth };
-
-// Exportar BASE_URL para uso externo (ex: download de ficheiros)
-if (typeof window !== 'undefined') {
-  window.InkuAPI = window.InkuAPI || {};
-  window.InkuAPI.BASE_URL = API_BASE;
-}
+/* ── Auto-redirect if not logged in (skip auth pages) ────────── */
+(function () {
+  const pub = ['/login', '/register', '/forgot-password', '/index', '/404'];
+  const isPublic = pub.some(p => window.location.pathname.includes(p));
+  if (!isPublic && !InkuAuth.isLoggedIn()) {
+    window.location.href = '/login.html';
+  }
+})();

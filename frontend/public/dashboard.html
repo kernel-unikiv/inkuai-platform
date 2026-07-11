@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — INKU·AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text y='24' x='4' font-size='22' fill='white'>⚡</text></svg>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
@@ -11,93 +11,90 @@
 <body>
 <div class="dashboard-layout">
 
-  <!-- ══ SIDEBAR AZUL ESCURO ══ -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div>
-        <div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div>
+        <div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div>
         <div class="brand-sub">IP/UNIKIVI</div>
       </div>
     </a>
-
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"   class="sidebar-link active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-models.html"   class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
-
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"    class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
-
+      <a href="/dashboard.html"    class="sidebar-link active"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
+      <a href="/classroom.html"    class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <span class="sidebar-section-label">IA & Ferramentas</span>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/profile.html"     class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="sidebar-badge msg-unread-badge" style="display:none">0</span></a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none">
         <i class="bi bi-shield-fill"></i>Administração
       </a>
     </nav>
-
     <div class="sidebar-footer">
-      <div class="sidebar-user">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
-          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
+        <div style="flex:1;overflow:hidden;">
+          <div class="sidebar-user-name truncate" data-user-name>Utilizador</div>
           <div class="sidebar-user-role" data-user-role>student</div>
         </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)" title="Sair">
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
     </div>
   </aside>
 
-  <!-- ══ MAIN CONTENT ══ -->
   <main class="main-content">
-    <!-- Topbar branco -->
     <div class="topbar">
       <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)">
-        <i class="bi bi-list fs-4"></i>
+        <i class="bi bi-list" style="font-size:1.3rem;"></i>
       </button>
       <span class="topbar-title">Dashboard</span>
-      <span class="topbar-badge ms-2 d-none d-md-inline">FUNDECIT 2026</span>
-      <div id="notif-mount" class="d-flex align-items-center"></div>
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <button class="btn btn-link p-0 position-relative" style="color:var(--text-muted)">
-          <i class="bi bi-bell fs-5"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem" id="stat-notifs">0</span>
-        </button>
-        <span class="text-muted small d-none d-md-block" data-user-email></span>
+      <span class="topbar-badge ms-2 d-none d-sm-inline">FUNDECIT 2026</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+        <a href="/profile.html" class="d-flex align-items-center gap-2" style="text-decoration:none;">
+          <div class="avatar avatar-sm" id="topbar-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">U</div>
+        </a>
       </div>
     </div>
 
-    <!-- Conteúdo -->
     <div class="page-content">
-
-      <!-- Boas-vindas -->
-      <div class="mb-4">
-        <h5 style="font-weight:700;color:var(--text-primary)">
-          Bem-vindo de volta, <span data-user-name style="color:var(--blue-600)">Investigador</span> 👋
-        </h5>
-        <p class="mb-0" style="color:var(--text-muted);font-size:0.9rem">
-          Plataforma de Incubação de IA · IP/UNIKIVI · Candidatura FUNDECIT Edital Nº 1/2026
-        </p>
+      <!-- Welcome -->
+      <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
+        <div>
+          <h4 class="page-title mb-1">Bem-vindo, <span data-user-name class="text-gradient">Investigador</span> 👋</h4>
+          <p class="page-subtitle mb-0">Plataforma de Incubação de IA · IP/UNIKIVI · FUNDECIT Edital Nº 1/2026</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="/projects.html" class="btn-inkuai btn-inkuai-sm"><i class="bi bi-plus-lg"></i>Novo Projecto</a>
+          <a href="/ai-assistant.html" class="btn-inkuai-secondary btn-inkuai-sm"><i class="bi bi-robot"></i>Chat IA</a>
+        </div>
       </div>
 
-      <!-- Métricas -->
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-xl-3">
+      <!-- Metrics -->
+      <div class="row g-3 mb-5">
+        <div class="col-6 col-xl-3">
           <div class="metric-card">
             <div class="metric-icon blue"><i class="bi bi-folder2-open"></i></div>
             <div>
               <div class="metric-value" id="stat-projects">—</div>
               <div class="metric-label">Projectos</div>
+              <div class="metric-trend up" id="trend-projects"></div>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
           <div class="metric-card">
             <div class="metric-icon green"><i class="bi bi-rocket-takeoff"></i></div>
             <div>
@@ -106,85 +103,70 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon orange"><i class="bi bi-terminal-fill"></i></div>
+            <div class="metric-icon purple"><i class="bi bi-mortarboard-fill"></i></div>
             <div>
-              <div class="metric-value" style="font-size:1.2rem;color:var(--success)">Activo</div>
-              <div class="metric-label">Sandbox IA</div>
+              <div class="metric-value" id="stat-mentors">—</div>
+              <div class="metric-label">Mentores</div>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
           <div class="metric-card">
-            <div class="metric-icon purple"><i class="bi bi-github"></i></div>
+            <div class="metric-icon orange"><i class="bi bi-activity"></i></div>
             <div>
-              <div class="metric-value" style="font-size:1.2rem">GitHub</div>
-              <div class="metric-label">Integração</div>
+              <div class="metric-value" id="stat-xp" style="font-size:1.4rem;">0 XP</div>
+              <div class="metric-label">Reputação</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Grid principal -->
+      <!-- Main grid -->
       <div class="row g-4">
-        <!-- Projectos Recentes -->
+        <!-- Projects table -->
         <div class="col-lg-8">
           <div class="inkuai-card">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
-                <i class="bi bi-folder2-open me-2" style="color:var(--blue-600)"></i>Projectos Recentes
-              </h6>
-              <a href="/projects.html" class="btn btn-sm btn-outline-primary" style="font-size:0.8rem">Ver todos</a>
+            <div class="card-header">
+              <h6 class="card-title"><i class="bi bi-folder2-open"></i>Projectos Recentes</h6>
+              <a href="/projects.html" class="btn-inkuai-secondary btn-inkuai-sm">Ver todos</a>
             </div>
-            <div class="table-responsive">
-              <table class="inkuai-table">
-                <thead>
-                  <tr><th>Nome</th><th>Tipo</th><th>Estado</th><th>Data</th><th></th></tr>
-                </thead>
-                <tbody id="recent-projects">
-                  <tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted)">
-                    <div class="spinner-border spinner-border-sm me-2"></div>A carregar...
-                  </td></tr>
-                </tbody>
-              </table>
+            <div id="recent-projects-wrap">
+              <!-- Skeleton -->
+              <div class="skeleton skeleton-title mb-3"></div>
+              <div class="skeleton skeleton-text mb-2"></div>
+              <div class="skeleton skeleton-text mb-2" style="width:70%"></div>
+              <div class="skeleton skeleton-text" style="width:85%"></div>
             </div>
           </div>
         </div>
 
-        <!-- Coluna direita -->
-        <div class="col-lg-4">
-          <!-- Startups -->
-          <div class="inkuai-card mb-4">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:0">
-                <i class="bi bi-rocket-takeoff me-2" style="color:var(--success)"></i>Minhas Startups
-              </h6>
-              <a href="/startups.html" style="font-size:0.8rem;color:var(--blue-600);text-decoration:none">Ver todas</a>
+        <!-- Right column -->
+        <div class="col-lg-4 d-flex flex-column gap-4">
+          <!-- Quick actions -->
+          <div class="inkuai-card">
+            <div class="card-header">
+              <h6 class="card-title"><i class="bi bi-lightning-fill" style="color:var(--warning);"></i>Acções Rápidas</h6>
             </div>
-            <div id="my-startups">
-              <p style="color:var(--text-muted);font-size:0.875rem">A carregar...</p>
+            <div class="d-grid gap-2">
+              <a href="/projects.html"     class="btn-inkuai text-center justify-content-center"><i class="bi bi-plus-lg"></i>Novo Projecto</a>
+              <a href="/articles.html"     class="btn-inkuai-secondary text-center justify-content-center"><i class="bi bi-lightbulb"></i>Publicar Ideia</a>
+              <a href="/classroom.html"    class="btn-inkuai-secondary text-center justify-content-center"><i class="bi bi-mortarboard"></i>Classroom</a>
+              <a href="/sandbox.html"      class="btn-inkuai-secondary text-center justify-content-center"><i class="bi bi-terminal"></i>Sandbox IA</a>
+              <a href="/admin/admin-mentors.html" class="btn-inkuai-secondary text-center justify-content-center" id="admin-mentors-btn" style="display:none"><i class="bi bi-people"></i>Gerir Mentores</a>
             </div>
-            <a href="/startups.html" class="btn-outline-inkuai w-100 justify-content-center mt-2" style="font-size:0.8rem">
-              <i class="bi bi-plus-lg me-1"></i>Nova Startup
-            </a>
           </div>
 
-          <!-- Acções rápidas -->
-          <div class="inkuai-card">
-            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px">
-              <i class="bi bi-lightning-fill me-2" style="color:var(--warning)"></i>Acções Rápidas
-            </h6>
-            <div class="d-grid gap-2">
-              <a href="/projects.html" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-2"></i>Novo Projecto
-              </a>
-              <a href="/sandbox.html" class="btn btn-success btn-sm">
-                <i class="bi bi-play-fill me-2"></i>Abrir Sandbox IA
-              </a>
-              <a href="/datasets.html" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-upload me-2"></i>Carregar Dataset
-              </a>
+          <!-- Startups card -->
+          <div class="inkuai-card flex-grow-1">
+            <div class="card-header">
+              <h6 class="card-title"><i class="bi bi-rocket-takeoff" style="color:var(--success);"></i>Minhas Startups</h6>
+              <a href="/startups.html" class="btn-inkuai-ghost btn-inkuai-sm">Ver todas</a>
+            </div>
+            <div id="my-startups-wrap">
+              <div class="skeleton skeleton-text mb-2"></div>
+              <div class="skeleton skeleton-text" style="width:60%"></div>
             </div>
           </div>
         </div>
@@ -197,11 +179,111 @@
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
-<script src="/assets/js/pages/dashboard.js"></script>
 <script>
+const STATUS_COLORS = {
+  draft:'gray', active:'active', submitted:'submitted',
+  approved:'approved', completed:'active', rejected:'rejected'
+};
+
+async function loadDashboard() {
   const user = window.InkuAuth?.getUser();
-  if (user?.role === 'admin') document.getElementById('admin-link').style.display = '';
-  if (user?.name) document.getElementById('user-avatar').textContent = user.name[0].toUpperCase();
+  if (!user) { location.href = '/login.html'; return; }
+
+  // Set user info
+  if (user.role === 'admin') {
+    document.getElementById('admin-link').style.display = '';
+    document.getElementById('admin-mentors-btn').style.display = '';
+  }
+  const av = user.name?.[0]?.toUpperCase() || 'U';
+  document.getElementById('user-avatar').textContent = av;
+  document.getElementById('topbar-avatar').textContent = av;
+
+  // Load stats in parallel
+  const [projStats, startupStats, repData] = await Promise.allSettled([
+    window.InkuAPI.get('/projects/stats'),
+    window.InkuAPI.get('/startups?limit=1'),
+    window.InkuAPI.get('/social/reputation')
+  ]);
+
+  if (projStats.status === 'fulfilled') {
+    const s = projStats.value.stats || {};
+    document.getElementById('stat-projects').textContent = s.total || 0;
+    if (s.active > 0) document.getElementById('trend-projects').textContent = `↑ ${s.active} activos`;
+  }
+  if (startupStats.status === 'fulfilled') {
+    document.getElementById('stat-startups').textContent = startupStats.value.pagination?.total || '0';
+  }
+  if (repData.status === 'fulfilled') {
+    const r = repData.value.reputation || {};
+    document.getElementById('stat-xp').textContent = (r.xp || 0) + ' XP';
+  }
+
+  // Count mentors
+  try {
+    const mRes = await window.InkuAPI.get('/admin/mentors');
+    document.getElementById('stat-mentors').textContent = (mRes.mentors || []).length;
+  } catch { document.getElementById('stat-mentors').textContent = '—'; }
+
+  // Load recent projects
+  await loadRecentProjects();
+  await loadMyStartups();
+}
+
+async function loadRecentProjects() {
+  const wrap = document.getElementById('recent-projects-wrap');
+  try {
+    const res = await window.InkuAPI.get('/projects?limit=6');
+    const projects = res.data || [];
+    if (!projects.length) {
+      wrap.innerHTML = `<div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-folder2-open"></i></span><h5>Sem projectos</h5><p>Crie o seu primeiro projecto e comece a inovar.</p><a href="/projects.html" class="btn-inkuai btn-inkuai-sm">Criar projecto</a></div>`;
+      return;
+    }
+    wrap.innerHTML = `<div class="table-responsive">
+      <table class="inkuai-table">
+        <thead><tr><th>Projecto</th><th>Tipo</th><th>Estado</th><th>⭐</th><th>Data</th></tr></thead>
+        <tbody>${projects.map(p => `
+          <tr style="cursor:pointer;" onclick="location.href='/project-detail.html?id=${p.id}'">
+            <td>
+              <div style="font-weight:600;font-size:0.855rem;">${p.title}</div>
+              ${p.creator ? `<div style="font-size:0.72rem;color:var(--text-muted);">${p.creator.name}</div>` : ''}
+            </td>
+            <td><span class="tag tag-blue">${p.type}</span></td>
+            <td><span class="status status-${p.status}">${p.status}</span></td>
+            <td><span style="font-size:0.8rem;color:#f59e0b;">${p.avg_stars ? '★ '+p.avg_stars : '—'}</span></td>
+            <td style="font-size:0.78rem;color:var(--text-muted);white-space:nowrap;">${new Date(p.created_at).toLocaleDateString('pt-PT')}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  } catch(e) {
+    wrap.innerHTML = `<p style="color:var(--danger);text-align:center;font-size:0.85rem;">${e.message}</p>`;
+  }
+}
+
+async function loadMyStartups() {
+  const wrap = document.getElementById('my-startups-wrap');
+  try {
+    const res = await window.InkuAPI.get('/startups?limit=3');
+    const startups = res.data || [];
+    if (!startups.length) {
+      wrap.innerHTML = `<div class="inkuai-empty" style="padding:20px 0;"><span class="inkuai-empty-icon" style="font-size:2rem;"><i class="bi bi-rocket-takeoff"></i></span><p>Sem startups ainda.</p><a href="/startups.html" class="btn-inkuai btn-inkuai-sm">Criar startup</a></div>`;
+      return;
+    }
+    wrap.innerHTML = startups.map(s => `
+      <div class="d-flex align-items-center gap-3 py-2 border-bottom" style="cursor:pointer;" onclick="location.href='/startup-detail.html?id=${s.id}'">
+        <div class="avatar avatar-sm" style="background:var(--brand-gradient);font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0;">${s.name[0]}</div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="font-weight:600;font-size:0.855rem;" class="truncate">${s.name}</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">${s.stage || 'Ideação'}</div>
+        </div>
+        <span class="status status-${s.status || 'draft'}">${s.status || 'draft'}</span>
+      </div>`).join('');
+  } catch(e) {
+    wrap.innerHTML = `<p style="color:var(--danger);font-size:0.82rem;">${e.message}</p>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
 </script>
 <script src="/assets/js/components/notifications.js"></script>
 <script src="/assets/js/components/mentor-ai.js"></script>

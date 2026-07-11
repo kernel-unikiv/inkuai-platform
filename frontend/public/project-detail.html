@@ -3,228 +3,721 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projecto — INKU·AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text y='24' x='4' font-size='22' fill='white'>⚡</text></svg>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .project-banner{height:220px;border-radius:var(--r-lg);overflow:hidden;position:relative;background:var(--brand-gradient);}
+    .project-banner img{width:100%;height:100%;object-fit:cover;}
+    .project-banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 60%);}
+    .info-chip{display:inline-flex;align-items:center;gap:5px;font-size:0.78rem;color:var(--text-muted);}
+    .info-chip i{font-size:0.85rem;}
+    .tab-nav-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:0.845rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .tab-nav-btn:hover{color:var(--text-primary);}
+    .tab-nav-btn.active{color:var(--brand-primary);border-bottom-color:var(--brand-primary);}
+    .star-input{display:inline-flex;gap:3px;}
+    .star-input .s{font-size:1.5rem;cursor:pointer;color:var(--gray-300);transition:color .1s,transform .1s;}
+    .star-input .s:hover,.star-input .s.on{color:#f59e0b;transform:scale(1.15);}
+    .member-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-md);border:1px solid var(--border-light);transition:all .15s;cursor:pointer;}
+    .member-card:hover{border-color:var(--blue-200);background:var(--blue-50);}
+    .tech-chip{display:inline-flex;align-items:center;gap:4px;background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200);border-radius:var(--r-full);padding:3px 10px;font-size:0.72rem;font-weight:600;}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"   class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-models.html"  class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
-      <a href="/mentorship.html" class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"   class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
-      <a href="/messages.html"   class="sidebar-link" id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem">0</span></a>
-      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <span class="sidebar-section-label">Principal</span>
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
+      <a href="/classroom.html"    class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <span class="sidebar-section-label">IA & Ferramentas</span>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
+      <span class="sidebar-section-label">Conta</span>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-user">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <a href="/projects.html" class="btn btn-link p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-arrow-left"></i></a>
-      <span class="topbar-title" id="page-title">Detalhes do Projecto</span>
-      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
-      <div class="ms-auto d-flex gap-2" id="action-btns"></div>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list" style="font-size:1.3rem;"></i></button>
+      <div class="topbar-breadcrumb">
+        <a href="/projects.html">Projectos</a>
+        <span>/</span>
+        <span id="breadcrumb-title" style="color:var(--text-primary);">—</span>
+      </div>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+        <a href="/profile.html" style="text-decoration:none;">
+          <div class="avatar avatar-sm" id="topbar-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;">U</div>
+        </a>
+      </div>
     </div>
-    <div class="page-content" id="project-content">
-      <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+
+    <div id="project-loading" class="page-content">
+      <div class="project-banner skeleton mb-4"></div>
+      <div class="skeleton skeleton-title mb-3" style="width:40%;height:28px;"></div>
+      <div class="skeleton skeleton-text mb-2"></div>
+      <div class="skeleton skeleton-text" style="width:70%;"></div>
     </div>
-  
-    <!-- Comments Section -->
-    <div class="inkuai-card mt-4" id="comments-section">
-      <div class="inkuai-section-title"><i class="bi bi-chat-dots-fill" style="color:var(--blue-600);"></i> Comentários</div>
-      <form id="comment-form-comments-container" class="mb-4">
-        <div class="d-flex gap-3">
-          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:0.85rem;" id="comment-user-avatar">U</div>
-          <div style="flex:1;">
-            <textarea id="comment-input" class="form-control-dark" rows="2" placeholder="Escreve um comentário..."></textarea>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <button type="button" id="cancel-reply" onclick="cancelReply()" style="display:none;font-size:0.78rem;color:var(--text-muted);background:none;border:none;cursor:pointer;">✕ Cancelar resposta</button>
-              <button type="submit" class="btn-inkuai btn-inkuai-sm ms-auto"><i class="bi bi-send me-1"></i>Publicar</button>
+
+    <div id="project-main" style="display:none;">
+      <!-- Banner -->
+      <div class="page-content page-content-full pb-0">
+        <div class="project-banner mb-0" id="proj-banner">
+          <div class="project-banner-overlay"></div>
+        </div>
+      </div>
+
+      <div class="page-content pt-3">
+        <!-- Header row -->
+        <div class="d-flex align-items-flex-start gap-4 mb-4 flex-wrap">
+          <!-- Logo -->
+          <div id="proj-logo-wrap" style="margin-top:-32px;flex-shrink:0;">
+            <div id="proj-logo" class="avatar avatar-lg" style="background:var(--brand-gradient);font-size:1.5rem;font-weight:800;color:#fff;border:3px solid #fff;box-shadow:var(--shadow-md);">P</div>
+          </div>
+          <!-- Info -->
+          <div style="flex:1;min-width:200px;padding-top:6px;">
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <h1 style="font-size:1.4rem;font-weight:800;margin:0;" id="proj-title">—</h1>
+              <span class="status" id="proj-status-badge"></span>
+            </div>
+            <div class="d-flex gap-3 flex-wrap mb-2" id="proj-meta-chips"></div>
+            <p id="proj-description" style="font-size:0.875rem;color:var(--text-secondary);line-height:1.7;margin:0;max-width:720px;"></p>
+          </div>
+          <!-- Actions -->
+          <div class="d-flex flex-column gap-2 align-items-end flex-shrink-0">
+            <div class="d-flex gap-2">
+              <button class="btn-inkuai-secondary btn-inkuai-sm" id="like-btn" onclick="likeProject()">
+                <i class="bi bi-heart"></i><span id="like-count">0</span>
+              </button>
+              <button class="btn-inkuai-secondary btn-inkuai-sm" id="share-btn" onclick="shareProject()">
+                <i class="bi bi-share"></i>
+              </button>
+              <button class="btn-inkuai btn-inkuai-sm" id="edit-btn" style="display:none;" onclick="location.href='/projects.html?edit='+projectId">
+                <i class="bi bi-pencil"></i>Editar
+              </button>
+            </div>
+            <div class="d-flex gap-3" style="font-size:0.78rem;color:var(--text-muted);">
+              <span><i class="bi bi-eye me-1"></i><span id="proj-views">0</span></span>
+              <span><i class="bi bi-download me-1"></i><span id="proj-downloads">0</span></span>
+              <span><i class="bi bi-star-fill me-1" style="color:#f59e0b;"></i><span id="proj-avg-stars">—</span></span>
             </div>
           </div>
         </div>
-      </form>
-      <div id="comments-container"></div>
+
+        <!-- Tech stack -->
+        <div id="proj-stack-row" class="d-flex flex-wrap gap-2 mb-4"></div>
+
+        <!-- Tabs -->
+        <div style="border-bottom:1px solid var(--border-light);margin-bottom:24px;overflow-x:auto;white-space:nowrap;">
+          <button class="tab-nav-btn active" data-tab="overview"  onclick="switchTab('overview')"><i class="bi bi-info-circle me-1"></i>Visão Geral</button>
+          <button class="tab-nav-btn"        data-tab="roadmap"   onclick="switchTab('roadmap')"><i class="bi bi-map me-1"></i>Roadmap</button>
+          <button class="tab-nav-btn"        data-tab="team"      onclick="switchTab('team')"><i class="bi bi-people me-1"></i>Equipa</button>
+          <button class="tab-nav-btn"        data-tab="ratings"   onclick="switchTab('ratings')"><i class="bi bi-star me-1"></i>Avaliações</button>
+          <button class="tab-nav-btn"        data-tab="comments"  onclick="switchTab('comments')"><i class="bi bi-chat-dots me-1"></i>Comentários</button>
+          <button class="tab-nav-btn"        data-tab="classroom" onclick="switchTab('classroom')"><i class="bi bi-mortarboard me-1"></i>Classroom</button>
+        </div>
+
+        <!-- Tab panels -->
+        <div id="tab-overview">
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <!-- Description full -->
+              <div class="inkuai-card mb-4">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-file-text"></i>Descrição Detalhada</h6></div>
+                <div id="proj-desc-full" style="font-size:0.875rem;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap;"></div>
+              </div>
+              <!-- Video -->
+              <div class="inkuai-card mb-4" id="video-card" style="display:none;">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-play-circle"></i>Vídeo</h6></div>
+                <div id="proj-video"></div>
+              </div>
+              <!-- Gallery -->
+              <div class="inkuai-card mb-4" id="gallery-card" style="display:none;">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-images"></i>Galeria</h6></div>
+                <div class="row g-2" id="proj-gallery"></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <!-- Mentor -->
+              <div class="inkuai-card mb-4" id="mentor-card" style="display:none;">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-person-check-fill" style="color:var(--success);"></i>Mentor</h6></div>
+                <div id="mentor-info"></div>
+              </div>
+              <!-- Links -->
+              <div class="inkuai-card mb-4">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-link-45deg"></i>Links</h6></div>
+                <div id="proj-links" class="d-flex flex-column gap-2"></div>
+              </div>
+              <!-- Creator -->
+              <div class="inkuai-card">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-person-circle"></i>Desenvolvedor</h6></div>
+                <div id="creator-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-roadmap" style="display:none;">
+          <div class="inkuai-card">
+            <div class="card-header">
+              <h6 class="card-title"><i class="bi bi-map"></i>Roadmap do Projecto</h6>
+              <a id="roadmap-link" href="#" class="btn-inkuai btn-inkuai-sm"><i class="bi bi-arrow-up-right-circle"></i>Abrir Roadmap</a>
+            </div>
+            <div id="roadmap-preview"></div>
+          </div>
+        </div>
+
+        <div id="tab-team" style="display:none;">
+          <div class="inkuai-card">
+            <div class="card-header"><h6 class="card-title"><i class="bi bi-people"></i>Membros da Equipa</h6></div>
+            <div class="row g-3" id="team-list"></div>
+          </div>
+        </div>
+
+        <div id="tab-ratings" style="display:none;">
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <div class="inkuai-card text-center">
+                <div style="font-size:3.5rem;font-weight:800;color:var(--text-primary);line-height:1;" id="rating-avg">—</div>
+                <div class="stars readonly justify-content-center my-2" id="rating-stars-display"></div>
+                <div style="font-size:0.82rem;color:var(--text-muted);" id="rating-count">0 avaliações</div>
+                <div class="divider"></div>
+                <div id="rating-bars" class="d-flex flex-column gap-2"></div>
+              </div>
+              <div class="inkuai-card mt-4">
+                <div class="card-header"><h6 class="card-title"><i class="bi bi-star"></i>A sua Avaliação</h6></div>
+                <div class="star-input justify-content-center d-flex mb-3" id="my-stars">
+                  <span class="s" data-v="1">★</span><span class="s" data-v="2">★</span>
+                  <span class="s" data-v="3">★</span><span class="s" data-v="4">★</span><span class="s" data-v="5">★</span>
+                </div>
+                <textarea id="rate-feedback" class="form-control-dark mb-3" rows="3" placeholder="Comentário (opcional)..."></textarea>
+                <button class="btn-inkuai w-100" onclick="submitRating()"><i class="bi bi-check2 me-2"></i>Publicar Avaliação</button>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="inkuai-card">
+                <div class="card-header">
+                  <h6 class="card-title"><i class="bi bi-chat-square-text"></i>Avaliações</h6>
+                  <div class="d-flex gap-1">
+                    <button class="btn-inkuai-secondary btn-inkuai-sm eval-sort active" data-sort="recent" onclick="loadEvaluations('recent',this)">Recentes</button>
+                    <button class="btn-inkuai-secondary btn-inkuai-sm eval-sort" data-sort="best"   onclick="loadEvaluations('best',this)">Melhores</button>
+                    <button class="btn-inkuai-secondary btn-inkuai-sm eval-sort" data-sort="worst"  onclick="loadEvaluations('worst',this)">Piores</button>
+                  </div>
+                </div>
+                <div id="evaluations-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-comments" style="display:none;">
+          <div class="inkuai-card">
+            <div class="card-header"><h6 class="card-title"><i class="bi bi-chat-dots-fill"></i>Comentários</h6></div>
+            <!-- Comment form -->
+            <div class="d-flex gap-3 mb-4">
+              <div class="avatar avatar-sm" id="comment-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">U</div>
+              <div style="flex:1;">
+                <textarea id="comment-input" class="form-control-dark mb-2" rows="2" placeholder="Escreve um comentário..."></textarea>
+                <div class="d-flex align-items-center gap-2">
+                  <button id="cancel-reply-btn" style="display:none;font-size:0.78rem;color:var(--text-muted);background:none;border:none;cursor:pointer;" onclick="cancelReply()">✕ Cancelar resposta</button>
+                  <button class="btn-inkuai btn-inkuai-sm ms-auto" onclick="postComment()"><i class="bi bi-send me-1"></i>Publicar</button>
+                </div>
+              </div>
+            </div>
+            <div id="comments-list"></div>
+          </div>
+        </div>
+
+        <div id="tab-classroom" style="display:none;">
+          <div class="inkuai-card">
+            <div class="card-header">
+              <h6 class="card-title"><i class="bi bi-mortarboard-fill"></i>Classroom</h6>
+              <a id="classroom-link" href="#" class="btn-inkuai btn-inkuai-sm"><i class="bi bi-arrow-up-right-circle"></i>Abrir Classroom</a>
+            </div>
+            <div id="submissions-preview"></div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </div><!-- /project-main -->
+
+    <div id="project-error" style="display:none;" class="page-content">
+      <div class="inkuai-empty">
+        <span class="inkuai-empty-icon"><i class="bi bi-exclamation-triangle"></i></span>
+        <h5>Projecto não encontrado</h5>
+        <p>O projecto que procura não existe ou não tem permissão para o ver.</p>
+        <a href="/projects.html" class="btn-inkuai">← Voltar aos Projectos</a>
+      </div>
     </div>
-    </main>
+  </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
+<script src="/assets/js/components/comments.js"></script>
 <script>
-async function loadProject() {
-  const id = new URLSearchParams(window.location.search).get('id');
-  if (!id) { window.location.href='/projects.html'; return; }
+const urlP = new URLSearchParams(window.location.search);
+const projectId = urlP.get('id');
+let projectData = null;
+let currentUser = null;
+let myStarValue = 0;
+
+// ── Init
+async function init() {
+  currentUser = window.InkuAuth?.getUser?.();
+  if (!projectId) { showError(); return; }
+  if (currentUser?.role === 'admin') document.getElementById('admin-link').style.display = '';
+
   try {
-    const res = await window.InkuAPI.get(`/projects/${id}`);
-    const p = res.project;
-    const me = window.InkuAuth?.getUser();
-    const isOwner = me?.id === p.created_by || ['admin','mentor'].includes(me?.role);
-    document.getElementById('page-title').textContent = p.title;
+    const res = await window.InkuAPI.get(`/projects/${projectId}`);
+    projectData = res.project;
+    if (!projectData) { showError(); return; }
 
-    const ab = document.getElementById('action-btns');
-    if (isOwner && p.status==='draft')
-      ab.innerHTML += `<button onclick="submitProject('${p.id}')" class="btn btn-sm btn-primary"><i class="bi bi-send me-1"></i>Submeter</button>`;
-    if (['admin','mentor'].includes(me?.role) && p.status==='submitted')
-      ab.innerHTML += `<button onclick="approveProject('${p.id}')" class="btn btn-sm btn-success"><i class="bi bi-check-lg me-1"></i>Aprovar</button>`;
-    ab.innerHTML += `<a href="/sandbox.html?project=${p.id}" class="btn btn-sm btn-outline-success"><i class="bi bi-terminal me-1"></i>Sandbox</a>`;
+    // Set mentor assignment if provided
+    if (res.mentor_assignment) renderMentor(res.mentor_assignment);
 
-    const typeColor = {software:'var(--blue-600)',ai_model:'var(--success)',data_pipeline:'var(--warning)',research:'var(--info)'};
-    const typeBg    = {software:'var(--blue-50)',ai_model:'#f0fdf4',data_pipeline:'#fff7ed',research:'#f0f9ff'};
-    const typeIcon  = {software:'bi-code-slash',ai_model:'bi-braces',data_pipeline:'bi-database',research:'bi-journal-text'};
-    const tc = typeColor[p.type]||'var(--blue-600)';
-    const tb = typeBg[p.type]||'var(--blue-50)';
-    const ti = typeIcon[p.type]||'bi-folder';
+    // Set user eval if provided
+    if (res.user_evaluation) {
+      myStarValue = res.user_evaluation.stars || 0;
+      document.getElementById('rate-feedback').value = res.user_evaluation.feedback || '';
+      updateStarUI(myStarValue);
+    }
 
-    document.getElementById('project-content').innerHTML = `
-    <div class="row g-4">
-      <div class="col-lg-8">
-        <div class="inkuai-card mb-4">
-          <div class="d-flex align-items-start gap-3 mb-4">
-            <div style="width:52px;height:52px;background:${tb};border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="bi ${ti} fs-4" style="color:${tc}"></i>
-            </div>
-            <div style="flex:1">
-              <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
-                <h4 style="font-weight:700;color:var(--text-primary);margin:0">${p.title}</h4>
-                <span class="status status-${p.status}">${p.status}</span>
-                <span class="badge" style="background:${tb};color:${tc};font-size:0.72rem">${p.type}</span>
-              </div>
-              <div style="font-size:0.82rem;color:var(--text-muted)">
-                Criado por <strong style="color:var(--text-primary)">${p.creator?.name||'—'}</strong> ·
-                ${new Date(p.created_at).toLocaleDateString('pt-PT')} · v${p.version||'1.0.0'}
-              </div>
-            </div>
+    renderProject(projectData);
+    document.getElementById('project-loading').style.display = 'none';
+    document.getElementById('project-main').style.display = '';
+  } catch(e) {
+    showError(e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('project-loading').style.display = 'none';
+  document.getElementById('project-error').style.display = '';
+  if (msg) console.error(msg);
+}
+
+function renderProject(p) {
+  document.title = `${p.title} — INKU·AI`;
+  document.getElementById('breadcrumb-title').textContent = p.title;
+  document.getElementById('proj-title').textContent = p.title;
+  document.getElementById('proj-description').textContent = p.description || '';
+  document.getElementById('proj-desc-full').textContent = p.description || 'Sem descrição disponível.';
+  document.getElementById('proj-views').textContent = p.views || 0;
+  document.getElementById('proj-downloads').textContent = p.downloads || 0;
+  document.getElementById('proj-avg-stars').textContent = p.avg_stars ? `${p.avg_stars} (${p.eval_count})` : 'Sem avaliações';
+  document.getElementById('like-count').textContent = p.likes || 0;
+
+  // Banner
+  const banner = document.getElementById('proj-banner');
+  if (p.cover_url) {
+    banner.innerHTML = `<img src="${p.cover_url}" alt="Banner"><div class="project-banner-overlay"></div>`;
+  } else {
+    // Gradient based on type
+    const grads = { software:'#2563eb,#7c3aed', ai_model:'#7c3aed,#db2777', data_pipeline:'#0d9488,#2563eb', research:'#d97706,#dc2626' };
+    banner.style.background = `linear-gradient(135deg,${grads[p.type]||grads.software})`;
+  }
+
+  // Logo
+  const logo = document.getElementById('proj-logo');
+  if (p.logo_url) { logo.innerHTML = `<img src="${p.logo_url}" alt="Logo" style="width:100%;height:100%;object-fit:cover;">`; }
+  else { logo.textContent = p.title[0]?.toUpperCase() || 'P'; }
+
+  // Status badge
+  const sb = document.getElementById('proj-status-badge');
+  sb.className = `status status-${p.status}`;
+  sb.textContent = p.status;
+
+  // Meta chips
+  const typeIcons = { software:'🖥️', ai_model:'🤖', data_pipeline:'📊', research:'🔬' };
+  document.getElementById('proj-meta-chips').innerHTML = [
+    `<span class="info-chip"><i class="bi bi-tag"></i>${typeIcons[p.type]||'📁'} ${p.type}</span>`,
+    `<span class="info-chip"><i class="bi bi-calendar3"></i>${new Date(p.created_at).toLocaleDateString('pt-PT',{day:'numeric',month:'short',year:'numeric'})}</span>`,
+    p.version ? `<span class="info-chip"><i class="bi bi-code-branch"></i>v${p.version}</span>` : '',
+    `<span class="info-chip"><i class="bi bi-eye"></i>${p.views||0} visualizações</span>`,
+  ].join('');
+
+  // Tech stack
+  const stack = (() => { try { return JSON.parse(p.tech_stack_json||'[]'); } catch { return []; } })();
+  document.getElementById('proj-stack-row').innerHTML = stack.map(t => `<span class="tech-chip"><i class="bi bi-braces"></i>${t}</span>`).join('');
+
+  // Links
+  const linksEl = document.getElementById('proj-links');
+  const links = [];
+  if (p.github_repo_url) links.push({icon:'bi-github',label:'GitHub',url:p.github_repo_url,color:'#0f172a'});
+  if (p.demo_url)        links.push({icon:'bi-play-circle',label:'Demo Live',url:p.demo_url,color:'#16a34a'});
+  if (p.docs_url)        links.push({icon:'bi-book',label:'Documentação',url:p.docs_url,color:'#2563eb'});
+  if (p.video_url)       links.push({icon:'bi-youtube',label:'Vídeo',url:p.video_url,color:'#dc2626'});
+  linksEl.innerHTML = links.length
+    ? links.map(l => `<a href="${l.url}" target="_blank" class="d-flex align-items-center gap-2" style="font-size:0.845rem;color:${l.color};text-decoration:none;padding:7px 10px;border-radius:var(--r-sm);border:1px solid var(--border-light);transition:all .15s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'"><i class="bi ${l.icon}"></i>${l.label}<i class="bi bi-box-arrow-up-right ms-auto" style="font-size:0.7rem;opacity:0.5;"></i></a>`).join('')
+    : '<p style="font-size:0.82rem;color:var(--text-muted);">Sem links disponíveis.</p>';
+
+  // Creator
+  if (p.creator) renderCreator(p.creator);
+
+  // Video
+  if (p.video_url) {
+    document.getElementById('video-card').style.display = '';
+    const vEl = document.getElementById('proj-video');
+    if (p.video_url.includes('youtube') || p.video_url.includes('youtu.be')) {
+      const vid = p.video_url.match(/(?:v=|youtu\.be\/)([^&\s]+)/)?.[1];
+      vEl.innerHTML = vid ? `<iframe width="100%" height="340" src="https://www.youtube.com/embed/${vid}" frameborder="0" allowfullscreen style="border-radius:var(--r-md);"></iframe>` : `<a href="${p.video_url}" target="_blank" class="btn-inkuai-secondary btn-inkuai-sm">Ver vídeo</a>`;
+    } else {
+      vEl.innerHTML = `<a href="${p.video_url}" target="_blank" class="btn-inkuai-secondary btn-inkuai-sm"><i class="bi bi-play-circle me-2"></i>Ver vídeo</a>`;
+    }
+  }
+
+  // Gallery
+  const gallery = (() => { try { return JSON.parse(p.gallery_json||'[]'); } catch { return []; } })();
+  if (gallery.length) {
+    document.getElementById('gallery-card').style.display = '';
+    document.getElementById('proj-gallery').innerHTML = gallery.map(img => `
+      <div class="col-6 col-md-4">
+        <img src="${img}" alt="Galeria" style="width:100%;height:140px;object-fit:cover;border-radius:var(--r-md);cursor:pointer;border:1px solid var(--border-light);" onclick="window.open('${img}','_blank')">
+      </div>`).join('');
+  }
+
+  // Edit button
+  if (currentUser && (p.created_by === currentUser.id || ['admin','mentor'].includes(currentUser.role))) {
+    document.getElementById('edit-btn').style.display = '';
+  }
+
+  // Roadmap & Classroom links
+  document.getElementById('roadmap-link').href = `/roadmap.html?id=${p.id}`;
+  document.getElementById('classroom-link').href = `/classroom.html?project=${p.id}`;
+}
+
+function renderCreator(c) {
+  document.getElementById('creator-card').innerHTML = `
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <div class="avatar avatar-md" style="background:var(--brand-gradient);font-weight:700;font-size:1rem;color:#fff;">
+        ${c.avatar_url ? `<img src="${c.avatar_url}" alt="${c.name}">` : (c.name||'?')[0].toUpperCase()}
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:0.9rem;">${c.name}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">${c.institution||''}</div>
+        ${c.github_username ? `<a href="https://github.com/${c.github_username}" target="_blank" style="font-size:0.75rem;color:var(--text-muted);text-decoration:none;"><i class="bi bi-github me-1"></i>${c.github_username}</a>` : ''}
+      </div>
+    </div>
+    <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">${c.bio||''}</div>
+    <a href="/profile.html?id=${c.id}" class="btn-inkuai w-100 justify-content-center">
+      <i class="bi bi-person-circle me-2"></i>Ver Perfil do Desenvolvedor
+    </a>`;
+}
+
+function renderMentor(a) {
+  if (!a?.mentor) return;
+  document.getElementById('mentor-card').style.display = '';
+  const m = a.mentor;
+  document.getElementById('mentor-info').innerHTML = `
+    <div class="d-flex align-items-center gap-3 mb-2">
+      <div class="avatar avatar-md" style="background:linear-gradient(135deg,#10b981,#059669);font-weight:700;font-size:1rem;color:#fff;">
+        ${m.avatar_url ? `<img src="${m.avatar_url}" alt="${m.name}">` : (m.name||'?')[0].toUpperCase()}
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:0.9rem;">${m.name}</div>
+        <div style="font-size:0.75rem;color:var(--success);">👨‍🏫 Mentor · ${a.assigned_by==='ai'?'Escolhido pela IA':'Atribuído pelo admin'}</div>
+      </div>
+    </div>
+    ${m.mentor_bio ? `<p style="font-size:0.82rem;color:var(--text-secondary);">${m.mentor_bio}</p>` : ''}
+    <a href="/profile.html?id=${m.id}" class="btn-inkuai-ghost btn-inkuai-sm w-100 justify-content-center">Ver perfil</a>`;
+}
+
+// ── Tabs
+function switchTab(tab) {
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  ['overview','roadmap','team','ratings','comments','classroom'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t===tab ? '' : 'none';
+  });
+  if (tab === 'ratings')   { loadRatings(); loadEvaluations('recent'); }
+  if (tab === 'comments')  loadComments();
+  if (tab === 'team')      loadTeam();
+  if (tab === 'roadmap')   loadRoadmapPreview();
+  if (tab === 'classroom') loadClassroomPreview();
+}
+
+// ── Star Rating
+document.addEventListener('DOMContentLoaded', () => {
+  const stars = document.querySelectorAll('.star-input .s');
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => { updateStarUI(+s.dataset.v); });
+    s.addEventListener('mouseleave', () => { updateStarUI(myStarValue); });
+    s.addEventListener('click', () => { myStarValue = +s.dataset.v; updateStarUI(myStarValue); });
+  });
+  init();
+});
+
+function updateStarUI(v) {
+  document.querySelectorAll('.star-input .s').forEach(s => {
+    s.classList.toggle('on', +s.dataset.v <= v);
+  });
+}
+
+async function submitRating() {
+  if (!myStarValue) { showToast('Seleccione uma classificação (1-5 estrelas).','warning'); return; }
+  const feedback = document.getElementById('rate-feedback').value;
+  try {
+    const res = await window.InkuAPI.post(`/projects/${projectId}/rate`, { stars: myStarValue, feedback });
+    showToast(res.message || 'Avaliação publicada!','success');
+    // Refresh rating display
+    document.getElementById('proj-avg-stars').textContent = `${res.avg_stars} (${res.eval_count})`;
+    loadRatings();
+    loadEvaluations('recent');
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+async function loadRatings() {
+  const p = await window.InkuAPI.get(`/projects/${projectId}`).catch(() => null);
+  if (!p) return;
+  const proj = p.project;
+  const avg = proj.avg_stars || 0;
+  const count = proj.eval_count || 0;
+  document.getElementById('rating-avg').textContent = avg ? avg.toFixed(1) : '—';
+  document.getElementById('rating-count').textContent = `${count} avaliação(ões)`;
+  document.getElementById('rating-stars-display').innerHTML = [1,2,3,4,5].map(v =>
+    `<span class="star${v<=Math.round(avg)?' filled':''}">★</span>`).join('');
+
+  // Bars — compute distribution from evaluations
+  const evRes = await window.InkuAPI.get(`/projects/${projectId}/evaluations`).catch(() => null);
+  const evals = evRes?.evaluations || [];
+  const dist = {5:0,4:0,3:0,2:0,1:0};
+  evals.forEach(e => { if (e.stars) dist[e.stars] = (dist[e.stars]||0)+1; });
+  const max = Math.max(...Object.values(dist), 1);
+  document.getElementById('rating-bars').innerHTML = [5,4,3,2,1].map(v => `
+    <div class="rating-bar-row">
+      <span style="width:12px;text-align:right;font-size:0.78rem;color:var(--text-muted);">${v}</span>
+      <i class="bi bi-star-fill" style="color:#f59e0b;font-size:0.7rem;"></i>
+      <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${Math.round((dist[v]||0)/max*100)}%;"></div></div>
+      <span style="font-size:0.72rem;color:var(--text-muted);width:20px;">${dist[v]||0}</span>
+    </div>`).join('');
+}
+
+async function loadEvaluations(sort='recent', btn=null) {
+  if (btn) {
+    document.querySelectorAll('.eval-sort').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const list = document.getElementById('evaluations-list');
+  list.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/projects/${projectId}/evaluations?sort=${sort}`);
+    const evals = res.evaluations || [];
+    if (!evals.length) {
+      list.innerHTML = '<div class="inkuai-empty" style="padding:24px 0;"><span class="inkuai-empty-icon" style="font-size:2rem;"><i class="bi bi-star"></i></span><p>Sem avaliações ainda. Sê o primeiro!</p></div>';
+      return;
+    }
+    list.innerHTML = evals.map(e => `
+      <div style="padding:14px 0;border-bottom:1px solid var(--border-light);" class="last-no-border">
+        <div class="d-flex align-items-start gap-3">
+          <div class="avatar avatar-sm" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">
+            ${e.evaluator?.avatar_url ? `<img src="${e.evaluator.avatar_url}" alt="${e.evaluator.name}">` : (e.evaluator?.name||'?')[0].toUpperCase()}
           </div>
-          <p style="color:var(--text-secondary);margin-bottom:20px">${p.description||'Sem descrição.'}</p>
-          ${p.github_repo_url?`
-          <a href="${p.github_repo_url}" target="_blank" class="d-inline-flex align-items-center gap-2 text-decoration-none"
-             style="background:var(--bg-page);border:1px solid var(--border-light);padding:8px 14px;border-radius:8px;color:var(--text-primary);font-size:0.875rem">
-            <i class="bi bi-github"></i>${p.github_repo_url.replace('https://github.com/','')}
-            <i class="bi bi-box-arrow-up-right" style="font-size:0.72rem;color:var(--text-muted)"></i>
-          </a>`:''}
-        </div>
-
-        ${p.tech_stack?.length?`
-        <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px"><i class="bi bi-layers me-2" style="color:var(--blue-600)"></i>Stack Tecnológico</h6>
-          <div class="d-flex flex-wrap gap-2">${p.tech_stack.map(t=>`<span class="badge" style="background:var(--blue-50);color:var(--blue-700);font-size:0.8rem;padding:6px 12px">${t}</span>`).join('')}</div>
-        </div>`:''}
-
-        <div class="inkuai-card">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-star me-2" style="color:var(--warning)"></i>Avaliações (${p.evaluations?.length||0})</h6>
-          ${p.evaluations?.length?p.evaluations.map(e=>`
-          <div class="p-3 rounded-3 mb-3" style="background:var(--bg-page);border:1px solid var(--border-light)">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <span style="font-weight:600;color:var(--text-primary);font-size:0.875rem">${e.evaluator?.name||'Avaliador'}</span>
-              <span style="color:var(--warning);font-weight:700">${e.score||0}/100</span>
+          <div style="flex:1;">
+            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+              <a href="/profile.html?id=${e.evaluator_id}" style="font-weight:700;font-size:0.855rem;color:var(--text-primary);text-decoration:none;">${e.evaluator?.name||'Anónimo'}</a>
+              <span class="status status-${e.evaluator?.role||'student'}">${e.evaluator?.role||'student'}</span>
+              <div style="margin-left:auto;color:#f59e0b;font-size:0.9rem;">${'★'.repeat(e.stars||0)}${'☆'.repeat(5-(e.stars||0))}</div>
             </div>
-            <p style="color:var(--text-muted);font-size:0.82rem;margin:0">${e.feedback||'Sem feedback.'}</p>
-          </div>`).join(''):`<p style="color:var(--text-muted);font-size:0.875rem">Ainda sem avaliações.</p>`}
+            ${e.feedback ? `<p style="font-size:0.855rem;color:var(--text-secondary);line-height:1.6;margin:0;">${e.feedback}</p>` : ''}
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">${new Date(e.created_at).toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'})}</div>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = `<p style="color:var(--danger);text-align:center;font-size:0.85rem;">${e.message}</p>`; }
+}
+
+async function loadComments() {
+  const usr = currentUser;
+  if (usr?.name) document.getElementById('comment-avatar').textContent = usr.name[0].toUpperCase();
+  const list = document.getElementById('comments-list');
+  list.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/social/comments/project/${projectId}`);
+    const comments = res.comments || [];
+    renderComments(comments, list);
+  } catch(e) { list.innerHTML = `<p style="color:var(--danger);font-size:0.85rem;">${e.message}</p>`; }
+}
+
+function renderComments(comments, container) {
+  if (!comments.length) {
+    container.innerHTML = '<div class="inkuai-empty" style="padding:24px 0;"><span class="inkuai-empty-icon" style="font-size:2rem;"><i class="bi bi-chat-dots"></i></span><p>Sem comentários ainda.</p></div>';
+    return;
+  }
+  function timeAgo(iso) {
+    const d = Math.floor((Date.now()-new Date(iso))/1000);
+    if(d<60) return d+'s'; if(d<3600) return Math.floor(d/60)+'m'; if(d<86400) return Math.floor(d/3600)+'h'; return Math.floor(d/86400)+'d';
+  }
+  function renderOne(c, isReply=false) {
+    const replies = (c.replies||[]).map(r => renderOne(r,true)).join('');
+    return `<div class="comment-item" style="${isReply?'padding-left:44px;':''}" data-cid="${c.id}">
+      <div class="d-flex gap-3">
+        <div class="avatar avatar-sm" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">
+          ${(c.author?.name||'?')[0].toUpperCase()}
+        </div>
+        <div style="flex:1;">
+          <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+            <a href="/profile.html?id=${c.author_id}" style="font-weight:700;font-size:0.845rem;color:var(--text-primary);text-decoration:none;">${c.author?.name||'Anónimo'}</a>
+            <span class="status status-${c.author?.role||'student'}" style="font-size:0.62rem;">${c.author?.role||''}</span>
+            <span style="font-size:0.7rem;color:var(--text-muted);">${timeAgo(c.created_at)}</span>
+          </div>
+          <div class="comment-body">${c.body}</div>
+          <div class="d-flex gap-3">
+            <button class="comment-action" onclick="likeComment('${c.id}',this)"><i class="bi bi-heart me-1"></i><span>${c.likes||0}</span></button>
+            <button class="comment-action" onclick="setReply('${c.id}','${(c.author?.name||'').replace(/'/g,"\\'")}')"><i class="bi bi-reply me-1"></i>Responder</button>
+            ${c.author_id===currentUser?.id ? `<button class="comment-action" style="color:var(--danger);" onclick="deleteComment('${c.id}')"><i class="bi bi-trash3"></i></button>` : ''}
+          </div>
         </div>
       </div>
+      ${replies ? `<div style="border-left:2px solid var(--border-light);margin-left:18px;padding-left:0;">${replies}</div>` : ''}
+    </div>`;
+  }
+  container.innerHTML = comments.map(c => renderOne(c)).join('');
+}
 
-      <div class="col-lg-4">
-        <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-info-circle me-2" style="color:var(--blue-600)"></i>Informações</h6>
-          <div class="d-flex flex-column gap-2" style="font-size:0.875rem">
-            <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)">
-              <span style="color:var(--text-muted)">Estado</span><span class="status status-${p.status}">${p.status}</span>
-            </div>
-            <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)">
-              <span style="color:var(--text-muted)">Tipo</span><span style="color:var(--text-primary);font-weight:600">${p.type}</span>
-            </div>
-            <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)">
-              <span style="color:var(--text-muted)">Versão</span><span style="color:var(--text-primary)">v${p.version||'1.0.0'}</span>
-            </div>
-            <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--border-light)">
-              <span style="color:var(--text-muted)">Público</span>
-              <span style="color:${p.is_public?'var(--success)':'var(--text-muted)'}">${p.is_public?'Sim':'Não'}</span>
-            </div>
-            <div class="d-flex justify-content-between py-2">
-              <span style="color:var(--text-muted)">Criado em</span>
-              <span style="color:var(--text-primary)">${new Date(p.created_at).toLocaleDateString('pt-PT')}</span>
-            </div>
-          </div>
+let replyToId = null;
+function setReply(id, name) {
+  replyToId = id;
+  document.getElementById('comment-input').placeholder = `Responder a ${name}...`;
+  document.getElementById('comment-input').focus();
+  document.getElementById('cancel-reply-btn').style.display = '';
+}
+function cancelReply() {
+  replyToId = null;
+  document.getElementById('comment-input').placeholder = 'Escreve um comentário...';
+  document.getElementById('cancel-reply-btn').style.display = 'none';
+}
+async function postComment() {
+  const body = document.getElementById('comment-input').value.trim();
+  if (!body) return;
+  try {
+    await window.InkuAPI.post('/social/comments', { targetType:'project', targetId: projectId, body, parentId: replyToId||null });
+    document.getElementById('comment-input').value = '';
+    cancelReply();
+    showToast('Comentário publicado!','success');
+    loadComments();
+  } catch(e) { showToast(e.message,'error'); }
+}
+async function likeComment(id, btn) {
+  try {
+    const res = await window.InkuAPI.post(`/social/comments/${id}/like`);
+    btn.querySelector('span').textContent = res.likes ?? '';
+    btn.querySelector('i').className = 'bi bi-heart-fill me-1';
+    btn.style.color = 'var(--danger)';
+  } catch {}
+}
+async function deleteComment(id) {
+  if (!confirm('Eliminar comentário?')) return;
+  try {
+    await window.InkuAPI.delete(`/social/comments/${id}`);
+    showToast('Comentário eliminado.','success'); loadComments();
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+async function loadTeam() {
+  const list = document.getElementById('team-list');
+  if (!projectData?.creator) return;
+  list.innerHTML = `
+    <div class="col-md-6 col-lg-4">
+      <div class="member-card" onclick="location.href='/profile.html?id=${projectData.creator.id}'">
+        <div class="avatar avatar-md" style="background:var(--brand-gradient);font-weight:700;font-size:1rem;color:#fff;">
+          ${projectData.creator.avatar_url ? `<img src="${projectData.creator.avatar_url}">` : (projectData.creator.name||'?')[0].toUpperCase()}
         </div>
-
-        ${p.tags?.length?`
-        <div class="inkuai-card mb-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:12px"><i class="bi bi-tags me-2" style="color:var(--success)"></i>Tags</h6>
-          <div class="d-flex flex-wrap gap-2">${p.tags.map(t=>`<span class="badge" style="background:#f0fdf4;color:var(--success);font-size:0.78rem">#${t}</span>`).join('')}</div>
-        </div>`:''}
-
-        <div class="inkuai-card">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px"><i class="bi bi-lightning me-2" style="color:var(--warning)"></i>Acções</h6>
-          <div class="d-grid gap-2">
-            <a href="/sandbox.html?project=${p.id}" class="btn btn-success btn-sm"><i class="bi bi-terminal me-2"></i>Abrir Sandbox</a>
-            ${p.github_repo_url?`<a href="${p.github_repo_url}" target="_blank" class="btn btn-outline-secondary btn-sm"><i class="bi bi-github me-2"></i>Ver GitHub</a>`:''}
-            ${isOwner&&p.status==='draft'?`<button onclick="submitProject('${p.id}')" class="btn btn-primary btn-sm"><i class="bi bi-send me-2"></i>Submeter para Avaliação</button>`:''}
-          </div>
+        <div>
+          <div style="font-weight:700;font-size:0.875rem;">${projectData.creator.name}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">${projectData.creator.institution||'Criador'}</div>
+          <span class="status status-approved mt-1" style="font-size:0.62rem;">Líder</span>
         </div>
       </div>
     </div>`;
-  } catch(err) {
-    document.getElementById('project-content').innerHTML=`<div class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>${err.message}</div>`;
-  }
 }
 
-async function submitProject(id) {
-  if (!confirm('Submeter este projecto para avaliação?')) return;
-  try { await window.InkuAPI.post(`/projects/${id}/submit`); window.showToast?.('Projecto submetido!','success'); setTimeout(loadProject,800); }
-  catch(err) { window.showToast?.(err.message,'error'); }
-}
-async function approveProject(id) {
-  if (!confirm('Aprovar este projecto?')) return;
-  try { await window.InkuAPI.post(`/projects/${id}/approve`); window.showToast?.('Projecto aprovado!','success'); setTimeout(loadProject,800); }
-  catch(err) { window.showToast?.(err.message,'error'); }
+async function loadRoadmapPreview() {
+  const wrap = document.getElementById('roadmap-preview');
+  wrap.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/social/roadmap/${projectId}`);
+    const phases = res.roadmap || [];
+    if (!phases.length) {
+      wrap.innerHTML = `<div class="inkuai-empty" style="padding:20px 0;"><span class="inkuai-empty-icon" style="font-size:2rem;"><i class="bi bi-map"></i></span><p>Sem roadmap. Clique em "Abrir Roadmap" para criar.</p></div>`;
+      return;
+    }
+    const icons = {ideacao:'💡',validacao:'🔍',prototipo:'🛠️',mvp:'🚀',lancamento:'📣',crescimento:'📈'};
+    wrap.innerHTML = `<div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;">${phases.map(ph => `
+      <div style="flex:0 0 160px;border:1.5px solid ${ph.status==='completed'?'#86efac':ph.status==='active'?'#93c5fd':'var(--border-light)'};
+                  border-radius:var(--r-md);padding:12px;background:${ph.status==='completed'?'#f0fdf4':ph.status==='active'?'#eff6ff':'var(--bg-card)'};">
+        <div style="font-size:1.2rem;margin-bottom:6px;">${icons[ph.phase]||'📌'}</div>
+        <div style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">${ph.phase}</div>
+        <div style="font-size:0.82rem;font-weight:600;">${ph.title}</div>
+        <div style="margin-top:8px;height:4px;background:var(--gray-200);border-radius:99px;"><div style="height:100%;background:${ph.status==='completed'?'var(--success)':'var(--brand-primary)'};border-radius:99px;width:${ph.progress||0}%;"></div></div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:3px;">${ph.progress||0}%</div>
+      </div>`).join('')}</div>`;
+  } catch(e) { wrap.innerHTML = `<p style="color:var(--danger);font-size:0.82rem;">${e.message}</p>`; }
 }
 
-const usr = window.InkuAuth?.getUser();
-if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
-if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
-document.addEventListener('DOMContentLoaded', loadProject);
+async function loadClassroomPreview() {
+  const wrap = document.getElementById('submissions-preview');
+  wrap.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/submissions/project/${projectId}`);
+    const subs = res.submissions || [];
+    if (!subs.length) {
+      wrap.innerHTML = '<div class="inkuai-empty" style="padding:20px 0;"><p>Sem entregas ainda.</p></div>';
+      return;
+    }
+    wrap.innerHTML = subs.slice(0,5).map(s => `
+      <div style="padding:10px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:12px;">
+        <div style="font-size:1.2rem;">${{entrega:'📦',milestone:'🎯',relatorio:'📄',apresentacao:'🎤'}[s.type]||'📦'}</div>
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:0.845rem;">${s.title}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);">${s.submitter?.name||''} · ${new Date(s.created_at).toLocaleDateString('pt-PT')}</div>
+        </div>
+        <span class="status status-${s.status}">${s.status}</span>
+        ${s.score!=null ? `<span style="font-weight:700;font-size:0.9rem;color:var(--success);">${s.score}%</span>` : ''}
+      </div>`).join('');
+  } catch(e) { wrap.innerHTML = `<p style="color:var(--danger);font-size:0.82rem;">${e.message}</p>`; }
+}
+
+async function likeProject() {
+  try {
+    const res = await window.InkuAPI.post(`/projects/${projectId}/like`);
+    document.getElementById('like-count').textContent = res.likes ?? '';
+    document.querySelector('#like-btn i').className = 'bi bi-heart-fill';
+    showToast('Adicionado aos favoritos!','success');
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+function shareProject() {
+  const url = window.location.href;
+  if (navigator.share) { navigator.share({ title: document.title, url }); }
+  else { navigator.clipboard?.writeText(url); showToast('Link copiado!','success'); }
+}
 </script>
 <script src="/assets/js/components/notifications.js"></script>
 <script src="/assets/js/components/mentor-ai.js"></script>
-<script src="/assets/js/components/comments.js"></script>
-
-<script>
-// Init comments for this project
-document.addEventListener('DOMContentLoaded', function() {
-  const urlP = new URLSearchParams(window.location.search);
-  const projId = urlP.get('id');
-  if (projId && window.InkuComments) {
-    InkuComments.mount('project', projId, '#comments-container');
-    const usr = window.InkuAuth?.getUser?.();
-    if (usr?.name) document.getElementById('comment-user-avatar').textContent = usr.name[0].toUpperCase();
-  }
-  document.getElementById('cancel-reply')?.addEventListener('click', () => {
-    const inp = document.getElementById('comment-input');
-    if(inp){ delete inp.dataset.parentId; inp.placeholder='Escreve um comentário...'; }
-    document.getElementById('cancel-reply').style.display='none';
-  });
-});
-</script>
 </body>
 </html>

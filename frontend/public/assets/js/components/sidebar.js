@@ -1,80 +1,68 @@
 'use strict';
-// ── Sidebar Component — PC / Tablet / Móvel ─────────────────
-(function() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.querySelector('.sidebar');
-    if (!sidebar) return;
+/* ── Sidebar component — mobile toggle + active link + logout ── */
+(function () {
+  function init() {
+    const sidebar  = document.getElementById('main-sidebar');
+    const toggle   = document.getElementById('sidebar-toggle');
+    const user     = window.InkuAuth?.getUser?.();
 
-    // Injectar overlay se não existir
-    if (!document.querySelector('.sidebar-overlay')) {
-      const overlay = document.createElement('div');
-      overlay.className = 'sidebar-overlay';
-      overlay.id = 'sidebar-overlay';
-      overlay.onclick = closeSidebar;
-      document.body.insertBefore(overlay, document.body.firstChild);
+    // ── Populate user data attributes
+    if (user) {
+      document.querySelectorAll('[data-user-name]').forEach(el => { el.textContent = user.name || 'Utilizador'; });
+      document.querySelectorAll('[data-user-role]').forEach(el => { el.textContent = user.role || 'student'; });
+      document.querySelectorAll('[data-user-email]').forEach(el => { el.textContent = user.email || ''; });
+
+      const initials = (user.name || 'U')[0].toUpperCase();
+      document.querySelectorAll('#user-avatar, #topbar-avatar').forEach(el => {
+        if (!el.querySelector('img')) el.textContent = initials;
+      });
+
+      if (user.role === 'admin') {
+        document.querySelectorAll('#admin-link, #admin-mentors-btn').forEach(el => {
+          if (el) el.style.display = '';
+        });
+      }
     }
 
-    // Toggle button
-    const toggleBtn = document.getElementById('sidebar-toggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', toggleSidebar);
-    }
-
-    // Auth: preencher dados do utilizador
-    const usr = window.InkuAuth?.getUser?.();
-    if (usr) {
-      document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = usr.name || '');
-      document.querySelectorAll('[data-user-role]').forEach(el => el.textContent = usr.role || '');
-      document.querySelectorAll('[data-user-email]').forEach(el => el.textContent = usr.email || '');
-    }
-
-    // Marcar link activo automaticamente
+    // ── Mark active link
     const path = window.location.pathname;
     document.querySelectorAll('.sidebar-link').forEach(link => {
-      if (link.getAttribute('href') === path) {
-        link.classList.add('active');
+      const href = link.getAttribute('href');
+      if (!href) return;
+      const isActive = href === path || (href !== '/' && path.startsWith(href.replace('.html', '')));
+      link.classList.toggle('active', isActive);
+    });
+
+    // ── Mobile toggle
+    if (toggle && sidebar) {
+      let overlay = document.querySelector('.sidebar-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
       }
-    });
 
-    // Fechar sidebar ao redimensionar para desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth >= 1024) closeSidebar();
-    });
-  });
-
-  function toggleSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (!sidebar) return;
-    const isOpen = sidebar.classList.contains('open');
-    isOpen ? closeSidebar() : openSidebar();
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      });
+    }
   }
 
-  function openSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    sidebar?.classList.add('open');
-    overlay?.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    sidebar?.classList.remove('open');
-    overlay?.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-
-  // doLogout global
-  window.doLogout = function() {
-    window.InkuAuth?.logout?.();
+  // ── Logout
+  window.doLogout = function () {
     localStorage.removeItem('inkuai_token');
     localStorage.removeItem('inkuai_user');
     window.location.href = '/login.html';
   };
 
-  window.toggleSidebar  = toggleSidebar;
-  window.openSidebar    = openSidebar;
-  window.closeSidebar   = closeSidebar;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

@@ -3,461 +3,526 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil — INKU·AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text y='24' x='4' font-size='22' fill='white'>⚡</text></svg>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .tab-nav-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:0.845rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .tab-nav-btn:hover{color:var(--text-primary);}
+    .tab-nav-btn.active{color:var(--brand-primary);border-bottom-color:var(--brand-primary);}
+    .skill-chip{display:inline-flex;align-items:center;gap:4px;background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200);border-radius:var(--r-full);padding:3px 10px;font-size:0.72rem;font-weight:600;}
+    .achievement-card{border:1px solid var(--border-light);border-radius:var(--r-md);padding:14px;text-align:center;transition:all .15s;}
+    .achievement-card:hover{border-color:var(--blue-200);background:var(--blue-50);}
+    .achievement-icon{font-size:1.8rem;display:block;margin-bottom:6px;}
+    .proj-card{border:1px solid var(--border-light);border-radius:var(--r-md);padding:16px;cursor:pointer;transition:all .15s;background:var(--bg-card);}
+    .proj-card:hover{border-color:var(--blue-200);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
   <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"   class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"    class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
-      <a href="/classroom.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
+      <a href="/classroom.html"    class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <span class="sidebar-section-label">IA & Ferramentas</span>
       <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"    class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
-      <a href="/profile.html"     class="sidebar-link active"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"      class="sidebar-link active"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-user-avatar avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
-          <div class="sidebar-user-name truncate" data-user-name>Utilizador</div>
-          <div class="sidebar-user-role" data-user-role>student</div>
-        </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3)"><i class="bi bi-box-arrow-right"></i></button>
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
+        <div class="sidebar-user-avatar" id="user-avatar">U</div>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list" style="font-size:1.3rem;"></i></button>
       <span class="topbar-title">Perfil Profissional</span>
       <div class="ms-auto d-flex align-items-center gap-2">
         <div id="notif-mount"></div>
+        <a href="/profile.html" style="text-decoration:none;">
+          <div class="avatar avatar-sm" id="topbar-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;">U</div>
+        </a>
       </div>
     </div>
 
-    <div class="page-content p-0">
-      <!-- Banner -->
-      <div class="profile-banner" id="profile-banner"></div>
+    <div id="profile-loading" class="page-content">
+      <div class="skeleton mb-4" style="height:180px;border-radius:var(--r-lg);"></div>
+      <div class="skeleton skeleton-title" style="width:30%;height:26px;"></div>
+    </div>
 
-      <!-- Info principal -->
-      <div style="padding:0 28px 28px;">
-        <div class="d-flex align-items-flex-end flex-wrap gap-3 mb-4" style="margin-top:-10px;">
-          <div class="profile-avatar-wrapper">
-            <div class="avatar avatar-xl" id="profile-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:2.2rem;font-weight:800;color:#fff;">?</div>
-          </div>
-          <div style="flex:1;min-width:200px;padding-top:54px;">
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-              <h2 id="profile-name" style="font-size:1.4rem;font-weight:800;margin:0;"></h2>
-              <span id="profile-verified" style="display:none;color:#3b82f6;font-size:1.1rem;" title="Verificado">✓</span>
-              <span id="profile-role-badge" class="status"></span>
+    <div id="profile-main" style="display:none;">
+      <!-- Banner -->
+      <div class="profile-banner" id="profile-banner" style="margin:0;border-radius:0;"></div>
+
+      <div class="page-content pt-0">
+        <!-- Header card -->
+        <div class="inkuai-card mb-4" style="margin-top:-2px;border-top-left-radius:0;border-top-right-radius:0;border-top:none;">
+          <div class="d-flex align-items-flex-end gap-4 flex-wrap">
+            <!-- Avatar -->
+            <div class="profile-avatar-wrap">
+              <div class="avatar avatar-xl" id="profile-avatar" style="background:var(--brand-gradient);font-size:2rem;font-weight:800;color:#fff;">?</div>
             </div>
-            <div id="profile-institution" style="color:var(--text-muted);font-size:0.85rem;margin-top:3px;"></div>
-            <div id="profile-bio" style="color:var(--text-secondary);font-size:0.88rem;margin-top:8px;max-width:600px;line-height:1.6;"></div>
-            <!-- Links -->
-            <div class="d-flex gap-3 flex-wrap mt-2" id="profile-links"></div>
+            <!-- Main info -->
+            <div style="flex:1;min-width:220px;padding-top:52px;">
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                <h2 style="font-size:1.35rem;font-weight:800;margin:0;" id="profile-name">—</h2>
+                <span id="profile-verified" style="display:none;color:var(--brand-primary);font-size:1.1rem;" title="Verificado">✓</span>
+                <span class="status" id="profile-role-badge"></span>
+              </div>
+              <div style="font-size:0.855rem;color:var(--text-muted);margin-bottom:8px;" id="profile-headline"></div>
+              <div id="profile-bio" style="font-size:0.875rem;color:var(--text-secondary);line-height:1.7;max-width:640px;"></div>
+              <!-- Contact chips -->
+              <div class="d-flex gap-3 flex-wrap mt-3" id="profile-contact-chips"></div>
+            </div>
+            <!-- Action buttons -->
+            <div class="d-flex flex-column gap-2 align-items-end" style="padding-top:52px;">
+              <div class="d-flex gap-2">
+                <button id="follow-btn" class="btn-follow" onclick="toggleFollow()" style="display:none;"></button>
+                <button id="edit-profile-btn" class="btn-inkuai btn-inkuai-sm" onclick="openEditModal()" style="display:none;">
+                  <i class="bi bi-pencil"></i>Editar Perfil
+                </button>
+                <a id="message-btn" href="#" class="btn-inkuai-secondary btn-inkuai-sm" style="display:none;">
+                  <i class="bi bi-chat"></i>Mensagem
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="d-flex flex-column gap-2 align-items-end">
-            <button id="follow-btn" class="btn-follow" onclick="toggleFollow()" style="display:none;"></button>
-            <button id="edit-profile-btn" class="btn-inkuai btn-inkuai-sm" onclick="openEditModal()" style="display:none;">
-              <i class="bi bi-pencil me-1"></i>Editar Perfil
-            </button>
-            <a id="message-btn" href="#" class="btn-inkuai-ghost" style="display:none;font-size:0.8rem;padding:7px 14px;">
-              <i class="bi bi-chat me-1"></i>Mensagem
-            </a>
+
+          <div class="divider"></div>
+
+          <!-- Stats row -->
+          <div class="d-flex flex-wrap gap-2">
+            <div class="profile-stat" onclick="switchTab('projects')">
+              <div class="profile-stat-num" id="stat-projects">0</div>
+              <div class="profile-stat-label">Projectos</div>
+            </div>
+            <div class="divider-v mx-2"></div>
+            <div class="profile-stat" onclick="switchTab('articles')">
+              <div class="profile-stat-num" id="stat-articles">0</div>
+              <div class="profile-stat-label">Artigos</div>
+            </div>
+            <div class="divider-v mx-2"></div>
+            <div class="profile-stat" onclick="showModal('followers-modal')">
+              <div class="profile-stat-num" id="stat-followers">0</div>
+              <div class="profile-stat-label">Seguidores</div>
+            </div>
+            <div class="divider-v mx-2"></div>
+            <div class="profile-stat" onclick="switchTab('following')">
+              <div class="profile-stat-num" id="stat-following">0</div>
+              <div class="profile-stat-label">A seguir</div>
+            </div>
+            <div class="divider-v mx-2"></div>
+            <div class="profile-stat">
+              <div class="profile-stat-num" id="stat-mentorings">0</div>
+              <div class="profile-stat-label">Mentorias</div>
+            </div>
           </div>
         </div>
 
-        <!-- Stats + Reputação -->
-        <div class="row g-3 mb-4">
-          <div class="col-lg-8">
-            <div class="inkuai-card">
-              <div class="d-flex flex-wrap gap-4 mb-4">
-                <div class="profile-stat" onclick="loadTab('projects')">
-                  <div class="profile-stat-num" id="stat-projects">0</div>
-                  <div class="profile-stat-label">Projectos</div>
-                </div>
-                <div class="profile-stat" onclick="loadTab('articles')">
-                  <div class="profile-stat-num" id="stat-articles">0</div>
-                  <div class="profile-stat-label">Artigos</div>
-                </div>
-                <div class="profile-stat" onclick="showFollowers()">
-                  <div class="profile-stat-num" id="stat-followers">0</div>
-                  <div class="profile-stat-label">Seguidores</div>
-                </div>
-                <div class="profile-stat" onclick="loadTab('following')">
-                  <div class="profile-stat-num" id="stat-following">0</div>
-                  <div class="profile-stat-label">A seguir</div>
-                </div>
-              </div>
-              <!-- Expertise Tags -->
-              <div id="expertise-tags" class="d-flex flex-wrap gap-2"></div>
-            </div>
-          </div>
+        <div class="row g-4">
+          <!-- Left: Reputation + Skills + Achievements -->
           <div class="col-lg-4">
-            <!-- Reputação / XP -->
-            <div class="inkuai-card h-100">
+            <!-- XP Card -->
+            <div class="inkuai-card mb-4">
               <div class="d-flex align-items-center gap-3 mb-3">
-                <div style="width:44px;height:44px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;
-                            display:flex;align-items:center;justify-content:center;font-size:1.4rem;">⭐</div>
+                <div style="width:44px;height:44px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">⭐</div>
                 <div>
-                  <div class="reputation-badge mb-1" id="rep-badge">🌱 Iniciante</div>
-                  <div style="font-size:0.75rem;color:var(--text-muted);">Nível <span id="rep-level">1</span></div>
+                  <div class="rep-badge mb-1" id="rep-badge">🌱 Iniciante</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Nível <span id="rep-level" style="font-weight:700;">1</span></div>
                 </div>
               </div>
-              <div class="xp-bar-wrapper mb-2">
-                <div class="xp-bar" id="xp-bar" style="width:0%"></div>
+              <div class="xp-bar-track mb-1">
+                <div class="xp-bar-fill" id="xp-fill" style="width:0%"></div>
               </div>
-              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);">
-                <span><span id="rep-xp">0</span> XP</span>
-                <span><span id="rep-next">100</span> XP próximo nível</span>
+              <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);">
+                <span><b id="rep-xp">0</b> XP</span>
+                <span>Próximo: <b id="rep-next">100</b> XP</span>
               </div>
               <div class="divider"></div>
               <div class="row g-2 text-center" style="font-size:0.78rem;">
-                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-projects">0</div><div style="color:var(--text-muted);">Projectos</div></div>
-                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-comments">0</div><div style="color:var(--text-muted);">Comentários</div></div>
-                <div class="col-4"><div style="font-weight:700;color:var(--text-primary);" id="rep-streak">0</div><div style="color:var(--text-muted);">Streak 🔥</div></div>
+                <div class="col-4"><div style="font-weight:700;font-size:1rem;" id="rc-p">0</div><div style="color:var(--text-muted);">Projectos</div></div>
+                <div class="col-4"><div style="font-weight:700;font-size:1rem;" id="rc-c">0</div><div style="color:var(--text-muted);">Comentários</div></div>
+                <div class="col-4"><div style="font-weight:700;font-size:1rem;" id="rc-s">0</div><div style="color:var(--text-muted);">Streak 🔥</div></div>
+              </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="inkuai-card mb-4" id="skills-card" style="display:none;">
+              <div class="section-title"><i class="bi bi-lightning-fill"></i>Competências</div>
+              <div id="skills-list" class="d-flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Expertise -->
+            <div class="inkuai-card mb-4" id="expertise-card" style="display:none;">
+              <div class="section-title"><i class="bi bi-cpu"></i>Áreas de Expertise</div>
+              <div id="expertise-list" class="d-flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="inkuai-card">
+              <div class="section-title"><i class="bi bi-trophy-fill" style="color:#f59e0b;"></i>Conquistas</div>
+              <div class="row g-2" id="achievements-list">
+                <!-- dynamically populated -->
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tabs -->
-        <div class="d-flex gap-1 mb-4" style="border-bottom:1px solid var(--border-light);overflow-x:auto;">
-          <button class="tab-btn active" data-tab="projects" onclick="loadTab('projects')"><i class="bi bi-folder2 me-2"></i>Projectos</button>
-          <button class="tab-btn" data-tab="articles"  onclick="loadTab('articles')"><i class="bi bi-lightbulb me-2"></i>Artigos</button>
-          <button class="tab-btn" data-tab="timeline"  onclick="loadTab('timeline')"><i class="bi bi-clock-history me-2"></i>Timeline</button>
-          <button class="tab-btn" data-tab="following" onclick="loadTab('following')" id="tab-following" style="display:none;"><i class="bi bi-people me-2"></i>A Seguir</button>
+          <!-- Right: Tabs content -->
+          <div class="col-lg-8">
+            <!-- Tabs -->
+            <div style="border-bottom:1px solid var(--border-light);margin-bottom:20px;overflow-x:auto;white-space:nowrap;">
+              <button class="tab-nav-btn active" data-tab="projects"  onclick="switchTab('projects')"><i class="bi bi-folder2 me-1"></i>Projectos</button>
+              <button class="tab-nav-btn"        data-tab="articles"  onclick="switchTab('articles')"><i class="bi bi-lightbulb me-1"></i>Artigos</button>
+              <button class="tab-nav-btn"        data-tab="timeline"  onclick="switchTab('timeline')"><i class="bi bi-clock-history me-1"></i>Actividade</button>
+              <button class="tab-nav-btn"        data-tab="following" onclick="switchTab('following')" id="tab-following" style="display:none;"><i class="bi bi-people me-1"></i>A Seguir</button>
+            </div>
+            <div id="tab-panel"></div>
+          </div>
         </div>
-
-        <!-- Tab panels -->
-        <div id="tab-panel"></div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- Edit Profile Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="border-radius:var(--radius-lg);border:1px solid var(--border-light);">
-      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title fw-bold"><i class="bi bi-person-gear me-2" style="color:var(--blue-600);"></i>Editar Perfil</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-gear me-2" style="color:var(--brand-primary);"></i>Editar Perfil</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label-dark">Nome *</label>
-            <input type="text" id="edit-name" class="form-control-dark">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label-dark">Instituição</label>
-            <input type="text" id="edit-institution" class="form-control-dark">
-          </div>
-          <div class="col-12">
-            <label class="form-label-dark">Bio</label>
-            <textarea id="edit-bio" class="form-control-dark" rows="3" placeholder="Apresenta-te brevemente..."></textarea>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label-dark">GitHub</label>
-            <input type="text" id="edit-github" class="form-control-dark" placeholder="username">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label-dark">ORCID</label>
-            <input type="text" id="edit-orcid" class="form-control-dark" placeholder="0000-0000-0000-0000">
-          </div>
-          <div class="col-12">
-            <label class="form-label-dark">URL do Avatar</label>
-            <input type="url" id="edit-avatar" class="form-control-dark" placeholder="https://...">
-          </div>
+          <div class="col-md-6"><label class="form-label-dark">Nome *</label><input type="text" id="edit-name" class="form-control-dark"></div>
+          <div class="col-md-6"><label class="form-label-dark">Instituição</label><input type="text" id="edit-institution" class="form-control-dark"></div>
+          <div class="col-md-6"><label class="form-label-dark">Localização</label><input type="text" id="edit-location" class="form-control-dark" placeholder="Luanda, Angola"></div>
+          <div class="col-md-6"><label class="form-label-dark">Website</label><input type="url" id="edit-website" class="form-control-dark" placeholder="https://..."></div>
+          <div class="col-12"><label class="form-label-dark">Bio</label><textarea id="edit-bio" class="form-control-dark" rows="3" placeholder="Apresenta-te..."></textarea></div>
+          <div class="col-md-6"><label class="form-label-dark">GitHub</label><input type="text" id="edit-github" class="form-control-dark" placeholder="username"></div>
+          <div class="col-md-6"><label class="form-label-dark">LinkedIn</label><input type="url" id="edit-linkedin" class="form-control-dark" placeholder="https://linkedin.com/in/..."></div>
+          <div class="col-md-6"><label class="form-label-dark">ORCID</label><input type="text" id="edit-orcid" class="form-control-dark" placeholder="0000-0000-0000-0000"></div>
+          <div class="col-md-6"><label class="form-label-dark">Portefólio</label><input type="url" id="edit-portfolio" class="form-control-dark" placeholder="https://..."></div>
+          <div class="col-12"><label class="form-label-dark">Avatar URL</label><input type="url" id="edit-avatar" class="form-control-dark" placeholder="https://..."></div>
+          <div class="col-12"><label class="form-label-dark">Competências (separadas por vírgulas)</label><input type="text" id="edit-skills" class="form-control-dark" placeholder="JavaScript, Python, Machine Learning, ..."></div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+      <div class="modal-footer">
         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn-inkuai" id="save-profile-btn" onclick="saveProfile()"><i class="bi bi-check2 me-2"></i>Guardar</button>
+        <button class="btn-inkuai" id="save-profile-btn" onclick="saveProfile()"><i class="bi bi-check2 me-2"></i>Guardar Alterações</button>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-.tab-btn {
-  background:none;border:none;border-bottom:2px solid transparent;
-  color:var(--text-muted);font-size:0.855rem;font-weight:600;
-  padding:10px 16px;cursor:pointer;transition:all .15s;white-space:nowrap;
-}
-.tab-btn:hover { color:var(--text-primary); }
-.tab-btn.active { color:var(--blue-600);border-bottom-color:var(--blue-600); }
-.proj-card {
-  border:1px solid var(--border-light);border-radius:var(--radius-md);
-  padding:16px;transition:all .2s;cursor:pointer;background:var(--bg-card);
-}
-.proj-card:hover { border-color:var(--blue-400);transform:translateY(-2px);box-shadow:var(--shadow-md); }
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-let profileUserId = urlParams.get('id');
+const urlP = new URLSearchParams(window.location.search);
+let profileUserId = urlP.get('id');
 let currentUser = null;
 let profileData = null;
-let isOwnProfile = false;
+let isOwn = false;
 
 async function init() {
   currentUser = window.InkuAuth?.getUser?.();
   if (!profileUserId) profileUserId = currentUser?.id;
-  isOwnProfile = profileUserId === currentUser?.id;
+  if (!profileUserId) { location.href = '/login.html'; return; }
+  isOwn = profileUserId === currentUser?.id;
 
   if (currentUser?.role === 'admin') document.getElementById('admin-link').style.display = '';
-  if (currentUser?.name) document.getElementById('user-avatar').textContent = currentUser.name[0].toUpperCase();
+  const av = currentUser?.name?.[0]?.toUpperCase() || 'U';
+  document.getElementById('user-avatar').textContent = av;
+  document.getElementById('topbar-avatar').textContent = av;
 
-  await loadProfile();
-  await loadReputation();
-  loadTab('projects');
-}
-
-async function loadProfile() {
   try {
-    const res = await window.InkuAPI.get(`/users/${profileUserId}`);
-    profileData = res.user || res.data;
+    const [pRes, rRes] = await Promise.all([
+      window.InkuAPI.get(`/users/${profileUserId}`),
+      window.InkuAPI.get(`/social/reputation/${profileUserId}`)
+    ]);
+    profileData = pRes.user || pRes.data;
     renderProfile(profileData);
+    renderReputation(rRes.reputation || {});
   } catch(e) {
-    window.showToast?.('Erro ao carregar perfil.', 'error');
+    document.getElementById('profile-loading').style.display = 'none';
+    showToast('Erro ao carregar perfil: ' + e.message, 'error');
+    return;
   }
+
+  document.getElementById('profile-loading').style.display = 'none';
+  document.getElementById('profile-main').style.display = '';
+
+  if (!isOwn) checkFollowing();
+  switchTab('projects');
 }
 
 function renderProfile(u) {
   document.title = `${u.name} — INKU·AI`;
   document.getElementById('profile-name').textContent = u.name;
-  document.getElementById('profile-institution').textContent = u.institution || 'IP/UNIKIVI';
-  document.getElementById('profile-bio').textContent = u.bio || (isOwnProfile ? 'Adicione uma bio no seu perfil.' : '');
-
-  const roleBadge = document.getElementById('profile-role-badge');
-  roleBadge.textContent = u.role;
-  roleBadge.className = `status status-${u.role === 'mentor' ? 'active' : u.role === 'admin' ? 'approved' : 'draft'}`;
-
+  document.getElementById('profile-bio').textContent = u.bio || (isOwn ? 'Adicione uma bio clicando em "Editar Perfil".' : '');
   if (u.is_verified) document.getElementById('profile-verified').style.display = '';
+
+  // Headline
+  const parts = [];
+  if (u.institution) parts.push(u.institution);
+  if (u.location)    parts.push(`📍 ${u.location}`);
+  document.getElementById('profile-headline').textContent = parts.join(' · ');
+
+  // Role badge
+  const rb = document.getElementById('profile-role-badge');
+  const roleMap = { student:'gray', mentor:'green', admin:'red' };
+  rb.className = `status status-${roleMap[u.role]||'gray'}`;
+  rb.textContent = u.role === 'mentor' ? '👨‍🏫 Mentor' : u.role === 'admin' ? '🛡️ Admin' : '🎓 Estudante';
 
   // Avatar
   const av = document.getElementById('profile-avatar');
-  if (u.avatar_url) {
-    av.innerHTML = `<img src="${u.avatar_url}" alt="${u.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-  } else {
-    av.textContent = u.name[0].toUpperCase();
+  if (u.avatar_url) av.innerHTML = `<img src="${u.avatar_url}" alt="${u.name}">`;
+  else av.textContent = u.name?.[0]?.toUpperCase() || '?';
+
+  // Banner gradient
+  const bannerColors = ['#2563eb,#7c3aed','#7c3aed,#db2777','#0d9488,#2563eb','#d97706,#dc2626','#059669,#0d9488'];
+  const ci = (u.name?.charCodeAt(0)||0) % bannerColors.length;
+  document.getElementById('profile-banner').style.background = `linear-gradient(135deg,${bannerColors[ci]})`;
+
+  // Contact chips
+  const chips = [];
+  if (u.github_username) chips.push(`<a href="https://github.com/${u.github_username}" target="_blank" class="d-flex align-items-center gap-1" style="font-size:0.82rem;color:var(--text-muted);text-decoration:none;"><i class="bi bi-github"></i>${u.github_username}</a>`);
+  if (u.linkedin_url)    chips.push(`<a href="${u.linkedin_url}" target="_blank" class="d-flex align-items-center gap-1" style="font-size:0.82rem;color:#0a66c2;text-decoration:none;"><i class="bi bi-linkedin"></i>LinkedIn</a>`);
+  if (u.website_url)     chips.push(`<a href="${u.website_url}" target="_blank" class="d-flex align-items-center gap-1" style="font-size:0.82rem;color:var(--text-muted);text-decoration:none;"><i class="bi bi-globe"></i>Website</a>`);
+  if (u.portfolio_url)   chips.push(`<a href="${u.portfolio_url}" target="_blank" class="d-flex align-items-center gap-1" style="font-size:0.82rem;color:var(--text-muted);text-decoration:none;"><i class="bi bi-briefcase"></i>Portefólio</a>`);
+  if (u.orcid_id)        chips.push(`<a href="https://orcid.org/${u.orcid_id}" target="_blank" class="d-flex align-items-center gap-1" style="font-size:0.82rem;color:#a6ce39;text-decoration:none;"><i class="bi bi-award"></i>ORCID</a>`);
+  document.getElementById('profile-contact-chips').innerHTML = chips.join('');
+
+  // Skills
+  const skills = (() => { try { return JSON.parse(u.skills_json||'[]'); } catch { return []; } })();
+  if (skills.length) {
+    document.getElementById('skills-card').style.display = '';
+    document.getElementById('skills-list').innerHTML = skills.map(s => `<span class="skill-chip">${s}</span>`).join('');
   }
 
-  // Banner gradient baseado no nome
-  const colors = ['#6366f1,#8b5cf6','#2563eb,#7c3aed','#0d9488,#2563eb','#db2777,#7c3aed','#ea580c,#d97706'];
-  const idx = u.name.charCodeAt(0) % colors.length;
-  document.getElementById('profile-banner').style.background = `linear-gradient(135deg,${colors[idx]})`;
+  // Expertise (mentor)
+  const expertise = (() => { try { return JSON.parse(u.expertise_areas||'[]'); } catch { return []; } })();
+  if (expertise.length) {
+    document.getElementById('expertise-card').style.display = '';
+    document.getElementById('expertise-list').innerHTML = expertise.map(e => `<span class="tag tag-blue">${e}</span>`).join('');
+  }
 
-  // Links
-  const linksEl = document.getElementById('profile-links');
-  const links = [];
-  if (u.github_username) links.push(`<a href="https://github.com/${u.github_username}" target="_blank" class="d-flex align-items-center gap-1" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none;"><i class="bi bi-github"></i>${u.github_username}</a>`);
-  if (u.orcid_id) links.push(`<a href="https://orcid.org/${u.orcid_id}" target="_blank" class="d-flex align-items-center gap-1" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none;"><i class="bi bi-link-45deg"></i>ORCID</a>`);
-  linksEl.innerHTML = links.join('');
-
-  // Expertise tags
-  const tagsEl = document.getElementById('expertise-tags');
-  try {
-    const areas = JSON.parse(u.expertise_areas || '[]');
-    tagsEl.innerHTML = areas.map(a => `<span class="tag tag-blue">${a}</span>`).join('');
-  } catch(e) { tagsEl.innerHTML = ''; }
-
-  // Botões acção
-  if (isOwnProfile) {
+  // Buttons
+  if (isOwn) {
     document.getElementById('edit-profile-btn').style.display = '';
+    document.getElementById('tab-following').style.display = '';
   } else {
     document.getElementById('follow-btn').style.display = '';
     document.getElementById('message-btn').style.display = '';
     document.getElementById('message-btn').href = `/messages.html?to=${u.id}`;
-    checkFollowing();
   }
-  document.getElementById('tab-following').style.display = isOwnProfile ? '' : 'none';
 }
 
-async function loadReputation() {
-  try {
-    const res = await window.InkuAPI.get(`/social/reputation/${profileUserId}`);
-    const r = res.reputation;
-    document.getElementById('rep-badge').textContent = r.badge || '🌱 Iniciante';
-    document.getElementById('rep-level').textContent = r.level || 1;
-    document.getElementById('rep-xp').textContent = r.xp || 0;
-    document.getElementById('rep-next').textContent = r.next_level_xp || 100;
-    document.getElementById('xp-bar').style.width = (r.progress_pct || 0) + '%';
-    document.getElementById('rep-projects').textContent = r.projects_count || 0;
-    document.getElementById('rep-comments').textContent = r.comments_count || 0;
-    document.getElementById('rep-streak').textContent = r.streak_days || 0;
-    document.getElementById('stat-followers').textContent = r.followers_count || 0;
-    document.getElementById('stat-following').textContent = r.following_count || 0;
-    document.getElementById('stat-articles').textContent = r.articles_count || 0;
-    document.getElementById('stat-projects').textContent = r.projects_count || 0;
-  } catch(e) {}
+function renderReputation(r) {
+  document.getElementById('rep-badge').textContent  = r.badge || '🌱 Iniciante';
+  document.getElementById('rep-level').textContent  = r.level || 1;
+  document.getElementById('rep-xp').textContent     = (r.xp || 0).toLocaleString();
+  document.getElementById('rep-next').textContent   = (r.next_level_xp || 100).toLocaleString();
+  document.getElementById('xp-fill').style.width    = (r.progress_pct || 0) + '%';
+  document.getElementById('rc-p').textContent       = r.projects_count  || 0;
+  document.getElementById('rc-c').textContent       = r.comments_count  || 0;
+  document.getElementById('rc-s').textContent       = r.streak_days     || 0;
+  document.getElementById('stat-followers').textContent  = r.followers_count || 0;
+  document.getElementById('stat-following').textContent  = r.following_count || 0;
+  document.getElementById('stat-articles').textContent   = r.articles_count  || 0;
+  document.getElementById('stat-projects').textContent   = r.projects_count  || 0;
+  document.getElementById('stat-mentorings').textContent = r.mentorings_count|| 0;
+
+  // Achievements based on XP/counts
+  const ach = [];
+  if ((r.xp||0) >= 100)  ach.push({icon:'⚡',name:'Explorador',desc:'100+ XP'});
+  if ((r.xp||0) >= 500)  ach.push({icon:'🔥',name:'Inovador',desc:'500+ XP'});
+  if ((r.xp||0) >= 1000) ach.push({icon:'🚀',name:'Builder',desc:'1000+ XP'});
+  if ((r.projects_count||0) >= 1) ach.push({icon:'📁',name:'Criador',desc:'Primeiro projecto'});
+  if ((r.projects_count||0) >= 5) ach.push({icon:'🗂️',name:'Prolífico',desc:'5+ projectos'});
+  if ((r.articles_count||0) >= 1) ach.push({icon:'✍️',name:'Escritor',desc:'Primeiro artigo'});
+  if ((r.followers_count||0) >= 10) ach.push({icon:'👥',name:'Influenciador',desc:'10+ seguidores'});
+  if ((r.mentorings_count||0) >= 1) ach.push({icon:'👨‍🏫',name:'Mentor',desc:'Primeira mentoria'});
+  if (!ach.length) ach.push({icon:'🌱',name:'Em início',desc:'Complete tarefas para ganhar conquistas'});
+  document.getElementById('achievements-list').innerHTML = ach.map(a => `
+    <div class="col-4">
+      <div class="achievement-card">
+        <span class="achievement-icon">${a.icon}</span>
+        <div style="font-weight:700;font-size:0.75rem;margin-bottom:2px;">${a.name}</div>
+        <div style="font-size:0.65rem;color:var(--text-muted);">${a.desc}</div>
+      </div>
+    </div>`).join('');
 }
 
 async function checkFollowing() {
   try {
     const res = await window.InkuAPI.get(`/social/follow/check?targetType=user&targetId=${profileUserId}`);
     const btn = document.getElementById('follow-btn');
-    if (res.following) {
-      btn.textContent = 'A Seguir'; btn.classList.add('following');
-    } else {
-      btn.textContent = 'Seguir'; btn.classList.remove('following');
-    }
-  } catch(e) {}
+    btn.textContent = res.following ? 'A Seguir' : 'Seguir';
+    btn.classList.toggle('following', !!res.following);
+  } catch {}
 }
 
 async function toggleFollow() {
   try {
     const res = await window.InkuAPI.post('/social/follow', { targetType:'user', targetId: profileUserId });
     const btn = document.getElementById('follow-btn');
-    if (res.following) {
-      btn.textContent = 'A Seguir'; btn.classList.add('following');
-      window.showToast?.('A seguir!', 'success');
-    } else {
-      btn.textContent = 'Seguir'; btn.classList.remove('following');
-      window.showToast?.('Deixou de seguir.', 'info');
-    }
-    await loadReputation();
-  } catch(e) { window.showToast?.(e.message,'error'); }
+    btn.textContent = res.following ? 'A Seguir' : 'Seguir';
+    btn.classList.toggle('following', !!res.following);
+    showToast(res.following ? 'A seguir!' : 'Deixou de seguir.', res.following ? 'success' : 'info');
+  } catch(e) { showToast(e.message, 'error'); }
 }
 
-async function loadTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+async function switchTab(tab) {
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
   const panel = document.getElementById('tab-panel');
-  panel.innerHTML = '<div class="text-center py-5" style="color:var(--text-muted);"><div class="spinner-border text-primary"></div></div>';
+  panel.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
+
   try {
     if (tab === 'projects') {
       const res = await window.InkuAPI.get(`/projects?createdBy=${profileUserId}&limit=12`);
-      const projects = res.data || [];
-      if (!projects.length) { panel.innerHTML = emptyState('bi-folder2','Sem projectos publicados.'); return; }
-      panel.innerHTML = `<div class="row g-3">${projects.map(p => `
-        <div class="col-md-6 col-xl-4">
+      const items = res.data || [];
+      if (!items.length) { panel.innerHTML = emptyState('bi-folder2','Sem projectos publicados.'); return; }
+      panel.innerHTML = `<div class="row g-3">${items.map(p => `
+        <div class="col-md-6">
           <div class="proj-card" onclick="location.href='/project-detail.html?id=${p.id}'">
-            <div class="d-flex align-items-start justify-content-between mb-2">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="tag tag-blue">${p.type}</span>
               <span class="status status-${p.status}">${p.status}</span>
-              <span style="font-size:0.72rem;color:var(--text-muted);">${new Date(p.created_at).toLocaleDateString('pt-PT')}</span>
             </div>
-            <h6 style="font-weight:700;margin-bottom:6px;">${p.title}</h6>
+            <h6 style="font-weight:700;margin-bottom:6px;" class="truncate">${p.title}</h6>
             <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;">${p.description||''}</p>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              ${(()=>{try{return JSON.parse(p.tech_stack_json||'[]').slice(0,3).map(t=>`<span class="tag tag-gray">${t}</span>`).join('')}catch{return ''}})()}
+            <div class="d-flex align-items-center justify-content-between">
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">${(()=>{try{return JSON.parse(p.tech_stack_json||'[]').slice(0,3).map(t=>`<span class="tag tag-gray">${t}</span>`).join('')}catch{return ''}})()}</div>
+              ${p.avg_stars ? `<span style="font-size:0.78rem;color:#f59e0b;">★ ${p.avg_stars}</span>` : ''}
             </div>
           </div>
         </div>`).join('')}</div>`;
     }
-    if (tab === 'articles') {
+    else if (tab === 'articles') {
       const res = await window.InkuAPI.get(`/articles?authorId=${profileUserId}&limit=9`);
-      const articles = res.data || [];
-      if (!articles.length) { panel.innerHTML = emptyState('bi-lightbulb','Sem artigos publicados.'); return; }
-      panel.innerHTML = `<div class="row g-3">${articles.map(a => `
-        <div class="col-md-6 col-xl-4">
+      const items = res.data || [];
+      if (!items.length) { panel.innerHTML = emptyState('bi-lightbulb','Sem artigos publicados.'); return; }
+      const catColors = {ideia:'orange',artigo:'blue',investigacao:'green',inovacao:'purple'};
+      panel.innerHTML = `<div class="row g-3">${items.map(a => `
+        <div class="col-md-6">
           <div class="proj-card" onclick="location.href='/article-detail.html?id=${a.id}'">
-            <span style="font-size:0.7rem;background:rgba(99,102,241,.1);color:#6366f1;padding:2px 8px;border-radius:20px;font-weight:600;">${a.category}</span>
-            <h6 style="font-weight:700;margin:8px 0 6px;">${a.title}</h6>
-            <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);">${a.summary||''}</p>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:8px;"><i class="bi bi-eye me-1"></i>${a.views||0} <i class="bi bi-heart ms-2 me-1"></i>${a.likes||0}</div>
+            <span class="tag tag-${catColors[a.category]||'blue'} mb-2 d-inline-block">${a.category}</span>
+            <h6 style="font-weight:700;margin-bottom:6px;" class="truncate">${a.title}</h6>
+            <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;">${a.summary||''}</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);"><i class="bi bi-eye me-1"></i>${a.views||0} <i class="bi bi-heart ms-2 me-1"></i>${a.likes||0}</div>
           </div>
         </div>`).join('')}</div>`;
     }
-    if (tab === 'timeline') {
-      // Actividade recente como timeline
-      panel.innerHTML = `
-        <div class="inkuai-card">
-          <div class="inkuai-section-title"><i class="bi bi-clock-history" style="color:var(--blue-600);"></i> Actividade Recente</div>
-          <div class="timeline" id="timeline-content">
-            <div class="text-center py-3" style="color:var(--text-muted);font-size:0.85rem;">A construir timeline...</div>
+    else if (tab === 'timeline') {
+      const [pRes, aRes] = await Promise.all([
+        window.InkuAPI.get(`/projects?createdBy=${profileUserId}&limit=8`),
+        window.InkuAPI.get(`/articles?authorId=${profileUserId}&limit=8`)
+      ]);
+      const items = [
+        ...(pRes.data||[]).map(p=>({type:'project',title:p.title,date:p.created_at,status:p.status,id:p.id,sub:'📁 Projecto'})),
+        ...(aRes.data||[]).map(a=>({type:'article',title:a.title,date:a.created_at,cat:a.category,id:a.id,sub:'💡 Artigo'}))
+      ].sort((a,b)=>new Date(b.date)-new Date(a.date));
+      if (!items.length) { panel.innerHTML = emptyState('bi-clock-history','Sem actividade recente.'); return; }
+      panel.innerHTML = `<div class="inkuai-card"><div class="timeline">${items.map(item => `
+        <div class="timeline-item">
+          <div class="timeline-dot ${item.type==='article'?'orange':item.status==='approved'?'green':''}"></div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:3px;">${item.sub} · ${new Date(item.date).toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'})}</div>
+            <a href="/${item.type==='project'?'project-detail':'article-detail'}.html?id=${item.id}" style="font-size:0.875rem;font-weight:600;color:var(--text-primary);text-decoration:none;">${item.title}</a>
+            ${item.status ? `<span class="status status-${item.status} ms-2" style="font-size:0.62rem;">${item.status}</span>` : ''}
           </div>
-        </div>`;
-      try {
-        const [pRes, aRes] = await Promise.all([
-          window.InkuAPI.get(`/projects?createdBy=${profileUserId}&limit=5`),
-          window.InkuAPI.get(`/articles?authorId=${profileUserId}&limit=5`)
-        ]);
-        const items = [
-          ...(pRes.data||[]).map(p=>({type:'project',title:p.title,date:p.created_at,status:p.status,id:p.id})),
-          ...(aRes.data||[]).map(a=>({type:'article',title:a.title,date:a.created_at,cat:a.category,id:a.id}))
-        ].sort((a,b)=>new Date(b.date)-new Date(a.date));
-        const timelineEl = document.getElementById('timeline-content');
-        if (!items.length) { timelineEl.innerHTML = '<p style="color:var(--text-muted);text-align:center;font-size:0.85rem;">Sem actividade recente.</p>'; return; }
-        timelineEl.innerHTML = items.map(item => `
-          <div class="timeline-item">
-            <div class="timeline-dot ${item.type==='article'?'orange':item.status==='approved'?'green':''}"></div>
-            <div style="font-size:0.85rem;">
-              <span style="font-weight:600;color:var(--text-primary);">${item.type==='project'?'🗂️ Projecto':'💡 Artigo'}</span>
-              <a href="/${item.type==='project'?'project-detail':'article-detail'}.html?id=${item.id}" style="color:var(--text-secondary);text-decoration:none;margin-left:6px;">${item.title}</a>
-              <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${new Date(item.date).toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'})}</div>
-            </div>
-          </div>`).join('');
-      } catch(e) {}
+        </div>`).join('')}</div></div>`;
     }
-    if (tab === 'following') {
+    else if (tab === 'following') {
       const res = await window.InkuAPI.get('/social/following');
-      const following = res.following || [];
-      if (!following.length) { panel.innerHTML = emptyState('bi-people','Não está a seguir ninguém ainda.'); return; }
-      panel.innerHTML = `<div class="row g-3">${following.map(f=>`
+      const items = res.following || [];
+      if (!items.length) { panel.innerHTML = emptyState('bi-people','Não está a seguir ninguém ainda.'); return; }
+      panel.innerHTML = `<div class="row g-3">${items.map(f => `
         <div class="col-md-4">
-          <a href="/profile.html?id=${f.target_id}" class="d-flex align-items-center gap-3 p-3" style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-md);text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--blue-400)'" onmouseout="this.style.borderColor='var(--border-light)'">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:0.85rem;font-weight:700;color:#fff;">${f.target_id.substring(0,1).toUpperCase()}</div>
-            <div style="font-size:0.85rem;color:var(--text-primary);font-weight:600;">${f.target_id.substring(0,8)}...</div>
+          <a href="/profile.html?id=${f.target_id}" class="d-flex align-items-center gap-3 p-3 inkuai-card hoverable" style="text-decoration:none;">
+            <div class="avatar avatar-sm" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;">?</div>
+            <div style="font-size:0.845rem;color:var(--text-primary);font-weight:600;">Ver perfil</div>
           </a>
         </div>`).join('')}</div>`;
     }
   } catch(e) {
-    panel.innerHTML = `<p style="color:var(--danger);text-align:center;">Erro ao carregar: ${e.message}</p>`;
+    panel.innerHTML = `<p style="color:var(--danger);text-align:center;font-size:0.85rem;">${e.message}</p>`;
   }
 }
 
 function emptyState(icon, msg) {
-  return `<div class="inkuai-empty"><div class="inkuai-empty-icon"><i class="bi ${icon}"></i></div><p>${msg}</p></div>`;
+  return `<div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi ${icon}"></i></span><p>${msg}</p></div>`;
 }
 
 function openEditModal() {
   if (!profileData) return;
-  document.getElementById('edit-name').value = profileData.name || '';
-  document.getElementById('edit-institution').value = profileData.institution || '';
-  document.getElementById('edit-bio').value = profileData.bio || '';
-  document.getElementById('edit-github').value = profileData.github_username || '';
-  document.getElementById('edit-orcid').value = profileData.orcid_id || '';
-  document.getElementById('edit-avatar').value = profileData.avatar_url || '';
+  document.getElementById('edit-name').value       = profileData.name || '';
+  document.getElementById('edit-institution').value= profileData.institution || '';
+  document.getElementById('edit-location').value   = profileData.location || '';
+  document.getElementById('edit-website').value    = profileData.website_url || '';
+  document.getElementById('edit-bio').value        = profileData.bio || '';
+  document.getElementById('edit-github').value     = profileData.github_username || '';
+  document.getElementById('edit-linkedin').value   = profileData.linkedin_url || '';
+  document.getElementById('edit-orcid').value      = profileData.orcid_id || '';
+  document.getElementById('edit-portfolio').value  = profileData.portfolio_url || '';
+  document.getElementById('edit-avatar').value     = profileData.avatar_url || '';
+  try {
+    const skills = JSON.parse(profileData.skills_json || '[]');
+    document.getElementById('edit-skills').value = skills.join(', ');
+  } catch { document.getElementById('edit-skills').value = ''; }
   bootstrap.Modal.getOrCreateInstance(document.getElementById('editProfileModal')).show();
 }
 
 async function saveProfile() {
   const btn = document.getElementById('save-profile-btn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
   try {
+    const skills = document.getElementById('edit-skills').value
+      .split(',').map(s => s.trim()).filter(Boolean);
     await window.InkuAPI.put(`/users/${profileUserId}`, {
       name:            document.getElementById('edit-name').value,
       institution:     document.getElementById('edit-institution').value,
+      location:        document.getElementById('edit-location').value,
+      website_url:     document.getElementById('edit-website').value,
       bio:             document.getElementById('edit-bio').value,
       github_username: document.getElementById('edit-github').value,
+      linkedin_url:    document.getElementById('edit-linkedin').value,
       orcid_id:        document.getElementById('edit-orcid').value,
-      avatar_url:      document.getElementById('edit-avatar').value
+      portfolio_url:   document.getElementById('edit-portfolio').value,
+      avatar_url:      document.getElementById('edit-avatar').value,
+      skills_json:     JSON.stringify(skills)
     });
     bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
-    window.showToast?.('Perfil actualizado!','success');
-    await loadProfile();
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Guardar'; }
+    showToast('Perfil actualizado com sucesso!', 'success');
+    const pRes = await window.InkuAPI.get(`/users/${profileUserId}`);
+    profileData = pRes.user || pRes.data;
+    renderProfile(profileData);
+  } catch(e) { showToast(e.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check2 me-2"></i>Guardar Alterações'; }
 }
 
 document.addEventListener('DOMContentLoaded', init);
