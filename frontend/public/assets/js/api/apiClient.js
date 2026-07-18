@@ -11,12 +11,17 @@ const USER_KEY  = 'inkuai_user';
 
 /* ── Auth helper ─────────────────────────────────────────────── */
 window.InkuAuth = {
-  getToken:  ()   => localStorage.getItem(TOKEN_KEY),
-  getUser:   ()   => { try { const u = localStorage.getItem(USER_KEY); return u ? JSON.parse(u) : null; } catch { return null; } },
-  setUser:   (u)  => localStorage.setItem(USER_KEY, JSON.stringify(u)),
-  setToken:  (t)  => localStorage.setItem(TOKEN_KEY, t),
-  isLoggedIn:()   => !!localStorage.getItem(TOKEN_KEY),
-  logout:    ()   => { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); window.location.href = '/login.html'; }
+  getToken:  ()      => localStorage.getItem(TOKEN_KEY),
+  getUser:   ()      => { try { const u = localStorage.getItem(USER_KEY); return u ? JSON.parse(u) : null; } catch { return null; } },
+  setUser:   (u)     => localStorage.setItem(USER_KEY, JSON.stringify(u)),
+  setToken:  (t)     => localStorage.setItem(TOKEN_KEY, t),
+  // setAuth — called by auth.js after login
+  setAuth:   (t, u)  => {
+    localStorage.setItem(TOKEN_KEY, t);
+    localStorage.setItem(USER_KEY, JSON.stringify(u));
+  },
+  isLoggedIn:()      => !!localStorage.getItem(TOKEN_KEY),
+  logout:    ()      => { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); window.location.href = '/login.html'; }
 };
 
 /* ── Core fetch wrapper ──────────────────────────────────────── */
