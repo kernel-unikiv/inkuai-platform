@@ -833,3 +833,73 @@ textarea.form-control-dark { resize: vertical; min-height: 88px; }
   .sidebar, .topbar, .ai-fab, .ai-fab-panel, .toast-container { display: none !important; }
   .main-content { margin-left: 0 !important; }
 }
+
+/* ══ LANDING PAGE ════════════════════════════════════════════ */
+.landing-nav {
+  background: rgba(15,23,42,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 0;
+}
+.landing-nav .nav-link { color: rgba(255,255,255,0.65) !important; font-size: 0.875rem; font-weight: 500; padding: 6px 12px !important; border-radius: 6px; transition: all .15s; }
+.landing-nav .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.07); }
+
+.hero-section {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 45%, #2563eb 100%);
+  padding: 100px 0 60px;
+  position: relative; overflow: hidden;
+}
+.hero-section::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.14) 0%, transparent 50%);
+}
+
+/* Dashboard preview card on landing */
+.dashboard-preview {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+  overflow: hidden;
+  transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
+}
+.preview-header {
+  background: #f1f5f9;
+  padding: 10px 14px;
+  display: flex; align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+.preview-header .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%; display: inline-block;
+}
+.preview-mini-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px; padding: 12px;
+}
+.preview-terminal {
+  background: #0f172a;
+  border-radius: 8px; padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; line-height: 1.8;
+}
+
+/* Landing footer */
+.landing-footer {
+  background: #020617;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Fix --radius-md used in index.html (old variable name) */
+:root {
+  --radius-md: var(--r-md);
+  --radius-sm: var(--r-sm);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-full: var(--r-full);
+}

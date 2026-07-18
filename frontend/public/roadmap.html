@@ -14,28 +14,30 @@
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
-    <nav class="sidebar-nav">
+        <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"   class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"    class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"    class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"    class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
-      <a href="/classroom.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"     class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
+      <a href="/classroom.html"    class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <span class="sidebar-section-label">IA &amp; Ferramentas</span>
       <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"    class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
-      <a href="/profile.html"     class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="sidebar-badge msg-unread-badge" style="display:none">0</span></a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
+        <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
-          <div class="sidebar-user-name truncate" data-user-name>Utilizador</div>
-          <div class="sidebar-user-role" data-user-role>student</div>
-        </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3)"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
@@ -91,7 +93,7 @@
 <!-- Modal: Adicionar/Editar Fase -->
 <div class="modal fade" id="phaseModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="border-radius:var(--radius-lg);border:1px solid var(--border-light);">
+    <div class="modal-content" style="border-radius:var(--r-lg);border:1px solid var(--border-light);">
       <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
         <h5 class="modal-title fw-bold" id="phase-modal-title"><i class="bi bi-map me-2" style="color:var(--blue-600);"></i>Fase do Roadmap</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -158,7 +160,7 @@
 <style>
 .phase-column {
   flex: 0 0 260px; border: 1.5px solid var(--border-light);
-  border-radius: var(--radius-md); background: var(--bg-card);
+  border-radius: var(--r-md); background: var(--bg-card);
   overflow: hidden; transition: all .2s;
 }
 .phase-column:hover { border-color: var(--blue-300); }

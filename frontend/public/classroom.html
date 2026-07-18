@@ -3,123 +3,118 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Classroom — INKU·AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text y='24' x='4' font-size='22' fill='white'>⚡</text></svg>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .tab-nav-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:0.845rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .tab-nav-btn:hover{color:var(--text-primary);}
+    .tab-nav-btn.active{color:var(--brand-primary);border-bottom-color:var(--brand-primary);}
+    .sub-card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--r-md);padding:16px;margin-bottom:10px;transition:all .15s;}
+    .sub-card:hover{border-color:var(--blue-200);box-shadow:var(--shadow-sm);}
+    .score-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;border:3px solid currentColor;flex-shrink:0;}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
-    <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
       <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"     class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"     class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"     class="sidebar-link "><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link"><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
       <a href="/classroom.html"    class="sidebar-link active"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"      class="sidebar-link "><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
-      <a href="/ai-assistant.html" class="sidebar-link "><i class="bi bi-robot"></i>INKU·AI Chat</a>
-      <a href="/ai-models.html"    class="sidebar-link "><i class="bi bi-braces"></i>Modelos IA</a>
-      <span class="sidebar-section-label">Académico</span>
-      <a href="/mentorship.html"   class="sidebar-link "><i class="bi bi-mortarboard-fill"></i>Mentoria</a>
-      <a href="/datasets.html"     class="sidebar-link "><i class="bi bi-database-fill"></i>Datasets</a>
+      <span class="sidebar-section-label">IA &amp; Ferramentas</span>
+      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"     class="sidebar-link " id="msg-nav-link"><i class="bi bi-chat-dots-fill"></i>Mensagens <span class="badge bg-danger ms-auto msg-unread-badge" style="display:none;font-size:0.6rem;padding:2px 5px">0</span></a>
-      <a href="/profile.html"      class="sidebar-link "><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-user">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<main class="main-content">
+
+  <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn-ghost d-lg-none" style="color:var(--text-muted);margin-right:4px" onclick="toggleSidebar()"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title">🎓 Classroom — Espaço de Projectos</span>
-      <div id="notif-mount" class="d-flex align-items-center me-2"></div>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list" style="font-size:1.3rem;"></i></button>
+      <span class="topbar-title">🎓 Classroom</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+      </div>
     </div>
 
     <div class="page-content">
-
-      <!-- Selector de Projecto -->
+      <!-- Project selector -->
       <div class="inkuai-card mb-4">
         <div class="row g-3 align-items-end">
           <div class="col-md-7">
-            <label class="form-label-dark"><i class="bi bi-folder2-open me-2" style="color:#6366f1;"></i>Seleccionar Projecto</label>
+            <label class="form-label-dark"><i class="bi bi-folder2-open me-2" style="color:var(--brand-primary);"></i>Seleccionar Projecto</label>
             <select id="project-select" class="form-control-dark">
-              <option value="">-- Escolha um projecto --</option>
+              <option value="">— Escolha um projecto —</option>
             </select>
           </div>
           <div class="col-md-5">
-            <button class="btn-inkuai" id="load-classroom-btn" onclick="loadClassroom()">
+            <button class="btn-inkuai justify-content-center w-100" onclick="loadClassroom()">
               <i class="bi bi-arrow-right-circle me-2"></i>Abrir Classroom
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Classroom Principal (hidden until project selected) -->
+      <!-- Classroom main (hidden until project selected) -->
       <div id="classroom-main" style="display:none;">
-        <!-- Mentor Info -->
+
+        <!-- Mentor card -->
         <div id="mentor-card" class="inkuai-card mb-4" style="display:none;">
           <div class="d-flex align-items-center gap-3">
-            <div style="width:52px;height:52px;background:linear-gradient(135deg,#10b981,#059669);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;">👨‍🏫</div>
-            <div>
-              <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Mentor Atribuído</div>
-              <div style="font-weight:700;color:var(--text-primary);font-size:1rem;" id="mentor-name">—</div>
-              <div style="font-size:0.8rem;color:var(--text-muted);" id="mentor-info">—</div>
+            <div style="width:48px;height:48px;background:linear-gradient(135deg,#10b981,#059669);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">👨‍🏫</div>
+            <div style="flex:1;">
+              <div style="font-size:0.72rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Mentor Atribuído</div>
+              <div style="font-weight:700;font-size:1rem;" id="mentor-name">—</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);" id="mentor-role">—</div>
             </div>
-            <div class="ms-auto">
-              <span id="mentor-badge" class="badge" style="background:rgba(16,185,129,.15);color:#10b981;padding:6px 12px;border-radius:20px;font-size:0.78rem;">✓ Atribuído automaticamente</span>
-            </div>
+            <span style="background:rgba(16,185,129,.1);color:#10b981;padding:4px 12px;border-radius:var(--r-full);font-size:0.75rem;font-weight:700;">✓ Atribuído pela IA</span>
           </div>
         </div>
 
         <!-- Tabs -->
-        <ul class="nav nav-tabs mb-4" style="border-bottom:1px solid var(--border-light);">
-          <li class="nav-item">
-            <button class="nav-link active" data-tab="submissions" onclick="switchTab('submissions')" style="color:var(--text-secondary);background:none;border:none;border-bottom:2px solid transparent;padding:10px 18px;font-weight:600;" id="tab-submissions">
-              <i class="bi bi-folder-check me-2"></i>Entregas
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" data-tab="new-submission" onclick="switchTab('new-submission')" style="color:var(--text-secondary);background:none;border:none;border-bottom:2px solid transparent;padding:10px 18px;font-weight:600;" id="tab-new-submission">
-              <i class="bi bi-upload me-2"></i>Nova Entrega
-            </button>
-          </li>
-          <li class="nav-item" id="grade-tab-li" style="display:none;">
-            <button class="nav-link" data-tab="grade" onclick="switchTab('grade')" style="color:var(--text-secondary);background:none;border:none;border-bottom:2px solid transparent;padding:10px 18px;font-weight:600;" id="tab-grade">
-              <i class="bi bi-patch-check me-2"></i>Avaliar
-            </button>
-          </li>
-        </ul>
-
-        <!-- Tab: Lista de Entregas -->
-        <div id="panel-submissions">
-          <div id="submissions-list">
-            <div class="text-center py-5" style="color:var(--text-muted)"><div class="spinner-border text-primary"></div></div>
-          </div>
+        <div style="border-bottom:1px solid var(--border-light);margin-bottom:20px;overflow-x:auto;white-space:nowrap;">
+          <button class="tab-nav-btn active" data-tab="submissions" onclick="switchTab('submissions')"><i class="bi bi-folder-check me-1"></i>Entregas</button>
+          <button class="tab-nav-btn"        data-tab="new"         onclick="switchTab('new')"><i class="bi bi-upload me-1"></i>Nova Entrega</button>
+          <button class="tab-nav-btn"        data-tab="grade"       onclick="switchTab('grade')" id="tab-grade" style="display:none;"><i class="bi bi-patch-check me-1"></i>Avaliar</button>
         </div>
 
-        <!-- Tab: Nova Entrega -->
-        <div id="panel-new-submission" style="display:none;">
+        <!-- Submissions list -->
+        <div id="panel-submissions">
+          <div id="submissions-list"><div class="text-center py-5"><div class="spinner-border text-primary"></div></div></div>
+        </div>
+
+        <!-- New submission -->
+        <div id="panel-new" style="display:none;">
           <div class="inkuai-card">
-            <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-              <i class="bi bi-upload" style="color:#6366f1;"></i> Submeter Nova Entrega
-              
-            </h6>
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <h6 style="font-weight:700;margin:0;"><i class="bi bi-upload me-2" style="color:var(--brand-primary);"></i>Submeter Nova Entrega</h6>
+            </div>
             <div class="row g-3">
               <div class="col-md-8">
-                <label class="form-label-dark">Título da Entrega *</label>
+                <label class="form-label-dark">Título <span style="color:var(--danger);">*</span></label>
                 <input type="text" id="sub-title" class="form-control-dark" placeholder="Ex: Sprint 1 — Protótipo inicial">
               </div>
               <div class="col-md-4">
@@ -132,86 +127,70 @@
                 </select>
               </div>
               <div class="col-12">
-                <label class="form-label-dark">Descrição / Conteúdo *</label>
-                <textarea id="sub-desc" class="form-control-dark" rows="5"
-                    placeholder="Descreva o que foi desenvolvido, dificuldades encontradas, próximos passos..."></textarea>
+                <label class="form-label-dark">Descrição <span style="color:var(--danger);">*</span></label>
+                <textarea id="sub-desc" class="form-control-dark" rows="5" placeholder="O que foi desenvolvido, dificuldades encontradas, próximos passos..."></textarea>
               </div>
               <div class="col-12">
                 <label class="form-label-dark">Código (opcional)</label>
-                <textarea id="sub-code" class="form-control-dark" rows="4"
-                    placeholder="// Cole aqui excertos de código relevantes..." style="font-family:monospace;font-size:12px;"></textarea>
+                <textarea id="sub-code" class="form-control-dark code-editor" rows="4" placeholder="// Cole aqui excertos de código relevantes..."></textarea>
               </div>
               <div class="col-12">
                 <label class="form-label-dark">Links (GitHub, Demo, Docs — um por linha)</label>
-                <textarea id="sub-links" class="form-control-dark" rows="2" placeholder="https://github.com/...&#10;https://demo.inkuai.com/..."></textarea>
+                <textarea id="sub-links" class="form-control-dark" rows="2" placeholder="https://github.com/...&#10;https://demo.site.com/..."></textarea>
               </div>
               <div class="col-12">
-                <button class="btn-inkuai" id="submit-btn" onclick="submitWork()">
-                  <i class="bi bi-send me-2"></i>Submeter Entrega
-                </button>
+                <button class="btn-inkuai" id="submit-btn" onclick="submitWork()"><i class="bi bi-send me-2"></i>Submeter Entrega</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Tab: Avaliar (mentor/admin only) -->
+        <!-- Grade panel -->
         <div id="panel-grade" style="display:none;">
-          <div id="grade-list">
-            <div class="text-center py-4" style="color:var(--text-muted)">Seleccione uma entrega acima para avaliar.</div>
+          <div class="inkuai-card">
+            <h6 style="font-weight:700;margin-bottom:16px;"><i class="bi bi-patch-check me-2" style="color:var(--success);"></i>Avaliar Entregas</h6>
+            <div id="grade-list"><div class="text-center py-4" style="color:var(--text-muted);">Seleccione a aba "Entregas" para ver as submissões.</div></div>
           </div>
         </div>
+
       </div>
     </div>
   </main>
 </div>
 
-<!-- Modal de Avaliação -->
+<!-- Grade Modal -->
 <div class="modal fade" id="gradeModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
-      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title"><i class="bi bi-patch-check-fill me-2" style="color:#10b981;"></i>Avaliar Entrega</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-patch-check-fill me-2" style="color:var(--success);"></i>Avaliar Entrega</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div id="grade-detail-info" class="mb-4 p-3" style="background:var(--surface-bg);border-radius:10px;"></div>
-        <!-- AI Feedback -->
-        <div id="ai-feedback-box" style="display:none;" class="mb-4 p-3" style="border-radius:10px;">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <span style="font-size:18px;">✨</span>
-            <strong style="color:#a78bfa;font-size:0.9rem;">Feedback gerado pela IA</strong>
-            <span id="ai-score-badge" class="ms-auto badge" style="background:rgba(99,102,241,.2);color:#818cf8;"></span>
-          </div>
-          <div id="ai-feedback-text" style="color:var(--text-secondary);font-size:0.85rem;line-height:1.7;white-space:pre-wrap;"></div>
+        <div id="grade-detail" class="mb-4 p-3" style="background:var(--gray-50);border-radius:var(--r-md);font-size:0.855rem;"></div>
+        <div id="ai-feedback-box" style="display:none;" class="mb-4 p-3" style="background:var(--purple-light);border-left:3px solid var(--purple);border-radius:var(--r-md);">
+          <div class="d-flex align-items-center gap-2 mb-2"><span style="font-size:1rem;">✨</span><strong style="color:var(--purple);font-size:0.85rem;">Feedback gerado pela IA</strong><span id="ai-score-badge" class="ms-auto tag tag-purple"></span></div>
+          <div id="ai-feedback-text" style="font-size:0.845rem;color:var(--text-secondary);white-space:pre-wrap;"></div>
         </div>
         <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label-dark">Nota (0–100) *</label>
+            <label class="form-label-dark">Nota (0–100) <span style="color:var(--danger);">*</span></label>
             <input type="number" id="grade-score" class="form-control-dark" min="0" max="100" placeholder="75">
           </div>
           <div class="col-12">
-            <label class="form-label-dark">Feedback / Comentários *</label>
-            <textarea id="grade-feedback" class="form-control-dark" rows="5" placeholder="Escreva o seu feedback detalhado..."></textarea>
+            <label class="form-label-dark">Feedback <span style="color:var(--danger);">*</span></label>
+            <textarea id="grade-feedback" class="form-control-dark" rows="4" placeholder="Escreva o seu feedback detalhado..."></textarea>
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
-        <button class="btn btn-outline-secondary" id="ai-grade-btn" onclick="getAIFeedback()">✨ Obter Feedback IA</button>
+      <div class="modal-footer">
+        <button class="btn-inkuai-ghost" id="ai-grade-btn" onclick="getAIFeedback()">✨ Feedback IA</button>
         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn-inkuai" id="confirm-grade-btn" onclick="confirmGrade()"><i class="bi bi-check2 me-2"></i>Confirmar Avaliação</button>
+        <button class="btn-inkuai" onclick="confirmGrade()"><i class="bi bi-check2 me-2"></i>Confirmar Avaliação</button>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-
-.ai-field-btn:hover{transform:scale(1.05);color:#fff;}
-.nav-link.active { border-bottom:2px solid #6366f1 !important; color:#818cf8 !important; }
-.sub-card { background:var(--surface-card); border:1px solid var(--border-light); border-radius:12px; padding:16px; margin-bottom:12px; transition:all .2s; }
-.sub-card:hover { border-color:#6366f1; }
-.score-ring { width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;border:3px solid; }
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
@@ -219,14 +198,21 @@
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
 let currentProject = null;
-let currentUser = window.InkuAuth?.getUser();
+let currentUser = null;
 let currentGradeId = null;
 
-async function init() {
-  if(currentUser?.role==='admin') document.getElementById('admin-link').style.display='';
-  if(currentUser?.name) document.getElementById('user-avatar').textContent=currentUser.name[0].toUpperCase();
+const TYPE_ICON   = {entrega:'📦',milestone:'🎯',relatorio:'📄',apresentacao:'🎤'};
+const STATUS_COLOR= {submitted:'#d97706',reviewed:'#6366f1',graded:'#16a34a',returned:'#dc2626'};
 
-  // Load user's projects into selector
+async function init() {
+  currentUser = window.InkuAuth?.getUser?.();
+  if (!currentUser) return;
+  if (currentUser.role==='admin') document.getElementById('admin-link').style.display='';
+  if (currentUser.name) document.getElementById('user-avatar').textContent = currentUser.name[0].toUpperCase();
+  if (['admin','mentor'].includes(currentUser.role)) {
+    document.getElementById('tab-grade').style.display='';
+  }
+
   try {
     const res = await window.InkuAPI.get('/projects/my');
     const projects = res.projects || res.data || [];
@@ -236,112 +222,101 @@ async function init() {
       opt.value = p.id; opt.textContent = p.title;
       sel.appendChild(opt);
     });
-    // Auto-select from URL param
-    const urlParams = new URLSearchParams(window.location.search);
-    const pid = urlParams.get('project');
+    const urlP = new URLSearchParams(window.location.search);
+    const pid  = urlP.get('project');
     if (pid) { sel.value = pid; loadClassroom(); }
-  } catch(e){}
-
-  // Show grade tab for mentors/admins
-  if(['admin','mentor'].includes(currentUser?.role)) {
-    document.getElementById('grade-tab-li').style.display='';
-  }
+  } catch(e) { showToast(e.message,'error'); }
 }
 
 async function loadClassroom() {
   const pid = document.getElementById('project-select').value;
-  if (!pid) { window.showToast?.('Seleccione um projecto.','warning'); return; }
+  if (!pid) { showToast('Seleccione um projecto.','warning'); return; }
   currentProject = pid;
-  document.getElementById('classroom-main').style.display='';
-  
+  document.getElementById('classroom-main').style.display = '';
+
   // Load mentor
   try {
     const res = await window.InkuAPI.get(`/submissions/project/${pid}/mentor`);
     const a = res.assignment || null;
     if (a?.mentor) {
-      document.getElementById('mentor-card').style.display='';
+      document.getElementById('mentor-card').style.display = '';
       document.getElementById('mentor-name').textContent = a.mentor.name;
-      document.getElementById('mentor-info').textContent = a.mentor.bio || a.mentor.role;
+      document.getElementById('mentor-role').textContent = a.mentor.mentor_bio || a.mentor.role;
     }
-  } catch(e){}
+  } catch {}
 
-  loadSubmissions();
+  switchTab('submissions');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
+  ['submissions','new','grade'].forEach(t => {
+    document.getElementById(`panel-${t}`).style.display = t===tab ? '' : 'none';
+  });
+  if (tab==='submissions') loadSubmissions();
 }
 
 async function loadSubmissions() {
   const list = document.getElementById('submissions-list');
-  list.innerHTML = '<div class="text-center py-4" style="color:var(--text-muted)"><div class="spinner-border text-primary"></div></div>';
+  list.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
   try {
     const res = await window.InkuAPI.get(`/submissions/project/${currentProject}`);
     const subs = res.submissions || [];
     if (!subs.length) {
-      list.innerHTML = `<div class="text-center py-5">
-        <i class="bi bi-inbox fs-1 d-block mb-3" style="color:var(--text-muted)"></i>
-        <p style="color:var(--text-muted)">Ainda não há entregas neste projecto.</p>
-        <button class="btn-inkuai" onclick="switchTab('new-submission')"><i class="bi bi-upload me-2"></i>Fazer primeira entrega</button>
-      </div>`;
+      list.innerHTML = `<div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-inbox"></i></span><h5>Sem entregas</h5><p>Ainda não há entregas neste projecto.</p><button class="btn-inkuai" onclick="switchTab('new')"><i class="bi bi-upload me-2"></i>Fazer primeira entrega</button></div>`;
       return;
     }
-    const typeIcon = {entrega:'📦',milestone:'🎯',relatorio:'📄',apresentacao:'🎤'};
-    const statusColor = {submitted:'#f59e0b',reviewed:'#6366f1',graded:'#10b981',returned:'#ef4444'};
     list.innerHTML = subs.map(s => {
-      const scoreColor = s.score >= 70 ? '#10b981' : s.score >= 50 ? '#f59e0b' : '#ef4444';
+      const scoreColor = s.score >= 70 ? '#16a34a' : s.score >= 50 ? '#d97706' : '#dc2626';
       return `<div class="sub-card">
         <div class="d-flex align-items-start gap-3">
-          <div style="font-size:1.5rem;">${typeIcon[s.type]||'📦'}</div>
-          <div style="flex:1;">
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-              <strong style="color:var(--text-primary);">${s.title}</strong>
-              <span style="background:rgba(99,102,241,.1);color:#818cf8;padding:2px 8px;border-radius:20px;font-size:11px;">${s.type}</span>
-              <span style="background:rgba(0,0,0,.2);color:${statusColor[s.status]||'#aaa'};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;">${s.status}</span>
+          <div style="font-size:1.6rem;flex-shrink:0;">${TYPE_ICON[s.type]||'📦'}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <strong style="font-size:0.875rem;">${s.title}</strong>
+              <span class="tag tag-gray" style="font-size:0.67rem;">${s.type}</span>
+              <span style="background:${STATUS_COLOR[s.status]||'#94a3b8'}18;color:${STATUS_COLOR[s.status]||'#94a3b8'};padding:2px 8px;border-radius:99px;font-size:0.68rem;font-weight:700;">${s.status}</span>
             </div>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:6px 0 0;">${(s.description||'').substring(0,150)}${(s.description||'').length>150?'...':''}</p>
-            <div class="d-flex align-items-center gap-3 mt-2" style="font-size:0.75rem;color:var(--text-muted);">
-              <span><i class="bi bi-person me-1"></i>${s.submitter?.name||'—'}</span>
-              <span><i class="bi bi-calendar me-1"></i>${new Date(s.created_at).toLocaleDateString('pt-PT')}</span>
-              ${s.links?.length ? `<span><i class="bi bi-link-45deg me-1"></i>${s.links.length} link(s)</span>` : ''}
+            <p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px;">${s.description||''}</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);">
+              <i class="bi bi-person me-1"></i>${s.submitter?.name||'—'}
+              <i class="bi bi-calendar3 ms-3 me-1"></i>${new Date(s.created_at).toLocaleDateString('pt-PT')}
             </div>
-            ${s.feedback ? `<div class="mt-2 p-2" style="background:rgba(16,185,129,.08);border-left:3px solid #10b981;border-radius:4px;font-size:0.8rem;color:var(--text-secondary);">💬 ${s.feedback.substring(0,200)}</div>` : ''}
-            ${s.ai_feedback ? `<div class="mt-2 p-2" style="background:rgba(99,102,241,.08);border-left:3px solid #6366f1;border-radius:4px;font-size:0.8rem;color:var(--text-secondary);">✨ Feedback IA disponível</div>` : ''}
+            ${s.feedback ? `<div class="mt-2 p-2" style="background:rgba(16,185,129,.06);border-left:3px solid #10b981;border-radius:4px;font-size:0.78rem;color:var(--text-secondary);">💬 ${s.feedback.substring(0,200)}</div>` : ''}
+            ${s.ai_feedback ? `<div class="mt-1 p-2" style="background:rgba(99,102,241,.06);border-left:3px solid #6366f1;border-radius:4px;font-size:0.75rem;color:#6366f1;">✨ Feedback IA disponível</div>` : ''}
           </div>
-          <div class="d-flex flex-column align-items-center gap-2">
-            ${s.score !== null && s.score !== undefined ? `<div class="score-ring" style="color:${scoreColor};border-color:${scoreColor};">${s.score}</div>` : ''}
-            ${['admin','mentor'].includes(currentUser?.role) ? `<button class="btn btn-sm btn-outline-primary py-1 px-2" onclick="openGrade('${s.id}')" style="font-size:11px;"><i class="bi bi-pencil"></i> Avaliar</button>` : ''}
+          <div class="d-flex flex-column align-items-end gap-2 flex-shrink:0;">
+            ${s.score!=null ? `<div class="score-ring" style="color:${scoreColor};">${s.score}</div>` : ''}
+            ${['admin','mentor'].includes(currentUser?.role) ? `<button class="btn-inkuai-ghost btn-inkuai-sm" onclick="openGrade('${s.id}')"><i class="bi bi-pencil me-1"></i>Avaliar</button>` : ''}
           </div>
         </div>
       </div>`;
     }).join('');
   } catch(e) {
-    list.innerHTML = `<div class="text-center py-4 text-danger">${e.message}</div>`;
+    list.innerHTML = `<div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-exclamation-triangle"></i></span><h5>Erro</h5><p>${e.message}</p></div>`;
   }
 }
 
-function switchTab(tab) {
-  ['submissions','new-submission','grade'].forEach(t => {
-    document.getElementById(`panel-${t}`).style.display = t===tab ? '' : 'none';
-    const btn = document.getElementById(`tab-${t}`);
-    if(btn) btn.classList.toggle('active', t===tab);
-  });
-  if(tab==='submissions') loadSubmissions();
-}
-
 async function submitWork() {
+  const title = document.getElementById('sub-title').value.trim();
+  const desc  = document.getElementById('sub-desc').value.trim();
+  if (!title) { showToast('Título obrigatório.','warning'); return; }
+  if (!desc)  { showToast('Descrição obrigatória.','warning'); return; }
   const btn = document.getElementById('submit-btn');
   btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A submeter...';
   try {
     const rawLinks = (document.getElementById('sub-links').value||'').split('\n').map(l=>l.trim()).filter(Boolean);
     await window.InkuAPI.post('/submissions', {
       project_id:   currentProject,
-      title:        document.getElementById('sub-title').value,
-      description:  document.getElementById('sub-desc').value,
+      title, description: desc,
       type:         document.getElementById('sub-type').value,
       code_snippet: document.getElementById('sub-code').value||null,
       links_json:   JSON.stringify(rawLinks)
     });
-    window.showToast?.('Entrega submetida com sucesso!','success');
-    ['sub-title','sub-desc','sub-code','sub-links'].forEach(id=>document.getElementById(id).value='');
+    showToast('Entrega submetida!','success');
+    ['sub-title','sub-desc','sub-code','sub-links'].forEach(id => { document.getElementById(id).value=''; });
     switchTab('submissions');
-  } catch(e){ window.showToast?.(e.message,'error'); }
+  } catch(e) { showToast(e.message,'error'); }
   finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-send me-2"></i>Submeter Entrega'; }
 }
 
@@ -352,27 +327,21 @@ async function openGrade(subId) {
   document.getElementById('grade-feedback').value='';
   try {
     const res = await window.InkuAPI.get(`/submissions/${subId}`);
-    const s = res.data?.submission;
-    document.getElementById('grade-detail-info').innerHTML = `
-      <div class="d-flex gap-2 align-items-center mb-2">
-        <strong style="color:var(--text-primary);">${s.title}</strong>
-        <span style="color:var(--text-muted);font-size:0.8rem;">— por ${s.submitter?.name||'?'}</span>
-      </div>
-      <div style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;">${s.description||'Sem descrição.'}</div>
-      ${s.code_snippet ? `<pre style="background:#12121f;border-radius:8px;padding:12px;margin-top:10px;font-size:11px;color:#c4c4e0;overflow-x:auto;max-height:150px;">${s.code_snippet.substring(0,500)}</pre>` : ''}
-      ${s.links?.length ? `<div class="mt-2">${s.links.map(l=>`<a href="${l}" target="_blank" style="color:#6366f1;font-size:0.8rem;margin-right:10px;">${l}</a>`).join('')}</div>` : ''}
-    `;
+    const s = res.submission;
+    document.getElementById('grade-detail').innerHTML = `
+      <div style="font-weight:700;margin-bottom:6px;">${s.title}</div>
+      <div style="color:var(--text-muted);font-size:0.82rem;margin-bottom:8px;">Por ${s.submitter?.name||'?'} · ${new Date(s.created_at).toLocaleDateString('pt-PT')}</div>
+      <div style="color:var(--text-secondary);font-size:0.855rem;line-height:1.6;">${s.description||''}</div>
+      ${s.code_snippet ? `<pre style="background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px;font-size:0.75rem;margin-top:8px;overflow-x:auto;max-height:120px;">${s.code_snippet.substring(0,400)}</pre>` : ''}`;
     if(s.ai_feedback) {
       document.getElementById('ai-feedback-box').style.display='';
-      document.getElementById('ai-feedback-box').style.background='rgba(99,102,241,.08)';
-      document.getElementById('ai-feedback-box').style.borderRadius='10px';
       document.getElementById('ai-feedback-text').textContent = s.ai_feedback;
       if(s.ai_score) document.getElementById('ai-score-badge').textContent = `IA: ${s.ai_score}/100`;
-      document.getElementById('grade-score').value = s.ai_score || '';
+      document.getElementById('grade-score').value = s.ai_score||'';
     }
-    if(s.feedback) document.getElementById('grade-feedback').value = s.feedback;
-    if(s.score) document.getElementById('grade-score').value = s.score;
-  } catch(e){}
+    if(s.feedback)  document.getElementById('grade-feedback').value = s.feedback;
+    if(s.score!=null) document.getElementById('grade-score').value = s.score;
+  } catch(e) { showToast(e.message,'error'); return; }
   bootstrap.Modal.getOrCreateInstance(document.getElementById('gradeModal')).show();
 }
 
@@ -381,41 +350,33 @@ async function getAIFeedback() {
   btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A analisar...'; btn.disabled=true;
   try {
     const res = await window.InkuAPI.post(`/submissions/${currentGradeId}/ai-feedback`, {});
-    const d = res.data;
     document.getElementById('ai-feedback-box').style.display='';
-    document.getElementById('ai-feedback-box').style.background='rgba(99,102,241,.08)';
-    document.getElementById('ai-feedback-box').style.borderRadius='10px';
-    document.getElementById('ai-feedback-text').textContent = d.ai_feedback;
-    if(d.ai_score) {
-      document.getElementById('ai-score-badge').textContent = `IA sugere: ${d.ai_score}/100`;
-      document.getElementById('grade-score').value = d.ai_score;
+    document.getElementById('ai-feedback-box').style.cssText='display:block;margin-bottom:16px;padding:12px;background:var(--purple-light);border-left:3px solid var(--purple);border-radius:var(--r-md);';
+    document.getElementById('ai-feedback-text').textContent = res.ai_feedback;
+    if(res.ai_score) {
+      document.getElementById('ai-score-badge').textContent=`IA: ${res.ai_score}/100`;
+      document.getElementById('grade-score').value = res.ai_score;
     }
-    window.showToast?.('Feedback gerado pela IA!','success');
-  } catch(e){ window.showToast?.(e.message,'error'); }
-  finally { btn.innerHTML='✨ Obter Feedback IA'; btn.disabled=false; }
+    showToast('Feedback gerado!','success');
+  } catch(e) { showToast(e.message,'error'); }
+  finally { btn.innerHTML='✨ Feedback IA'; btn.disabled=false; }
 }
 
 async function confirmGrade() {
   const score    = parseFloat(document.getElementById('grade-score').value);
-  const feedback = document.getElementById('grade-feedback').value;
-  if (!feedback) { window.showToast?.('Por favor escreva um feedback.','warning'); return; }
-  const btn = document.getElementById('confirm-grade-btn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
+  const feedback = document.getElementById('grade-feedback').value.trim();
+  if (!feedback) { showToast('O feedback é obrigatório.','warning'); return; }
   try {
     await window.InkuAPI.put(`/submissions/${currentGradeId}/grade`, { score, feedback });
     bootstrap.Modal.getInstance(document.getElementById('gradeModal')).hide();
-    window.showToast?.('Avaliação registada!','success');
+    showToast('Avaliação registada!','success');
     loadSubmissions();
-  } catch(e){ window.showToast?.(e.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Confirmar Avaliação'; }
+  } catch(e) { showToast(e.message,'error'); }
 }
-
-
-// AI Auto-fill submission
-
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
 <script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/mentor-ai.js"></script>
 </body>
 </html>

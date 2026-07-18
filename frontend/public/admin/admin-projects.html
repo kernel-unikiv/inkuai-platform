@@ -14,25 +14,26 @@
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
       <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
     </a>
-    <nav class="sidebar-nav">
+        <nav class="sidebar-nav">
       <span class="sidebar-section-label">Administração</span>
       <a href="/admin/admin-dashboard.html" class="sidebar-link"><i class="bi bi-speedometer2"></i>Dashboard</a>
       <a href="/admin/admin-users.html"     class="sidebar-link"><i class="bi bi-people-fill"></i>Utilizadores</a>
-      <a href="/admin/admin-projects.html"  class="sidebar-link active"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/admin/admin-projects.html"  class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
       <a href="/admin/admin-startups.html"  class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/admin/admin-mentors.html"   class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Mentores</a>
       <a href="/admin/admin-messages.html"  class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
       <a href="/admin/admin-approvers.html" class="sidebar-link"><i class="bi bi-shield-check"></i>Aprovadores</a>
       <a href="/admin/admin-stats.html"     class="sidebar-link"><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
       <a href="/admin/admin-log.html"       class="sidebar-link"><i class="bi bi-journal-text"></i>Registo</a>
       <span class="sidebar-section-label">Plataforma</span>
-      <a href="/dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
-      <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/dashboard.html"     class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard Geral</a>
+      <a href="/ai-assistant.html"  class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
     </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
-        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+        <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
+        <div class="sidebar-user-avatar" style="background:#dc2626;" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.6);">admin</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>

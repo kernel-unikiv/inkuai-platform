@@ -6,54 +6,21 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .tab-nav-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:0.845rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+    .tab-nav-btn.active{color:var(--success);border-bottom-color:var(--success);}
+    .expertise-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.25);border-radius:var(--r-full);padding:3px 10px;font-size:0.72rem;font-weight:600;}
+    .expertise-chip .rm{background:none;border:none;color:#10b981;cursor:pointer;padding:0;font-size:12px;line-height:1;}
+    .mentor-card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:18px;transition:all .15s;}
+    .mentor-card:hover{border-color:rgba(16,185,129,.3);box-shadow:var(--shadow-md);}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
-    <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
-    </a>
-    <nav class="sidebar-nav">
-      <span class="sidebar-section-label">Dashboard</span>
-      <a href="/dashboard.html"              class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Plataforma</a>
-      <a href="/admin/admin-dashboard.html"  class="sidebar-link "><i class="bi bi-shield-fill"></i>Admin Dashboard</a>
-      <span class="sidebar-section-label">Gestão</span>
-      <a href="/admin/admin-users.html"      class="sidebar-link "><i class="bi bi-people-fill"></i>Utilizadores</a>
-      <a href="/admin/admin-projects.html"   class="sidebar-link "><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/admin/admin-startups.html"   class="sidebar-link "><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/admin/admin-mentors.html"    class="sidebar-link active"><i class="bi bi-mortarboard-fill"></i>Mentores</a>
-      <a href="/admin/admin-approvers.html"  class="sidebar-link "><i class="bi bi-person-check-fill"></i>Aprovadores</a>
-      <span class="sidebar-section-label">Comunicação</span>
-      <a href="/admin/admin-messages.html"   class="sidebar-link "><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
-      <span class="sidebar-section-label">Relatórios</span>
-      <a href="/admin/admin-stats.html"      class="sidebar-link "><i class="bi bi-graph-up-arrow"></i>Estatísticas</a>
-      <a href="/admin/admin-log.html"        class="sidebar-link "><i class="bi bi-journal-text"></i>Logs</a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-user-avatar" id="user-avatar">A</div>
-        <div style="flex:1;overflow:hidden;min-width:0"><div class="sidebar-user-name text-truncate" data-user-name>Admin</div><div class="sidebar-user-role">administrador</div></div>
-        <button onclick="doLogout()" class="btn-ghost" style="color:rgba(255,255,255,0.3);padding:4px 6px;font-size:0.875rem" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
-      </div>
-    </div>
-  </aside>
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-TYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão de Mentores — Admin INKU·AI</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/css/main.css" rel="stylesheet">
-</head>
-<body>
-<div class="dashboard-layout">
-  <aside class="sidebar">
-    <a href="/dashboard.html" class="sidebar-brand">
-      <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">ADMIN</div></div>
+      <div><div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div><div class="brand-sub">ADMIN</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Administração</span>
@@ -71,104 +38,72 @@ TYPE html>
       <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-user-avatar" style="background:#dc2626" id="user-avatar">A</div>
-        <div style="flex:1;overflow:hidden"><div class="sidebar-user-name" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.7)">admin</div></div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
+        <div class="sidebar-user-avatar" style="background:#dc2626;" id="user-avatar">A</div>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Admin</div><div class="sidebar-user-role" style="color:rgba(255,100,100,0.6);">admin</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <span class="topbar-title"><i class="bi bi-mortarboard-fill me-2" style="color:#10b981;"></i>Gestão de Mentores</span>
-      <div id="notif-mount" class="d-flex align-items-center ms-auto me-2"></div>
-      <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#addMentorModal">
-        <i class="bi bi-person-plus me-2"></i>Adicionar Mentor
-      </button>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list" style="font-size:1.3rem;"></i></button>
+      <span class="topbar-title"><i class="bi bi-mortarboard-fill me-2" style="color:var(--success);"></i>Gestão de Mentores</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+        <button class="btn-inkuai btn-inkuai-sm" data-bs-toggle="modal" data-bs-target="#addMentorModal">
+          <i class="bi bi-person-plus me-1"></i>Adicionar Mentor
+        </button>
+      </div>
     </div>
 
     <div class="page-content">
-
       <!-- Tabs -->
-      <ul class="nav mb-4" style="border-bottom:1px solid var(--border-light);">
-        <li class="nav-item">
-          <button class="nav-link active" id="tab-mentors-btn" onclick="switchTab('mentors')"
-            style="background:none;border:none;border-bottom:2px solid #10b981;color:#10b981;font-weight:700;padding:10px 20px;">
-            <i class="bi bi-mortarboard me-2"></i>Mentores Activos
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="tab-assign-btn" onclick="switchTab('assign')"
-            style="background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-weight:600;padding:10px 20px;">
-            <i class="bi bi-diagram-3 me-2"></i>Atribuir a Projecto
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="tab-notify-btn" onclick="switchTab('notify')"
-            style="background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-weight:600;padding:10px 20px;">
-            <i class="bi bi-megaphone me-2"></i>Notificações em Massa
-          </button>
-        </li>
-      </ul>
+      <div style="border-bottom:1px solid var(--border-light);margin-bottom:20px;">
+        <button class="tab-nav-btn active" id="tab-mentors-btn" onclick="switchTab('mentors')"><i class="bi bi-mortarboard me-1"></i>Mentores Activos</button>
+        <button class="tab-nav-btn"        id="tab-assign-btn"  onclick="switchTab('assign')"><i class="bi bi-diagram-3 me-1"></i>Atribuir a Projecto</button>
+        <button class="tab-nav-btn"        id="tab-notify-btn"  onclick="switchTab('notify')"><i class="bi bi-megaphone me-1"></i>Notificações em Massa</button>
+      </div>
 
-      <!-- Panel: Mentores -->
+      <!-- Mentors Panel -->
       <div id="panel-mentors">
-        <div id="mentors-list" class="row g-4">
-          <div class="col-12 text-center py-5" style="color:var(--text-muted)">
-            <div class="spinner-border text-primary"></div>
-          </div>
+        <div id="mentors-grid" class="row g-3">
+          <div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>
         </div>
       </div>
 
-      <!-- Panel: Atribuir -->
+      <!-- Assign Panel -->
       <div id="panel-assign" style="display:none;">
-        <div class="inkuai-card">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px;">
-            <i class="bi bi-diagram-3 me-2" style="color:#6366f1;"></i>Atribuir Mentor a Projecto
-          </h6>
+        <div class="inkuai-card mb-4">
+          <h6 style="font-weight:700;margin-bottom:16px;"><i class="bi bi-diagram-3 me-2" style="color:var(--brand-primary);"></i>Atribuir Mentor a Projecto</h6>
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-md-5">
               <label class="form-label-dark">Projecto</label>
-              <select id="assign-project" class="form-control-dark">
-                <option value="">— Seleccione um projecto —</option>
-              </select>
+              <select id="assign-project" class="form-control-dark"><option value="">— Seleccione um projecto —</option></select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
               <label class="form-label-dark">Mentor</label>
-              <select id="assign-mentor" class="form-control-dark">
-                <option value="">— Seleccione um mentor —</option>
-              </select>
+              <select id="assign-mentor" class="form-control-dark"><option value="">— Seleccione um mentor —</option></select>
             </div>
-            <div class="col-12 d-flex gap-3">
-              <button class="btn-inkuai" onclick="manualAssign()">
-                <i class="bi bi-person-check me-2"></i>Atribuir Manualmente
-              </button>
-              <button class="btn btn-outline-primary" style="border-color:#6366f1;color:#818cf8;" onclick="aiAssign()">
-                <i class="bi bi-stars me-2"></i>Deixar a IA Escolher
-              </button>
+            <div class="col-md-2 d-flex align-items-end">
+              <button class="btn-inkuai w-100 justify-content-center" onclick="manualAssign()"><i class="bi bi-person-check me-1"></i>Atribuir</button>
             </div>
+          </div>
+          <div class="mt-3">
+            <button class="btn-inkuai-ghost" onclick="aiAssign()"><i class="bi bi-stars me-2"></i>Deixar a IA Escolher</button>
           </div>
         </div>
-
-        <!-- Atribuições Actuais -->
-        <div class="inkuai-card mt-4">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:16px;">
-            <i class="bi bi-list-check me-2" style="color:#10b981;"></i>Atribuições Activas
-          </h6>
-          <div id="assignments-list">
-            <div class="text-center py-4" style="color:var(--text-muted)"><div class="spinner-border text-primary spinner-border-sm"></div></div>
-          </div>
+        <div class="inkuai-card">
+          <h6 style="font-weight:700;margin-bottom:14px;"><i class="bi bi-list-check me-2" style="color:var(--success);"></i>Atribuições Activas</h6>
+          <div id="assignments-list"><div class="text-center py-4"><div class="spinner-border spinner-border-sm text-primary"></div></div></div>
         </div>
       </div>
 
-      <!-- Panel: Notificações em Massa -->
+      <!-- Notify Panel -->
       <div id="panel-notify" style="display:none;">
         <div class="inkuai-card">
-          <h6 style="font-weight:700;color:var(--text-primary);margin-bottom:20px;">
-            <i class="bi bi-megaphone me-2" style="color:#f59e0b;"></i>Enviar Notificação em Massa
-          </h6>
+          <h6 style="font-weight:700;margin-bottom:20px;"><i class="bi bi-megaphone me-2" style="color:var(--warning);"></i>Enviar Notificação em Massa</h6>
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label-dark">Destinatários</label>
@@ -179,19 +114,10 @@ TYPE html>
             </div>
             <div class="col-md-6" id="role-select-row" style="display:none;">
               <label class="form-label-dark">Tipos</label>
-              <div class="d-flex gap-3 flex-wrap mt-2">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="role-student" value="student" checked>
-                  <label class="form-check-label" for="role-student" style="color:var(--text-secondary);">🎓 Estudantes</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="role-mentor" value="mentor">
-                  <label class="form-check-label" for="role-mentor" style="color:var(--text-secondary);">👨‍🏫 Mentores</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="role-admin" value="admin">
-                  <label class="form-check-label" for="role-admin" style="color:var(--text-secondary);">🛡️ Admins</label>
-                </div>
+              <div class="d-flex gap-3 flex-wrap mt-1">
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="role-student" value="student" checked><label class="form-check-label" for="role-student" style="font-size:0.845rem;color:var(--text-secondary);">🎓 Estudantes</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="role-mentor"  value="mentor"><label class="form-check-label" for="role-mentor"  style="font-size:0.845rem;color:var(--text-secondary);">👨‍🏫 Mentores</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="role-admin"   value="admin"><label class="form-check-label" for="role-admin"   style="font-size:0.845rem;color:var(--text-secondary);">🛡️ Admins</label></div>
               </div>
             </div>
             <div class="col-md-4">
@@ -204,11 +130,11 @@ TYPE html>
               </select>
             </div>
             <div class="col-md-8">
-              <label class="form-label-dark">Título *</label>
+              <label class="form-label-dark">Título <span style="color:var(--danger);">*</span></label>
               <input type="text" id="notif-title" class="form-control-dark" placeholder="Ex: 📢 Prazo FUNDECIT a aproximar!">
             </div>
             <div class="col-12">
-              <label class="form-label-dark">Mensagem *</label>
+              <label class="form-label-dark">Mensagem <span style="color:var(--danger);">*</span></label>
               <textarea id="notif-message" class="form-control-dark" rows="3" placeholder="Mensagem detalhada..."></textarea>
             </div>
             <div class="col-md-6">
@@ -216,9 +142,7 @@ TYPE html>
               <input type="text" id="notif-url" class="form-control-dark" placeholder="/projects.html">
             </div>
             <div class="col-12">
-              <button class="btn-inkuai" onclick="sendBulkNotification()">
-                <i class="bi bi-send me-2"></i>Enviar Notificação
-              </button>
+              <button class="btn-inkuai" onclick="sendBulkNotification()"><i class="bi bi-send me-2"></i>Enviar Notificação</button>
             </div>
           </div>
         </div>
@@ -227,25 +151,23 @@ TYPE html>
   </main>
 </div>
 
-<!-- Modal: Adicionar Mentor -->
+<!-- Add Mentor Modal -->
 <div class="modal fade" id="addMentorModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
-      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title"><i class="bi bi-mortarboard-fill me-2" style="color:#10b981;"></i>Cadastrar Mentor</h5>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-mortarboard-fill me-2" style="color:var(--success);"></i>Cadastrar Mentor</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row g-3">
           <div class="col-12">
-            <label class="form-label-dark">Utilizador *</label>
-            <select id="mentor-user-id" class="form-control-dark">
-              <option value="">— Seleccione um utilizador —</option>
-            </select>
-            <div class="form-text" style="color:var(--text-muted);font-size:0.78rem;">O utilizador passará a ter o role de "mentor".</div>
+            <label class="form-label-dark">Utilizador <span style="color:var(--danger);">*</span></label>
+            <select id="mentor-user-id" class="form-control-dark"><option value="">— Seleccione um utilizador —</option></select>
+            <div class="form-hint">O utilizador passará a ter o role "mentor".</div>
           </div>
           <div class="col-12">
-            <label class="form-label-dark">Áreas de Expertise <span style="color:#f59e0b;">*</span></label>
+            <label class="form-label-dark">Áreas de Expertise <span style="color:var(--danger);">*</span></label>
             <div class="d-flex flex-wrap gap-2 mb-2" id="expertise-chips"></div>
             <div class="d-flex gap-2">
               <select id="expertise-select" class="form-control-dark">
@@ -260,39 +182,33 @@ TYPE html>
                 <option value="base de dados">🗄️ Base de Dados</option>
                 <option value="investigação">🔬 Investigação Científica</option>
                 <option value="segurança">🔐 Cibersegurança</option>
-                <option value="redes">🔗 Redes / Infraestrutura</option>
                 <option value="gestão">📋 Gestão de Projectos</option>
                 <option value="empreendedorismo">🚀 Empreendedorismo</option>
               </select>
-              <button type="button" class="btn btn-outline-primary px-3" style="border-color:#6366f1;color:#818cf8;white-space:nowrap;" onclick="addExpertise()">
-                <i class="bi bi-plus"></i> Adicionar
-              </button>
+              <button type="button" class="btn-inkuai px-3" onclick="addExpertise()"><i class="bi bi-plus"></i></button>
             </div>
-            <input type="hidden" id="expertise-areas-json" value="[]">
+            <input type="hidden" id="expertise-json" value="[]">
           </div>
           <div class="col-12">
             <label class="form-label-dark">Bio como Mentor</label>
-            <textarea id="mentor-bio-input" class="form-control-dark" rows="3"
-              placeholder="Descreva a experiência académica/profissional do mentor nas áreas seleccionadas..."></textarea>
+            <textarea id="mentor-bio-input" class="form-control-dark" rows="3" placeholder="Descreva a experiência académica/profissional..."></textarea>
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+      <div class="modal-footer">
         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn-inkuai" id="save-mentor-btn" onclick="saveMentor()">
-          <i class="bi bi-check2 me-2"></i>Cadastrar Mentor
-        </button>
+        <button class="btn-inkuai" onclick="saveMentor()"><i class="bi bi-check2 me-2"></i>Cadastrar Mentor</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: Editar Mentor -->
+<!-- Edit Mentor Modal -->
 <div class="modal fade" id="editMentorModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:var(--surface-card);border:1px solid var(--border-light);border-radius:16px;">
-      <div class="modal-header" style="border-bottom:1px solid var(--border-light);">
-        <h5 class="modal-title"><i class="bi bi-pencil me-2" style="color:#6366f1;"></i>Editar Mentor</h5>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-pencil me-2" style="color:var(--brand-primary);"></i>Editar Mentor</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -304,23 +220,18 @@ TYPE html>
             <div class="d-flex gap-2">
               <select id="edit-expertise-select" class="form-control-dark">
                 <option value="">Seleccionar área...</option>
-                <option value="software">🖥️ Software / Desenvolvimento</option>
-                <option value="web">🌐 Web / Frontend</option>
+                <option value="software">🖥️ Software</option>
+                <option value="web">🌐 Web</option>
                 <option value="mobile">📱 Mobile</option>
-                <option value="ia">🤖 Inteligência Artificial</option>
+                <option value="ia">🤖 IA</option>
                 <option value="machine learning">🧠 Machine Learning</option>
-                <option value="dados">📊 Ciência de Dados</option>
-                <option value="backend">⚙️ Backend / APIs</option>
-                <option value="base de dados">🗄️ Base de Dados</option>
-                <option value="investigação">🔬 Investigação Científica</option>
-                <option value="segurança">🔐 Cibersegurança</option>
-                <option value="redes">🔗 Redes / Infraestrutura</option>
-                <option value="gestão">📋 Gestão de Projectos</option>
+                <option value="dados">📊 Dados</option>
+                <option value="backend">⚙️ Backend</option>
+                <option value="investigação">🔬 Investigação</option>
+                <option value="gestão">📋 Gestão</option>
                 <option value="empreendedorismo">🚀 Empreendedorismo</option>
               </select>
-              <button type="button" class="btn btn-outline-primary px-3" style="border-color:#6366f1;color:#818cf8;white-space:nowrap;" onclick="addEditExpertise()">
-                <i class="bi bi-plus"></i>
-              </button>
+              <button type="button" class="btn-inkuai px-3" onclick="addEditExpertise()"><i class="bi bi-plus"></i></button>
             </div>
             <input type="hidden" id="edit-expertise-json" value="[]">
           </div>
@@ -330,7 +241,7 @@ TYPE html>
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-light);">
+      <div class="modal-footer">
         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
         <button class="btn-inkuai" onclick="updateMentor()"><i class="bi bi-check2 me-2"></i>Guardar</button>
       </div>
@@ -338,342 +249,223 @@ TYPE html>
   </div>
 </div>
 
-<style>
-.expertise-chip {
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(16,185,129,.15);color:#10b981;
-  border:1px solid rgba(16,185,129,.3);border-radius:20px;
-  padding:4px 12px;font-size:12px;font-weight:600;
-}
-.expertise-chip button { background:none;border:none;color:#10b981;padding:0;line-height:1;cursor:pointer;font-size:14px; }
-.mentor-card { background:var(--surface-card);border:1px solid var(--border-light);border-radius:14px;padding:20px;transition:all .2s; }
-.mentor-card:hover { border-color:#10b981;box-shadow:0 6px 20px rgba(16,185,129,.1); }
-.type-map-badge { display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(99,102,241,.15);color:#818cf8; }
-</style>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-const TYPE_LABELS = { software:'Software', web:'Web', mobile:'Mobile', ia:'IA', 'machine learning':'ML', dados:'Dados', backend:'Backend', 'base de dados':'BD', investigação:'Investigação', segurança:'Segurança', redes:'Redes', gestão:'Gestão', empreendedorismo:'Empreend.' };
-
-// ─── Tab switching ───────────────────────────────────────────
 function switchTab(tab) {
   ['mentors','assign','notify'].forEach(t => {
     document.getElementById(`panel-${t}`).style.display = t===tab ? '' : 'none';
     const btn = document.getElementById(`tab-${t}-btn`);
-    if (btn) {
-      btn.style.borderBottomColor = t===tab ? '#10b981' : 'transparent';
-      btn.style.color = t===tab ? '#10b981' : 'var(--text-muted)';
-    }
+    if(btn) { btn.classList.toggle('active', t===tab); }
   });
-  if (tab === 'assign') { loadProjects(); loadAssignments(); }
+  if(tab==='assign') { loadProjects(); loadAssignments(); }
 }
 
-// ─── Load Mentors ────────────────────────────────────────────
 async function loadMentors() {
-  const grid = document.getElementById('mentors-list');
+  const grid = document.getElementById('mentors-grid');
   try {
     const res = await window.InkuAPI.get('/admin/mentors');
     const mentors = res.mentors || [];
-    if (!mentors.length) {
-      grid.innerHTML = `<div class="col-12 text-center py-5">
-        <i class="bi bi-mortarboard fs-1 d-block mb-3" style="color:var(--text-muted)"></i>
-        <p style="color:var(--text-muted)">Nenhum mentor cadastrado ainda.</p>
-        <button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#addMentorModal">
-          <i class="bi bi-plus me-2"></i>Adicionar primeiro mentor
-        </button>
-      </div>`;
+    if(!mentors.length) {
+      grid.innerHTML = `<div class="col-12"><div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-mortarboard"></i></span><h5>Sem mentores</h5><p>Adicione o primeiro mentor.</p><button class="btn-inkuai" data-bs-toggle="modal" data-bs-target="#addMentorModal"><i class="bi bi-plus me-2"></i>Adicionar Mentor</button></div></div>`;
       return;
     }
     grid.innerHTML = mentors.map(m => {
-      const areas = Array.isArray(m.expertise_areas) ? m.expertise_areas : [];
-      return `
-      <div class="col-md-6 col-xl-4">
+      const areas = Array.isArray(m.expertise_areas) ? m.expertise_areas : (()=>{try{return JSON.parse(m.expertise_areas||'[]');}catch{return [];}})();
+      return `<div class="col-md-6 col-xl-4">
         <div class="mentor-card">
           <div class="d-flex align-items-center gap-3 mb-3">
-            <div style="width:52px;height:52px;background:linear-gradient(135deg,#10b981,#059669);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.2rem;">
-              ${m.name[0].toUpperCase()}
-            </div>
-            <div style="flex:1;">
-              <div style="font-weight:700;color:var(--text-primary);">${m.name}</div>
-              <div style="font-size:0.78rem;color:var(--text-muted);">${m.email}</div>
-              <span style="font-size:0.7rem;background:rgba(16,185,129,.15);color:#10b981;padding:2px 8px;border-radius:20px;font-weight:600;">👨‍🏫 mentor</span>
+            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#10b981,#059669);font-weight:700;font-size:1rem;color:#fff;">${m.name?.[0]?.toUpperCase()||'?'}</div>
+            <div style="flex:1;overflow:hidden;">
+              <div style="font-weight:700;" class="truncate">${m.name}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);" class="truncate">${m.email}</div>
+              <span class="status status-active" style="font-size:0.62rem;">👨‍🏫 mentor</span>
             </div>
           </div>
-          ${m.mentor_bio ? `<p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">${m.mentor_bio.substring(0,120)}${m.mentor_bio.length>120?'...':''}</p>` : ''}
-          ${areas.length ? `
-          <div class="d-flex flex-wrap gap-1 mb-3">
-            ${areas.map(a=>`<span class="expertise-chip" style="font-size:10px;">${a}</span>`).join('')}
-          </div>` : '<p style="font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-bottom:12px;">Sem áreas definidas</p>'}
+          ${m.mentor_bio ? `<p class="line-clamp-2" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;">${m.mentor_bio}</p>` : ''}
+          ${areas.length ? `<div class="d-flex flex-wrap gap-1 mb-3">${areas.slice(0,4).map(a=>`<span class="expertise-chip">${a}</span>`).join('')}</div>` : '<p style="font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-bottom:10px;">Sem áreas definidas</p>'}
           <div class="d-flex gap-2 pt-2" style="border-top:1px solid var(--border-light);">
-            <button class="btn btn-sm btn-outline-primary flex-fill" style="border-color:#6366f1;color:#818cf8;font-size:12px;"
-              onclick="openEdit('${m.id}','${m.name.replace(/'/g,"\\'")}',${JSON.stringify(areas)},'${(m.mentor_bio||'').replace(/'/g,"\\'")}')">
-              <i class="bi bi-pencil me-1"></i>Editar
-            </button>
-            <button class="btn btn-sm btn-outline-danger flex-fill" style="font-size:12px;"
-              onclick="removeMentor('${m.id}','${m.name.replace(/'/g,"\\'")}')">
-              <i class="bi bi-person-x me-1"></i>Remover
-            </button>
+            <button class="btn-inkuai-ghost btn-inkuai-sm flex-fill" onclick="openEdit('${m.id}',${JSON.stringify(areas)},'${(m.mentor_bio||'').replace(/'/g,"\\'")}')"><i class="bi bi-pencil me-1"></i>Editar</button>
+            <button class="btn-inkuai-danger btn-inkuai-sm flex-fill" onclick="removeMentor('${m.id}','${m.name.replace(/'/g,"\\'")}')"><i class="bi bi-person-x me-1"></i>Remover</button>
           </div>
         </div>
       </div>`;
     }).join('');
   } catch(e) {
-    grid.innerHTML = `<div class="col-12 text-center py-4 text-danger">${e.message}</div>`;
+    grid.innerHTML = `<div class="col-12"><div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-exclamation-triangle"></i></span><h5>Erro</h5><p>${e.message}</p></div></div>`;
   }
 }
 
-// ─── Load all users for dropdown ─────────────────────────────
 async function loadUsersDropdown() {
   try {
-    const res = await window.InkuAPI.get('/admin/users?limit=100');
+    const res = await window.InkuAPI.get('/admin/users?limit=200');
     const users = res.data || res.users || [];
     const sel = document.getElementById('mentor-user-id');
-    users.filter(u => u.role !== 'mentor').forEach(u => {
-      const opt = document.createElement('option');
-      opt.value = u.id;
-      opt.textContent = `${u.name} (${u.email}) — ${u.role}`;
-      sel.appendChild(opt);
+    users.filter(u=>u.role!=='mentor').forEach(u => {
+      const o=document.createElement('option'); o.value=u.id; o.textContent=`${u.name} (${u.email}) — ${u.role}`; sel.appendChild(o);
     });
-  } catch(e) {}
+  } catch {}
 }
 
-// ─── Expertise chips (add modal) ─────────────────────────────
 function addExpertise() {
   const sel = document.getElementById('expertise-select');
-  const val = sel.value; if (!val) return;
-  let areas = JSON.parse(document.getElementById('expertise-areas-json').value || '[]');
-  if (areas.includes(val)) return;
+  const val = sel.value; if(!val) return;
+  let areas = JSON.parse(document.getElementById('expertise-json').value||'[]');
+  if(areas.includes(val)) return;
   areas.push(val);
-  document.getElementById('expertise-areas-json').value = JSON.stringify(areas);
-  renderChips('expertise-chips', areas, 'expertise-areas-json');
-  sel.value = '';
+  document.getElementById('expertise-json').value = JSON.stringify(areas);
+  renderChips('expertise-chips','expertise-json',areas);
+  sel.value='';
 }
 function addEditExpertise() {
-  const sel = document.getElementById('edit-expertise-select');
-  const val = sel.value; if (!val) return;
-  let areas = JSON.parse(document.getElementById('edit-expertise-json').value || '[]');
-  if (areas.includes(val)) return;
+  const sel=document.getElementById('edit-expertise-select');
+  const val=sel.value; if(!val) return;
+  let areas=JSON.parse(document.getElementById('edit-expertise-json').value||'[]');
+  if(areas.includes(val)) return;
   areas.push(val);
-  document.getElementById('edit-expertise-json').value = JSON.stringify(areas);
-  renderChips('edit-expertise-chips', areas, 'edit-expertise-json');
-  sel.value = '';
+  document.getElementById('edit-expertise-json').value=JSON.stringify(areas);
+  renderChips('edit-expertise-chips','edit-expertise-json',areas);
+  sel.value='';
 }
-function renderChips(containerId, areas, jsonId) {
-  const c = document.getElementById(containerId);
-  c.innerHTML = areas.map(a => `
-    <span class="expertise-chip">
-      ${a}
-      <button onclick="removeChip('${jsonId}','${containerId}','${a}')" type="button">×</button>
-    </span>`).join('');
+function renderChips(containerId, jsonId, areas) {
+  document.getElementById(containerId).innerHTML = areas.map(a=>
+    `<span class="expertise-chip">${a}<button class="rm" onclick="removeChip('${jsonId}','${containerId}','${a}')">×</button></span>`).join('');
 }
-function removeChip(jsonId, containerId, val) {
-  let areas = JSON.parse(document.getElementById(jsonId).value || '[]');
-  areas = areas.filter(a => a !== val);
-  document.getElementById(jsonId).value = JSON.stringify(areas);
-  renderChips(containerId, areas, jsonId);
+function removeChip(jsonId,containerId,val) {
+  let areas=JSON.parse(document.getElementById(jsonId).value||'[]');
+  areas=areas.filter(a=>a!==val);
+  document.getElementById(jsonId).value=JSON.stringify(areas);
+  renderChips(containerId,jsonId,areas);
 }
 
-// ─── Save mentor ─────────────────────────────────────────────
 async function saveMentor() {
-  const userId = document.getElementById('mentor-user-id').value;
-  const expertiseAreas = JSON.parse(document.getElementById('expertise-areas-json').value || '[]');
-  const mentorBio = document.getElementById('mentor-bio-input').value;
-  if (!userId) { window.showToast?.('Seleccione um utilizador.','warning'); return; }
-  if (!expertiseAreas.length) { window.showToast?.('Adicione pelo menos uma área de expertise.','warning'); return; }
-  const btn = document.getElementById('save-mentor-btn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A guardar...';
+  const userId=document.getElementById('mentor-user-id').value;
+  const expertiseAreas=JSON.parse(document.getElementById('expertise-json').value||'[]');
+  const mentorBio=document.getElementById('mentor-bio-input').value;
+  if(!userId){showToast('Seleccione um utilizador.','warning');return;}
+  if(!expertiseAreas.length){showToast('Adicione pelo menos uma área.','warning');return;}
   try {
-    await window.InkuAPI.post('/admin/mentors', { userId, expertiseAreas, mentorBio });
+    await window.InkuAPI.post('/admin/mentors',{userId,expertiseAreas,mentorBio});
     bootstrap.Modal.getInstance(document.getElementById('addMentorModal')).hide();
-    window.showToast?.('Mentor cadastrado com sucesso!','success');
+    showToast('Mentor cadastrado!','success');
     loadMentors();
-    // reset
-    document.getElementById('mentor-user-id').value = '';
-    document.getElementById('expertise-areas-json').value = '[]';
-    document.getElementById('mentor-bio-input').value = '';
-    document.getElementById('expertise-chips').innerHTML = '';
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="bi bi-check2 me-2"></i>Cadastrar Mentor'; }
+    document.getElementById('mentor-user-id').value='';
+    document.getElementById('expertise-json').value='[]';
+    document.getElementById('mentor-bio-input').value='';
+    document.getElementById('expertise-chips').innerHTML='';
+  } catch(e) { showToast(e.message,'error'); }
 }
 
-// ─── Edit mentor ─────────────────────────────────────────────
-function openEdit(id, name, areas, bio) {
-  document.getElementById('edit-mentor-id').value = id;
-  document.getElementById('edit-mentor-bio').value = bio || '';
-  document.getElementById('edit-expertise-json').value = JSON.stringify(areas);
-  renderChips('edit-expertise-chips', areas, 'edit-expertise-json');
+function openEdit(id,areas,bio) {
+  document.getElementById('edit-mentor-id').value=id;
+  document.getElementById('edit-mentor-bio').value=bio||'';
+  document.getElementById('edit-expertise-json').value=JSON.stringify(areas);
+  renderChips('edit-expertise-chips','edit-expertise-json',areas);
   bootstrap.Modal.getOrCreateInstance(document.getElementById('editMentorModal')).show();
 }
 async function updateMentor() {
-  const userId = document.getElementById('edit-mentor-id').value;
-  const expertiseAreas = JSON.parse(document.getElementById('edit-expertise-json').value || '[]');
-  const mentorBio = document.getElementById('edit-mentor-bio').value;
+  const userId=document.getElementById('edit-mentor-id').value;
+  const expertiseAreas=JSON.parse(document.getElementById('edit-expertise-json').value||'[]');
+  const mentorBio=document.getElementById('edit-mentor-bio').value;
   try {
-    await window.InkuAPI.post('/admin/mentors', { userId, expertiseAreas, mentorBio });
+    await window.InkuAPI.post('/admin/mentors',{userId,expertiseAreas,mentorBio});
     bootstrap.Modal.getInstance(document.getElementById('editMentorModal')).hide();
-    window.showToast?.('Mentor actualizado!','success');
-    loadMentors();
-  } catch(e) { window.showToast?.(e.message,'error'); }
+    showToast('Mentor actualizado!','success'); loadMentors();
+  } catch(e) { showToast(e.message,'error'); }
 }
-
-// ─── Remove mentor ───────────────────────────────────────────
-async function removeMentor(id, name) {
-  if (!confirm(`Remover "${name}" como mentor? O utilizador voltará ao role de estudante.`)) return;
+async function removeMentor(id,name) {
+  if(!confirm(`Remover "${name}" como mentor?`)) return;
   try {
     await window.InkuAPI.delete(`/admin/mentors/${id}`);
-    window.showToast?.(`${name} removido como mentor.`,'success');
-    loadMentors();
-  } catch(e) { window.showToast?.(e.message,'error'); }
+    showToast(`${name} removido como mentor.`,'success'); loadMentors();
+  } catch(e) { showToast(e.message,'error'); }
 }
 
-// ─── Assign tab: load projects + assignments ─────────────────
 async function loadProjects() {
   try {
-    const [pRes, mRes] = await Promise.all([
-      window.InkuAPI.get('/admin/projects?limit=100'),
-      window.InkuAPI.get('/admin/mentors')
-    ]);
-    const projects = pRes.data || [];
-    const mentors  = mRes.mentors || [];
-
-    const pSel = document.getElementById('assign-project');
-    const mSel = document.getElementById('assign-mentor');
-    pSel.innerHTML = '<option value="">— Seleccione um projecto —</option>';
-    mSel.innerHTML = '<option value="">— Seleccione um mentor —</option>';
-
-    projects.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id; opt.textContent = `${p.title} (${p.type}) — ${p.status}`;
-      pSel.appendChild(opt);
+    const [pRes,mRes]=await Promise.all([window.InkuAPI.get('/admin/projects?limit=100'),window.InkuAPI.get('/admin/mentors')]);
+    const ps=pRes.data||[]; const ms=mRes.mentors||[];
+    const pSel=document.getElementById('assign-project');
+    const mSel=document.getElementById('assign-mentor');
+    pSel.innerHTML='<option value="">— Seleccione —</option>';
+    mSel.innerHTML='<option value="">— Seleccione —</option>';
+    ps.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=`${p.title} (${p.type})`;pSel.appendChild(o);});
+    ms.forEach(m=>{
+      const areas=(()=>{try{return JSON.parse(m.expertise_areas||'[]');}catch{return [];}})();
+      const o=document.createElement('option');o.value=m.id;o.textContent=`${m.name} [${areas.slice(0,2).join(', ')||'sem áreas'}]`;mSel.appendChild(o);
     });
-    mentors.forEach(m => {
-      const opt = document.createElement('option');
-      const areas = Array.isArray(m.expertise_areas) ? m.expertise_areas.slice(0,3).join(', ') : '';
-      opt.value = m.id; opt.textContent = `${m.name} [${areas||'sem áreas'}]`;
-      mSel.appendChild(opt);
-    });
-  } catch(e) {}
+  } catch {}
 }
 
 async function loadAssignments() {
-  const list = document.getElementById('assignments-list');
+  const list=document.getElementById('assignments-list');
+  list.innerHTML='<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
   try {
-    // Get all projects and check mentor assignments
-    const res = await window.InkuAPI.get('/admin/projects?limit=50');
-    const projects = res.data || [];
-    if (!projects.length) { list.innerHTML = '<p style="color:var(--text-muted);text-align:center;">Sem projectos.</p>'; return; }
-
-    const rows = [];
-    for (const p of projects.slice(0,15)) {
-      try {
-        const mr = await window.InkuAPI.get(`/submissions/project/${p.id}/mentor`);
-        const a = mr.assignment || null;
-        rows.push({ project: p, assignment: a });
-      } catch(e) { rows.push({ project: p, assignment: null }); }
+    const res=await window.InkuAPI.get('/admin/projects?limit=30');
+    const projects=res.data||[];
+    if(!projects.length){list.innerHTML='<p style="color:var(--text-muted);text-align:center;font-size:0.85rem;">Sem projectos.</p>';return;}
+    const rows=[];
+    for(const p of projects.slice(0,15)){
+      try{const mr=await window.InkuAPI.get(`/submissions/project/${p.id}/mentor`);rows.push({p,a:mr.assignment||null});}
+      catch{rows.push({p,a:null});}
     }
-
-    list.innerHTML = `<div class="table-responsive">
-      <table style="width:100%;border-collapse:separate;border-spacing:0 6px;">
-        <thead><tr style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">
-          <th style="padding:6px 12px;">Projecto</th>
-          <th style="padding:6px 12px;">Tipo</th>
-          <th style="padding:6px 12px;">Mentor</th>
-          <th style="padding:6px 12px;">Atribuído por</th>
-          <th style="padding:6px 12px;">Acção</th>
-        </tr></thead>
-        <tbody>
-          ${rows.map(r => `
-          <tr style="background:var(--surface-card);border-radius:10px;">
-            <td style="padding:10px 12px;color:var(--text-primary);font-weight:600;font-size:0.85rem;">${r.project.title.substring(0,30)}</td>
-            <td style="padding:10px 12px;"><span class="type-map-badge">${r.project.type}</span></td>
-            <td style="padding:10px 12px;color:${r.assignment?'#10b981':'var(--text-muted)'};font-size:0.85rem;">
-              ${r.assignment ? `<i class="bi bi-person-check me-1"></i>${r.assignment.mentor?.name||'—'}` : '<span style="color:var(--text-muted)">Sem mentor</span>'}
-            </td>
-            <td style="padding:10px 12px;font-size:0.78rem;color:var(--text-muted);">${r.assignment?.assigned_by||'—'}</td>
-            <td style="padding:10px 12px;">
-              <button class="btn btn-sm" style="background:rgba(99,102,241,.15);color:#818cf8;border:none;font-size:11px;border-radius:20px;"
-                onclick="document.getElementById('assign-project').value='${r.project.id}'">
-                Reatribuir
-              </button>
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
-  } catch(e) { list.innerHTML = `<p class="text-danger">${e.message}</p>`; }
+    list.innerHTML=`<div class="table-responsive"><table class="inkuai-table">
+      <thead><tr><th>Projecto</th><th>Tipo</th><th>Mentor</th><th>Por</th><th>Acção</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr>
+        <td style="font-weight:600;font-size:0.845rem;">${r.p.title.substring(0,35)}</td>
+        <td><span class="tag tag-blue">${r.p.type}</span></td>
+        <td style="color:${r.a?'var(--success)':'var(--text-muted)'};font-size:0.845rem;">${r.a?'✓ '+r.a.mentor?.name:'Sem mentor'}</td>
+        <td style="font-size:0.78rem;color:var(--text-muted);">${r.a?.assigned_by||'—'}</td>
+        <td><button class="btn-inkuai-ghost btn-inkuai-sm" onclick="document.getElementById('assign-project').value='${r.p.id}'">Reatribuir</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } catch(e){list.innerHTML=`<p style="color:var(--danger);font-size:0.85rem;">${e.message}</p>`;}
 }
 
 async function manualAssign() {
-  const projectId = document.getElementById('assign-project').value;
-  const mentorId  = document.getElementById('assign-mentor').value;
-  if (!projectId || !mentorId) { window.showToast?.('Seleccione projecto e mentor.','warning'); return; }
-  try {
-    await window.InkuAPI.post('/admin/mentors/assign', { projectId, mentorId });
-    window.showToast?.('Mentor atribuído com sucesso!','success');
-    loadAssignments();
-  } catch(e) { window.showToast?.(e.message,'error'); }
+  const pId=document.getElementById('assign-project').value;
+  const mId=document.getElementById('assign-mentor').value;
+  if(!pId||!mId){showToast('Seleccione projecto e mentor.','warning');return;}
+  try{await window.InkuAPI.post('/admin/mentors/assign',{projectId:pId,mentorId:mId});showToast('Mentor atribuído!','success');loadAssignments();}
+  catch(e){showToast(e.message,'error');}
 }
 
 async function aiAssign() {
-  const projectId = document.getElementById('assign-project').value;
-  if (!projectId) { window.showToast?.('Seleccione um projecto.','warning'); return; }
-  const btn = event.target;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>IA a escolher...';
-  btn.disabled = true;
-  try {
-    const res = await window.InkuAPI.post(`/admin/mentors/auto-assign/${projectId}`, {});
-    window.showToast?.(`IA escolheu: ${res.assignment?.mentor?.name || 'mentor atribuído'}!`,'success');
-    loadAssignments();
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.innerHTML='<i class="bi bi-stars me-2"></i>Deixar a IA Escolher'; btn.disabled=false; }
+  const pId=document.getElementById('assign-project').value;
+  if(!pId){showToast('Seleccione um projecto.','warning');return;}
+  const btn=event.target; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A escolher...'; btn.disabled=true;
+  try{const r=await window.InkuAPI.post(`/admin/mentors/auto-assign/${pId}`,{});showToast(`IA escolheu: ${r.assignment?.mentor?.name||'mentor atribuído'}!`,'success');loadAssignments();}
+  catch(e){showToast(e.message,'error');}
+  finally{btn.innerHTML='<i class="bi bi-stars me-2"></i>Deixar a IA Escolher';btn.disabled=false;}
 }
 
-// ─── Bulk notification ───────────────────────────────────────
-function toggleRoleSelect() {
-  const target = document.getElementById('notif-target').value;
-  document.getElementById('role-select-row').style.display = target==='role' ? '' : 'none';
-}
+function toggleRoleSelect(){document.getElementById('role-select-row').style.display=document.getElementById('notif-target').value==='role'?'':'none';}
 
 async function sendBulkNotification() {
-  const title   = document.getElementById('notif-title').value;
-  const message = document.getElementById('notif-message').value;
-  const type    = document.getElementById('notif-type').value;
-  const target  = document.getElementById('notif-target').value;
-  const url     = document.getElementById('notif-url').value;
-  if (!title || !message) { window.showToast?.('Título e mensagem são obrigatórios.','warning'); return; }
-
-  let payload = { title, message, type, url };
-  if (target === 'role') {
-    const roles = ['student','mentor','admin'].filter(r => document.getElementById(`role-${r}`)?.checked);
-    if (!roles.length) { window.showToast?.('Seleccione pelo menos um tipo.','warning'); return; }
-    payload.target = 'role'; payload.role = roles;
-  } else {
-    payload.target = 'all';
-  }
-
-  const btn = event.target;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A enviar...';
-  btn.disabled = true;
-  try {
-    const res = await window.InkuAPI.post('/admin/notify', payload);
-    window.showToast?.(`Notificação enviada a ${res.sent} utilizador(es)!`,'success');
-    document.getElementById('notif-title').value = '';
-    document.getElementById('notif-message').value = '';
-  } catch(e) { window.showToast?.(e.message,'error'); }
-  finally { btn.innerHTML='<i class="bi bi-send me-2"></i>Enviar Notificação'; btn.disabled=false; }
+  const title=document.getElementById('notif-title').value;
+  const message=document.getElementById('notif-message').value;
+  if(!title||!message){showToast('Título e mensagem obrigatórios.','warning');return;}
+  const target=document.getElementById('notif-target').value;
+  let payload={title,message,type:document.getElementById('notif-type').value,url:document.getElementById('notif-url').value};
+  if(target==='role'){
+    const roles=['student','mentor','admin'].filter(r=>document.getElementById(`role-${r}`)?.checked);
+    if(!roles.length){showToast('Seleccione pelo menos um tipo.','warning');return;}
+    payload.target='role';payload.role=roles;
+  } else payload.target='all';
+  const btn=event.target; btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>A enviar...';
+  try{
+    const r=await window.InkuAPI.post('/admin/notify',payload);
+    showToast(`Notificação enviada a ${r.sent} utilizador(es)!`,'success');
+    document.getElementById('notif-title').value='';document.getElementById('notif-message').value='';
+  }catch(e){showToast(e.message,'error');}
+  finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-send me-2"></i>Enviar Notificação';}
 }
 
-// ─── Init ────────────────────────────────────────────────────
-const usr = window.InkuAuth?.getUser?.();
-if (usr?.name) document.getElementById('user-avatar').textContent = usr.name[0].toUpperCase();
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadMentors();
-  loadUsersDropdown();
-});
+const usr=window.InkuAuth?.getUser?.();
+if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+document.addEventListener('DOMContentLoaded',()=>{loadMentors();loadUsersDropdown();});
 </script>
 <script src="/assets/js/components/notifications.js"></script>
 </body>

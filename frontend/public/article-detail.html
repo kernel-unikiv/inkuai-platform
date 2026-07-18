@@ -3,228 +3,291 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artigo — INKU·AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text y='24' x='4' font-size='22' fill='white'>⚡</text></svg>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
+  <style>
+    .cat-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:var(--r-full);font-size:0.72rem;font-weight:700;}
+    .cat-ideia       {background:rgba(245,158,11,.12);color:#d97706;}
+    .cat-artigo      {background:rgba(37,99,235,.1); color:#2563eb;}
+    .cat-investigacao{background:rgba(22,163,74,.1); color:#16a34a;}
+    .cat-inovacao    {background:rgba(124,58,237,.1);color:#7c3aed;}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="main-sidebar">
     <a href="/dashboard.html" class="sidebar-brand">
       <div class="brand-logo"><i class="bi bi-cpu-fill"></i></div>
-      <div><div class="brand-name">INKU<span style="color:#60a5fa">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
+      <div><div class="brand-name">INKU<span style="color:var(--blue-400);">·AI</span></div><div class="brand-sub">IP/UNIKIVI</div></div>
     </a>
     <nav class="sidebar-nav">
       <span class="sidebar-section-label">Principal</span>
-      <a href="/dashboard.html"  class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
-      <a href="/projects.html"   class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
-      <a href="/startups.html"   class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
-      <a href="/articles.html"   class="sidebar-link active"><i class="bi bi-lightbulb-fill"></i>Artigos & Ideias</a>
-      <a href="/classroom.html"  class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
-      <a href="/sandbox.html"    class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/dashboard.html"    class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i>Dashboard</a>
+      <a href="/projects.html"     class="sidebar-link"><i class="bi bi-folder2-open"></i>Projectos</a>
+      <a href="/startups.html"     class="sidebar-link"><i class="bi bi-rocket-takeoff"></i>Startups</a>
+      <a href="/articles.html"     class="sidebar-link active"><i class="bi bi-lightbulb-fill"></i>Artigos &amp; Ideias</a>
+      <a href="/roadmap.html"      class="sidebar-link"><i class="bi bi-map-fill"></i>Roadmap</a>
+      <a href="/classroom.html"    class="sidebar-link"><i class="bi bi-mortarboard-fill"></i>Classroom</a>
+      <span class="sidebar-section-label">IA &amp; Ferramentas</span>
       <a href="/ai-assistant.html" class="sidebar-link"><i class="bi bi-robot"></i>INKU·AI Chat</a>
+      <a href="/sandbox.html"      class="sidebar-link"><i class="bi bi-terminal-fill"></i>Sandbox IA</a>
+      <a href="/ai-models.html"    class="sidebar-link"><i class="bi bi-braces"></i>Modelos IA</a>
+      <a href="/datasets.html"     class="sidebar-link"><i class="bi bi-database-fill"></i>Datasets</a>
       <span class="sidebar-section-label">Conta</span>
-      <a href="/messages.html"   class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
-      <a href="/profile.html"    class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/messages.html"     class="sidebar-link"><i class="bi bi-chat-dots-fill"></i>Mensagens</a>
+      <a href="/profile.html"      class="sidebar-link"><i class="bi bi-person-fill"></i>Perfil</a>
+      <a href="/mentorship.html"   class="sidebar-link"><i class="bi bi-people-fill"></i>Mentoria</a>
       <a href="/admin/admin-dashboard.html" class="sidebar-link" id="admin-link" style="display:none"><i class="bi bi-shield-fill"></i>Administração</a>
     </nav>
     <div class="sidebar-footer">
-      <div class="sidebar-user">
+      <div class="sidebar-user" onclick="location.href='/profile.html'">
         <div class="sidebar-user-avatar" id="user-avatar">U</div>
-        <div style="flex:1;overflow:hidden">
-          <div class="sidebar-user-name text-truncate" data-user-name>Utilizador</div>
-          <div class="sidebar-user-role" data-user-role>student</div>
-        </div>
-        <button onclick="doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.4)"><i class="bi bi-box-arrow-right"></i></button>
+        <div style="flex:1;overflow:hidden;"><div class="sidebar-user-name truncate" data-user-name>Utilizador</div><div class="sidebar-user-role" data-user-role>student</div></div>
+        <button onclick="event.stopPropagation();doLogout()" class="btn btn-link p-0" style="color:rgba(255,255,255,0.3);" title="Sair"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="topbar">
-      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list fs-4"></i></button>
-      <a href="/articles.html" class="btn btn-sm btn-outline-secondary me-2" style="border-color:var(--border-light);color:var(--text-muted);">
-        <i class="bi bi-arrow-left me-1"></i>Artigos & Ideias
-      </a>
-      <div id="notif-mount" class="d-flex align-items-center ms-auto"></div>
+      <button id="sidebar-toggle" class="btn btn-link d-lg-none p-0 me-2" style="color:var(--text-muted)"><i class="bi bi-list" style="font-size:1.3rem;"></i></button>
+      <div class="topbar-breadcrumb">
+        <a href="/articles.html"><i class="bi bi-lightbulb me-1"></i>Artigos</a>
+        <span>/</span>
+        <span id="breadcrumb-title" style="color:var(--text-primary);">—</span>
+      </div>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <div id="notif-mount"></div>
+      </div>
     </div>
 
-    <div class="page-content">
-      <div id="article-loading" class="text-center py-5" style="color:var(--text-muted)">
-        <div class="spinner-border text-primary mb-3"></div>
-        <div>A carregar artigo...</div>
+    <div id="article-loading" class="page-content">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="skeleton mb-3" style="height:22px;width:50%;"></div>
+          <div class="skeleton skeleton-text mb-2"></div>
+          <div class="skeleton skeleton-text mb-2"></div>
+          <div class="skeleton skeleton-text" style="width:70%;"></div>
+        </div>
       </div>
-      <div id="article-body" style="display:none;">
-        <div class="row justify-content-center">
-          <div class="col-lg-9">
-            <!-- Header -->
-            <div class="inkuai-card mb-4">
-              <div class="d-flex align-items-center gap-2 mb-3">
-                <span id="art-cat-badge" class="cat-badge"></span>
-                <span id="art-date" style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;"></span>
-              </div>
-              <h1 id="art-title" style="font-size:1.6rem;font-weight:800;color:var(--text-primary);line-height:1.3;margin-bottom:16px;"></h1>
-              <p id="art-summary" style="font-size:1rem;color:var(--text-secondary);line-height:1.7;padding-bottom:16px;border-bottom:1px solid var(--border-light);"></p>
-              <!-- Author + Tags + Actions -->
-              <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
-                <div class="d-flex align-items-center gap-2">
-                  <div id="art-avatar" style="width:38px;height:38px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">?</div>
-                  <div>
-                    <div id="art-author" style="font-weight:600;color:var(--text-primary);font-size:0.9rem;"></div>
-                    <div id="art-author-role" style="font-size:0.75rem;color:var(--text-muted);"></div>
-                  </div>
-                </div>
-                <div id="art-tags-row" class="d-flex flex-wrap gap-1"></div>
-                <div class="ms-auto d-flex gap-2">
-                  <button id="like-btn" onclick="likeArticle()" class="btn btn-sm" style="background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);border-radius:20px;padding:4px 14px;font-size:13px;">
-                    <i class="bi bi-heart-fill me-1"></i><span id="like-count">0</span>
-                  </button>
-                  <button onclick="navigator.share?navigator.share({title:document.title,url:location.href}):navigator.clipboard.writeText(location.href)" class="btn btn-sm" style="background:rgba(99,102,241,.1);color:#818cf8;border:1px solid rgba(99,102,241,.2);border-radius:20px;padding:4px 14px;font-size:13px;">
-                    <i class="bi bi-share me-1"></i>Partilhar
-                  </button>
+    </div>
+
+    <div id="article-main" style="display:none;" class="page-content">
+      <div class="row justify-content-center g-4">
+        <div class="col-lg-8">
+          <!-- Header Card -->
+          <div class="inkuai-card mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+              <span class="cat-badge" id="art-cat-badge"></span>
+              <span style="font-size:0.78rem;color:var(--text-muted);" id="art-date"></span>
+            </div>
+            <h1 style="font-size:1.5rem;font-weight:800;line-height:1.3;margin-bottom:14px;" id="art-title"></h1>
+            <p id="art-summary" style="font-size:1rem;color:var(--text-secondary);line-height:1.7;padding-bottom:16px;border-bottom:1px solid var(--border-light);"></p>
+            <!-- Author + Tags + Actions -->
+            <div class="d-flex align-items-center flex-wrap gap-3 mt-3">
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar avatar-sm" id="art-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;">?</div>
+                <div>
+                  <div id="art-author" style="font-weight:700;font-size:0.875rem;"></div>
+                  <div id="art-author-role" style="font-size:0.72rem;color:var(--text-muted);"></div>
                 </div>
               </div>
-            </div>
-            <!-- Content -->
-            <div class="inkuai-card mb-4">
-              <div id="art-content" style="color:var(--text-secondary);font-size:0.95rem;line-height:1.9;white-space:pre-wrap;"></div>
-            </div>
-            <!-- AI Analysis -->
-            <div class="inkuai-card mb-4" id="ai-analysis-card">
-              <div class="d-flex align-items-center gap-2 mb-3">
-                <div style="width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">✨</div>
-                <h6 style="margin:0;font-weight:700;color:var(--text-primary);">Análise pela IA</h6>
-                <button id="ai-analyse-btn" onclick="analyseArticle()" class="btn btn-sm ms-auto" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;">
-                  ✨ Analisar com IA
+              <div id="art-tags-row" class="d-flex flex-wrap gap-1"></div>
+              <div class="ms-auto d-flex gap-2">
+                <button id="like-btn" onclick="likeArticle()" class="btn-inkuai-secondary btn-inkuai-sm">
+                  <i class="bi bi-heart me-1"></i><span id="like-count">0</span>
                 </button>
-              </div>
-              <div id="ai-analysis-result" style="color:var(--text-muted);font-size:0.85rem;">
-                Clique em "Analisar com IA" para obter uma análise detalhada deste artigo, incluindo pontos fortes, áreas de melhoria e relevância para Angola.
+                <button onclick="share()" class="btn-inkuai-secondary btn-inkuai-sm">
+                  <i class="bi bi-share me-1"></i>Partilhar
+                </button>
               </div>
             </div>
           </div>
+          <!-- Content -->
+          <div class="inkuai-card mb-4">
+            <div id="art-content" style="font-size:0.95rem;color:var(--text-secondary);line-height:1.9;white-space:pre-wrap;"></div>
+          </div>
+          <!-- AI Analysis -->
+          <div class="inkuai-card mb-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div style="width:32px;height:32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;">✨</div>
+              <h6 style="margin:0;font-weight:700;">Análise pela IA</h6>
+              <button id="ai-analyse-btn" onclick="analyseArticle()" class="btn-inkuai btn-inkuai-sm ms-auto">✨ Analisar</button>
+            </div>
+            <div id="ai-analysis" style="font-size:0.855rem;color:var(--text-muted);line-height:1.7;">
+              Clique em "Analisar" para obter análise detalhada da relevância, pontos fortes e áreas de melhoria.
+            </div>
+          </div>
+          <!-- Comments -->
+          <div class="inkuai-card">
+            <h6 style="font-weight:700;margin-bottom:16px;"><i class="bi bi-chat-dots-fill me-2" style="color:var(--brand-primary);"></i>Comentários</h6>
+            <div class="d-flex gap-3 mb-4">
+              <div class="avatar avatar-sm" id="comment-avatar" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">U</div>
+              <div style="flex:1;">
+                <textarea id="comment-input" class="form-control-dark mb-2" rows="2" placeholder="Escreve um comentário..."></textarea>
+                <button class="btn-inkuai btn-inkuai-sm ms-auto d-block" onclick="postComment()"><i class="bi bi-send me-1"></i>Publicar</button>
+              </div>
+            </div>
+            <div id="comments-list"></div>
+          </div>
+        </div>
+        <!-- Right sidebar -->
+        <div class="col-lg-4">
+          <div class="inkuai-card mb-4" style="position:sticky;top:76px;">
+            <h6 style="font-weight:700;margin-bottom:12px;">📊 Métricas</h6>
+            <div class="d-flex flex-column gap-3" style="font-size:0.845rem;">
+              <div class="d-flex align-items-center justify-content-between">
+                <span style="color:var(--text-muted);"><i class="bi bi-eye me-2"></i>Visualizações</span>
+                <strong id="m-views">0</strong>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span style="color:var(--text-muted);"><i class="bi bi-heart me-2"></i>Gostos</span>
+                <strong id="m-likes">0</strong>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <a id="author-link" href="#" class="btn-inkuai-ghost w-100 justify-content-center"><i class="bi bi-person-circle me-2"></i>Ver Perfil do Autor</a>
+          </div>
         </div>
       </div>
-      <div id="article-error" style="display:none;" class="text-center py-5 text-danger">
-        <i class="bi bi-exclamation-triangle fs-1 d-block mb-3"></i>
-        <div id="error-msg">Artigo não encontrado.</div>
-        <a href="/articles.html" class="btn-inkuai mt-3">← Voltar aos artigos</a>
-      </div>
+    </div>
+
+    <div id="article-error" style="display:none;" class="page-content">
+      <div class="inkuai-empty"><span class="inkuai-empty-icon"><i class="bi bi-exclamation-triangle"></i></span><h5>Artigo não encontrado</h5><a href="/articles.html" class="btn-inkuai">← Voltar</a></div>
     </div>
   </main>
 </div>
-
-<style>
-.cat-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
-.cat-ideia       { background:rgba(245,158,11,.15); color:#f59e0b; }
-.cat-artigo      { background:rgba(99,102,241,.15);  color:#818cf8; }
-.cat-investigacao{ background:rgba(16,185,129,.15);  color:#10b981; }
-.cat-inovacao    { background:rgba(239,68,68,.15);   color:#f87171; }
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 <script src="/assets/js/components/toast.js"></script>
 <script src="/assets/js/components/sidebar.js"></script>
 <script>
-const catLabel = { ideia:'💡 Ideia', artigo:'📄 Artigo', investigacao:'🔬 Investigação', inovacao:'🚀 Inovação' };
-let articleId = null;
+const urlP = new URLSearchParams(window.location.search);
+const articleId = urlP.get('id');
 let articleData = null;
+const CAT_LABEL = {ideia:'💡 Ideia',artigo:'📄 Artigo',investigacao:'🔬 Investigação',inovacao:'🚀 Inovação'};
 
-async function loadArticle() {
-  const params = new URLSearchParams(window.location.search);
-  articleId = params.get('id');
-  if (!articleId) { showError('ID do artigo não especificado.'); return; }
+async function init() {
+  const usr = window.InkuAuth?.getUser?.();
+  if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
+  if(usr?.name) { document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase(); document.getElementById('comment-avatar').textContent=usr.name[0].toUpperCase(); }
+  if(!articleId) { showError(); return; }
   try {
     const res = await window.InkuAPI.get(`/articles/${articleId}`);
     articleData = res.article || res.data?.article;
-    if (!articleData) { showError('Artigo não encontrado.'); return; }
-    renderArticle(articleData);
-  } catch(e) { showError(e.message || 'Erro ao carregar artigo.'); }
+    if(!articleData) { showError(); return; }
+    render(articleData);
+    loadComments();
+  } catch(e) { showError(e.message); }
 }
 
-function renderArticle(a) {
+function render(a) {
   document.title = `${a.title} — INKU·AI`;
+  document.getElementById('breadcrumb-title').textContent = a.title.substring(0,40)+(a.title.length>40?'...':'');
   document.getElementById('art-title').textContent   = a.title;
-  document.getElementById('art-summary').textContent  = a.summary || '';
+  document.getElementById('art-summary').textContent  = a.summary||'';
   document.getElementById('art-content').textContent  = a.content;
   document.getElementById('art-date').textContent     = new Date(a.created_at).toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('like-count').textContent   = a.likes || 0;
-
-  const badge = document.getElementById('art-cat-badge');
-  badge.className = `cat-badge cat-${a.category}`;
-  badge.textContent = catLabel[a.category] || a.category;
-
-  if (a.author) {
-    document.getElementById('art-avatar').textContent  = (a.author.name||'?')[0].toUpperCase();
-    document.getElementById('art-author').textContent  = a.author.name || 'Anónimo';
-    document.getElementById('art-author-role').textContent = a.author.role || '';
+  document.getElementById('like-count').textContent   = a.likes||0;
+  document.getElementById('m-views').textContent      = a.views||0;
+  document.getElementById('m-likes').textContent      = a.likes||0;
+  const cb = document.getElementById('art-cat-badge');
+  cb.className = `cat-badge cat-${a.category}`;
+  cb.textContent = CAT_LABEL[a.category]||a.category;
+  if(a.author) {
+    document.getElementById('art-avatar').textContent = a.author.name?.[0]?.toUpperCase()||'?';
+    document.getElementById('art-author').textContent = a.author.name||'Anónimo';
+    document.getElementById('art-author-role').textContent = a.author.role||'';
+    document.getElementById('author-link').href = `/profile.html?id=${a.author_id}`;
   }
-
-  const tagsRow = document.getElementById('art-tags-row');
-  const tags = (() => { try { return JSON.parse(a.tags_json||'[]'); } catch { return []; } })();
-  tagsRow.innerHTML = tags.map(t => `<span style="background:rgba(99,102,241,.1);color:#818cf8;padding:2px 8px;border-radius:20px;font-size:11px;">${t}</span>`).join('');
-
-  document.getElementById('article-loading').style.display = 'none';
-  document.getElementById('article-body').style.display = '';
+  const tags = (()=>{try{return JSON.parse(a.tags_json||'[]');}catch{return[];}})();
+  document.getElementById('art-tags-row').innerHTML = tags.map(t=>`<span class="tag tag-blue">${t}</span>`).join('');
+  document.getElementById('article-loading').style.display='none';
+  document.getElementById('article-main').style.display='';
 }
 
 function showError(msg) {
-  document.getElementById('article-loading').style.display = 'none';
-  document.getElementById('article-error').style.display   = '';
-  document.getElementById('error-msg').textContent = msg;
+  document.getElementById('article-loading').style.display='none';
+  document.getElementById('article-error').style.display='';
+  if(msg) console.error(msg);
 }
 
 async function likeArticle() {
-  if (!articleId) return;
   try {
-    const res = await window.InkuAPI.post(`/articles/${articleId}/like`, {});
-    document.getElementById('like-count').textContent = res.data?.likes ?? ((articleData?.likes||0)+1);
-    document.getElementById('like-btn').style.background = 'rgba(239,68,68,.25)';
-    window.showToast?.('Gostou do artigo!','success');
-  } catch(e) { window.showToast?.(e.message,'error'); }
+    const res = await window.InkuAPI.post(`/articles/${articleId}/like`);
+    const n = res.likes ?? ((articleData?.likes||0)+1);
+    document.getElementById('like-count').textContent = n;
+    document.getElementById('m-likes').textContent = n;
+    document.querySelector('#like-btn i').className='bi bi-heart-fill me-1';
+    showToast('Gostou!','success');
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+function share() {
+  const url = window.location.href;
+  if(navigator.share) navigator.share({title:document.title,url});
+  else { navigator.clipboard?.writeText(url); showToast('Link copiado!','success'); }
 }
 
 async function analyseArticle() {
   const btn = document.getElementById('ai-analyse-btn');
-  const result = document.getElementById('ai-analysis-result');
-  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A analisar...';
-  btn.disabled=true;
+  const res_el = document.getElementById('ai-analysis');
+  btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>A analisar...';
   try {
     const token = localStorage.getItem('inkuai_token');
-    const res = await fetch('/api/v1/ai/form-suggest', {
+    const res = await fetch('/api/v1/ai/form-suggest',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
-      body:JSON.stringify({
-        form_type:'article',
-        field:'análise crítica detalhada',
-        context:`Título: ${articleData?.title}. Categoria: ${articleData?.category}. Resumo: ${articleData?.summary||''}`,
-        partial_text: `Conteúdo a analisar:\n${(articleData?.content||'').substring(0,1500)}\n\nPor favor analisa este artigo/ideia considerando: 1) Relevância para Angola e África, 2) Inovação, 3) Viabilidade, 4) Pontos fortes e fracos, 5) Recomendações.`
-      })
+      body:JSON.stringify({form_type:'article',field:'análise crítica',context:`Título: ${articleData?.title}. Categoria: ${articleData?.category}`,partial_text:`Conteúdo:\n${(articleData?.content||'').substring(0,1500)}\n\nAnalisa: relevância para Angola/África, inovação, viabilidade, pontos fortes e fracos, recomendações.`})
     });
     const data = await res.json();
-    if (data.success) {
-      result.style.color = 'var(--text-secondary)';
-      result.style.whiteSpace = 'pre-wrap';
-      result.textContent = data.suggestion;
-      btn.style.display = 'none';
-    } else {
-      result.textContent = 'Não foi possível gerar análise. Tente novamente.';
-    }
-  } catch(e) {
-    result.textContent = 'Erro: ' + e.message;
-  } finally {
-    btn.innerHTML='✨ Analisar com IA';
-    btn.disabled=false;
-  }
+    if(data.success) { res_el.style.color='var(--text-secondary)'; res_el.textContent=data.suggestion; btn.style.display='none'; }
+    else res_el.textContent='Não foi possível gerar análise.';
+  } catch(e) { res_el.textContent='Erro: '+e.message; }
+  finally { btn.disabled=false; btn.innerHTML='✨ Analisar'; }
 }
 
-const usr = window.InkuAuth?.getUser?.();
-if(usr?.role==='admin') document.getElementById('admin-link').style.display='';
-if(usr?.name) document.getElementById('user-avatar').textContent=usr.name[0].toUpperCase();
+async function loadComments() {
+  const list = document.getElementById('comments-list');
+  list.innerHTML='<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+  try {
+    const res = await window.InkuAPI.get(`/social/comments/article/${articleId}`);
+    const comments = res.comments||[];
+    if(!comments.length) { list.innerHTML='<div class="text-center py-4" style="color:var(--text-muted);font-size:0.85rem;"><i class="bi bi-chat-dots d-block mb-2 fs-4"></i>Sem comentários ainda.</div>'; return; }
+    function tAgo(iso){const d=Math.floor((Date.now()-new Date(iso))/1000);if(d<60)return d+'s';if(d<3600)return Math.floor(d/60)+'m';if(d<86400)return Math.floor(d/3600)+'h';return Math.floor(d/86400)+'d';}
+    list.innerHTML=comments.map(c=>`
+      <div style="padding:12px 0;border-bottom:1px solid var(--border-light);">
+        <div class="d-flex gap-3">
+          <div class="avatar avatar-sm" style="background:var(--brand-gradient);font-weight:700;font-size:0.78rem;color:#fff;flex-shrink:0;">${(c.author?.name||'?')[0].toUpperCase()}</div>
+          <div style="flex:1;">
+            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+              <a href="/profile.html?id=${c.author_id}" style="font-weight:700;font-size:0.845rem;color:var(--text-primary);text-decoration:none;">${c.author?.name||'Anónimo'}</a>
+              <span style="font-size:0.7rem;color:var(--text-muted);">${tAgo(c.created_at)}</span>
+            </div>
+            <div style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">${c.body}</div>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML=`<p style="color:var(--danger);font-size:0.82rem;">${e.message}</p>`; }
+}
 
-document.addEventListener('DOMContentLoaded', loadArticle);
+async function postComment() {
+  const body = document.getElementById('comment-input').value.trim();
+  if(!body) return;
+  try {
+    await window.InkuAPI.post('/social/comments',{targetType:'article',targetId:articleId,body});
+    document.getElementById('comment-input').value='';
+    showToast('Comentário publicado!','success');
+    loadComments();
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 <script src="/assets/js/components/notifications.js"></script>
+<script src="/assets/js/components/mentor-ai.js"></script>
 </body>
 </html>

@@ -68,8 +68,9 @@ window.InkuAPI = {
 
 /* ── Auto-redirect if not logged in (skip auth pages) ────────── */
 (function () {
-  const pub = ['/login', '/register', '/forgot-password', '/index', '/404'];
-  const isPublic = pub.some(p => window.location.pathname.includes(p));
+  const pub = ['/login', '/register', '/forgot-password', '/index', '/404', '/#', '/index.html'];
+  const path = window.location.pathname;
+  const isPublic = path === '/' || pub.some(p => path.includes(p));
   if (!isPublic && !InkuAuth.isLoggedIn()) {
     window.location.href = '/login.html';
   }
